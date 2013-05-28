@@ -201,7 +201,6 @@ class quoteQueries
     // End # public functions -------------------------------------------------
         
     // Start # private functions ----------------------------------------------
-}
 
     private function selElements($options, $fields = "")
     {
