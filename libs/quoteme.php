@@ -11,25 +11,25 @@
 
 class quote
 {
-    private $quote;
+    private $text;
     private $authors;
     private $sources;
 
     function __construct()
     {
-        //$this->setQuote('');
+        //$this->setText('');
         //$this->setAuthor('');
         //$this->setSource('');
     }
 
     /**
-     * Return quote
+     * Return quote text
      * @access public
      * @return string
      */
-    public function getQuote()
+    public function getText()
     {
-        return $this->quote;
+        return $this->text;
     }
 
     /**
@@ -57,9 +57,9 @@ class quote
      * @access public
      * @return void
      */
-    public function setQuote($quote)
+    public function setText($text)
     {
-        $this->quote = $quote;
+        $this->text = $text;
     }
 
     /**
@@ -103,30 +103,30 @@ class quoteQueries
     {
         /* get all quotes */
         if ($option == "all") {
-            $result = $this->loadElement('all');
+            $result = $this->selElement('all');
         }
 
         /* get specific quote */
         elseif (is_int($option)) {
-            $result = $this->loadElement('one', $option);
+            $result = $this->selElement('one', $option);
         }
 
         /* get multiple quotes */
         elseif ($option[0] == "(") {
             $quantity = trim($option, '()');
-            $result = $this->loadElement('limit', $quantity);
+            $result = $this->selElement('limit', $quantity);
         }
 
         /* get multi specific quotes */
         elseif (strpos(';', $option) !== FALSE) {
-            //convert (10;48; 92;) to 10, 48, 92
+            // convert (10;48; 92;) to 10, 48, 92
             // $ids = str_replace(' ', '', $option);
             // $ids = str_replace(';', ',', $ids);
             // $ids = trim($ids, ',');
             // $ids = trim($ids);
             // More compact
             $ids = trim(trim(str_replace(';', ',', str_replace(' ', '', $option)), ','));
-            $result = $this->loadElement('multi', $ids);
+            $result = $this->selElement('multi', $ids);
         }
 
         /* get one randomized quote */
@@ -152,7 +152,7 @@ class quoteQueries
                 // -------------------------------------------
                 // version 2
                 
-                /*$quotes = $this->loadElement('all', 'id');
+                /*$quotes = $this->selElement('all', 'id');
                 if (is_array($quotes)) {
                     $id = array_rand($quotes, 1);
                     $result = $this->getQuote($id);
@@ -164,48 +164,77 @@ class quoteQueries
         if (is_array($result)) {
             $quote = new quote();
         }
-        else $quote = '';
+        else {
+            $quote = 'Error getQuote(), $result is empty !';
+        }
 
         return $quote;
     }
 
     public function addQuote($quote, $author = '', $source = '')
     {
-
+        if (!empty($quote)) {
+            $result[] = array('quote' => $text, 'author' => $author, 'source' => $source);
+        }
         return $result;
     }
 
     public function delQuote($id) // si la quote est supprimée, on retourne celle-ci au cas ou on veuille revenir en arrière
     {
+        if (is_int($id)) {
+            $result[] = $id;
+        }
         return $result;
     }
 
     public function editQuote($id, $elements)
     {
-
+        if (is_int($id)) {
+            if (is_array($elements)) {
+                foreach ($elements as $field => $value) {
+                    $result[]
+                }
+            }
+        }
     }
 
     // End # public functions -------------------------------------------------
         
     // Start # private functions ----------------------------------------------
+}
 
-    private function loadElement($options, $fields = "")
+    private function selElements($options, $fields = "")
     {
         // sql select all quote
     }
 
-    private function delElement($array) // array = quotes to del (array of ids)
+    private function delElements($array) // array = quotes to del (array of ids)
     {
-
+        $stmt = dbConnexion::getInstance()->prepare("DELETE quotes WHERE id = :id");
+        if (is_array($elements)) {
+            foreach ($elements as $datas) {
+                $stmt->execute('id' => $datas);
+            }
+        }
     }
 
-    private function addElement($array) // array = quotes to del (array type key = fields, value = values)
+    private function addElements($elements) // array = quotes to add (array key[] = array key = fields, value = values)
     {
-
+        $stmt = dbConnexion::getInstance()->prepare("INSERT INTO quotes (quote, author, source) VALUES (:quote, :author, :source)");
+        if (is_array($elements)) {
+            foreach ($elements as $datas) {
+                $stmt->execute('quote' => $datas['quote'], 'author' => $datas['author'], 'source' => $datas['source']);
+            }
+        }
     }
 
-    private function editElement($array) // array multidimentional = quotes to del (array keys = ids of elements, array inside: key fields, values values)
+    private function editElements($elements) // array multidimentional = quotes to edit (array keys = ids of elements, array inside: key fields, values values)
     {
-
+        $stmt = dbConnexion::getInstance()->prepare("UPDATE quotes SET quote = :quote, author = :author, source = :source WHERE id = :id");
+        if (is_array($elements)) {
+            foreach ($elements as $datas) {
+                $stmt->execute('id' => $datas['id'], 'quote' => $datas['quote'], 'author' => $datas['author'], 'source' => $datas['source']);
+            }
+        }
     }
 }
