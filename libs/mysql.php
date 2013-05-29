@@ -4,7 +4,7 @@
 */
 class dbConnexion
 {
-    
+    private static $instance;
     /*function __construct(argument)
     {
         # code...
