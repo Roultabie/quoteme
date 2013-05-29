@@ -12,8 +12,8 @@
 class quote
 {
     private $text;
-    private $authors;
-    private $sources;
+    private $author;
+    private $source;
 
     function __construct()
     {
@@ -39,7 +39,7 @@ class quote
      */
     public function getAuthor()
     {
-        return $this->authors;
+        return $this->author;
     }
 
     /**
@@ -49,7 +49,7 @@ class quote
      */
     public function getSource()
     {
-        return $this->sources;
+        return $this->source;
     }
 
     /**
@@ -69,7 +69,7 @@ class quote
      */
     public function setAuthor($author)
     {
-        $this->authors[] = $author;
+        $this->author = $author;
     }
 
     /**
@@ -79,13 +79,14 @@ class quote
      */
     public function setSource($source)
     {
-        $this->sources[] = $source;
+        $this->source = $source;
     }
 }
 
 class quoteQueries
 {
 
+    private $quoteList;
     private $elements;
     private $toAdd;
     private $toDelete;
@@ -94,7 +95,7 @@ class quoteQueries
 
     function __construct()
     {
-
+        $this->quoteList = '';
     }
 
     /**
@@ -106,63 +107,59 @@ class quoteQueries
     public function getQuote($option = '', $random = FALSE) // options : all, number: for one, (number): for quantity, nb1;nb2;nbX: for multiple,   random, multi: all,random or 10,random, or (57), random or 1;5,18,39,radom
     {
         if ($option == "all") { // get all quotes
-            $result = $this->selElements('all');
+            $this->quoteList = $this->selElements('all');
         }
         elseif (is_int($option)) { // get specific quote
-            $result = $this->selElements('one', $option);
+            $this->quoteList = $this->selElements('one', $option);
         }
         elseif ($option[0] == "(") { // get multiple quotes
             $quantity = trim($option, '()');
-            $result = $this->selElements('limit', $quantity);
+            $this->quoteList = $this->selElements('limit', $quantity);
         }
         elseif (strpos($option, ';') !== FALSE) { // get multi specific quotes
             $ids = trim(trim(str_replace(';', ',', str_replace(' ', '', $option)), ',')); // convert (10;48; 92;) to 10,48,92
-            $result = $this->selElements('multi', $ids);
+            $this->quoteList = $this->selElements('multi', $ids);
         }
         elseif (empty($option)) { // get randomized quote
             $random = TRUE;
         }
 
         if ($random === TRUE) { // randomize quotes / get randomized quotes
-            if (is_array($result)) {
-                $result = shuffle($result);
+            if (is_array($this->quoteList)) {
+                shuffle($this->quoteList);
             }
             else {
 
                 // test de performances random
                 // version 1
-                
-                $quotes = $this->getQuote('all');
-                if (is_array($quotes)) {
-                    $result = $quotes[array_rand($quotes, 1)];
-                }
-
+                $this->quoteList = $this->getQuote('all', TRUE);
+                //shuffle($this->quoteList);
                 // -------------------------------------------
                 // version 2
                 
                 /*$quotes = $this->selElement('all', 'id');
                 if (is_array($quotes)) {
                     $id = array_rand($quotes, 1);
-                    $result = $this->getQuote($id);
+                    $this->quoteList = $this->getQuote($id);
                 }*/
 
             }
         }
-
-        if (is_array($result)) {
-            $nbQuotes = count($result);
-            for ($i = 0; $i < $nbQuotes; $i++) {
-                $quote[$i] = new quote();
-                $quote[$i]->setText($result->quote);
-                $quote[$i]->setAuthor($result->author);
-                $quote[$i]->setSource($result->source);
+        if (!empty($option)) {
+            if (is_array($this->quoteList)) {
+                $nbQuotes = count($this->quoteList);
+                for ($i = 0; $i < $nbQuotes; $i++) {
+                    $quote[$i] = new quote();
+                    $quote[$i]->setText($this->quoteList[0]->quote);
+                    $quote[$i]->setAuthor($this->quoteList[0]->author);
+                    $quote[$i]->setSource($this->quoteList[0]->source);
+                }
+                return $quote;
             }
         }
-        /*else {
-            $quote = 'Error getQuote(), $result is empty !';
-        }*/
-
-        return $quote;
+        else {
+            return $this->quoteList;
+        }
     }
 
     /**
