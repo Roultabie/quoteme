@@ -85,17 +85,17 @@ class quote
 
 class quoteQueries
 {
-
-    private $quoteList;
     private $elements;
     private $toAdd;
     private $toDelete;
     private $toEdit;
     private static $stack;
+    public static $nbQuotes;
 
     function __construct()
     {
-        $this->quoteList = '';
+        $quotesIds = $this->selElements('all', 'id');
+        self::$nbQuotes = count($quotesIds);
     }
 
     /**
@@ -104,61 +104,49 @@ class quoteQueries
      * @param  boolean $random to ramdomize quote list set to TRUE
      * @return array   $quote  one line by quote
      */
-    public function getQuote($option = '', $random = FALSE) // options : all, number: for one, (number): for quantity, nb1;nb2;nbX: for multiple,   random, multi: all,random or 10,random, or (57), random or 1;5,18,39,radom
+    public function getQuote($option = '', $random = FALSE, $createObj = TRUE) // options : all, number: for one, (number): for quantity, nb1;nb2;nbX: for multiple,   random, multi: all,random or 10,random, or (57), random or 1;5,18,39,radom
     {
-        if ($option == "all") { // get all quotes
-            $this->quoteList = $this->selElements('all');
+        if ($option === "all") { // get all quotes
+            $quotesList = $this->selElements('all');
         }
         elseif (is_int($option)) { // get specific quote
-            $this->quoteList = $this->selElements('one', $option);
+            $quotesList = $this->selElements('one', $option);
         }
-        elseif ($option[0] == "(") { // get multiple quotes
+        elseif ($option[0] === "(") { // get multiple quotes
             $quantity = trim($option, '()');
-            $this->quoteList = $this->selElements('limit', $quantity);
+            $quotesList = $this->selElements('limit', $quantity);
         }
         elseif (strpos($option, ';') !== FALSE) { // get multi specific quotes
             $ids = trim(trim(str_replace(';', ',', str_replace(' ', '', $option)), ',')); // convert (10;48; 92;) to 10,48,92
-            $this->quoteList = $this->selElements('multi', $ids);
+            $quotesList = $this->selElements('multi', $ids);
         }
         elseif (empty($option)) { // get randomized quote
-            $random = TRUE;
-        }
-
-        if ($random === TRUE) { // randomize quotes / get randomized quotes
-            if (is_array($this->quoteList)) {
-                shuffle($this->quoteList);
-            }
-            else {
-
-                // test de performances random
-                // version 1
-                $this->quoteList = $this->getQuote('all', TRUE);
-                //shuffle($this->quoteList);
-                // -------------------------------------------
-                // version 2
+            // test de performances random
+            $quotesList = $this->getQuote('all', TRUE, FALSE); // version 1 : Temps d'exécution (script total) : 0.7875189781189 secondes pour 1000 itérations
                 
-                /*$quotes = $this->selElement('all', 'id');
-                if (is_array($quotes)) {
-                    $id = array_rand($quotes, 1);
-                    $this->quoteList = $this->getQuote($id);
-                }*/
-
-            }
+            /*$myQuotes = $this->selElements('all', 'id', FALSE); // version 2 : Temps d'exécution (script total) : 0.89189100265503 secondes pour 1000 itérations
+            if (is_array($myQuotes)) {
+                $id = array_rand($myQuotes, 1);
+                $quotesList = $this->getQuote($id, FALSE, FALSE);
+            }*/
         }
-        if (!empty($option)) {
-            if (is_array($this->quoteList)) {
-                $nbQuotes = count($this->quoteList);
-                for ($i = 0; $i < $nbQuotes; $i++) {
+        if ($random === TRUE) { // randomize quotes / get randomized quotes
+            $quotesList = $this->randomizeQuotes($quotesList);
+        }
+        if ($createObj) {
+            if (is_array($quotesList)) {
+                $nbElements = count($quotesList);
+                for ($i = 0; $i < $nbElements; $i++) {
                     $quote[$i] = new quote();
-                    $quote[$i]->setText($this->quoteList[0]->quote);
-                    $quote[$i]->setAuthor($this->quoteList[0]->author);
-                    $quote[$i]->setSource($this->quoteList[0]->source);
+                    $quote[$i]->setText($quotesList[$i]->quote);
+                    $quote[$i]->setAuthor($quotesList[$i]->author);
+                    $quote[$i]->setSource($quotesList[$i]->source);
                 }
                 return $quote;
             }
         }
         else {
-            return $this->quoteList;
+            return $quotesList;
         }
     }
 
@@ -214,13 +202,13 @@ class quoteQueries
         if (is_array($stack)) {
             foreach ($stack as $array) {
                 foreach ($array as $type => $elements) { // on ventille les différentes requetes
-                    if ($type == "insert") {
+                    if ($type === "insert") {
                         $insert[] = $elements;    
                     }
-                    elseif ($type == "update") {
+                    elseif ($type === "update") {
                         $update[] = $elements;
                     }
-                    elseif ($type == "delete") {
+                    elseif ($type === "delete") {
                         $delete[] = $elements;  
                     }
                 }
@@ -235,6 +223,14 @@ class quoteQueries
     // End # public functions -------------------------------------------------
         
     // Start # private functions ----------------------------------------------
+     
+    private function randomizeQuotes($quotesList)
+    {
+        if (is_array($quotesList)) {
+            shuffle($quotesList);
+        }
+        return $quotesList;
+    }
     
     private static function getStacking()
     {
@@ -250,16 +246,16 @@ class quoteQueries
 
     private function selElements($option, $fields = "")
     {
-        if ($option == "all") {
+        if ($option === "all") {
             $stmt = dbConnexion::getInstance()->prepare('SELECT quote, author, source FROM quotes;');
             $stmt->execute();
         }
-        elseif ($option == "one") {
+        elseif ($option === "one") {
             $stmt = dbConnexion::getInstance()->prepare('SELECT quote, author, source FROM quotes WHERE id=:id;');
             $stmt->bindValue(':id', $fields, PDO::PARAM_INT);
             $stmt->execute();
         }
-        elseif ($option == "multi") {
+        elseif ($option === "multi") {
             $idsPH = preg_replace('/\d+/', '?', $fields);
             $ids   = explode(',', $fields);
             $nbIds = count($ids);
