@@ -13,11 +13,13 @@ define('DB_NAME', 'quoteme');
 define('DB_USR', 'user');
 define('DB_PWD', 'pass');
 
-$html  = new timply('index.html');
-$quote = new quoteQueries();
-$quote = $quote->getQuote();
+$html     = new timply('index.html');
+$quote    = new quoteQueries();
+$nbQuotes = quoteQueries::$nbQuotes;
+$quote    = $quote->getQuote();
 $html->setElement('text', SmartyPants($quote[0]->getText(), 'f+:+t+h+H+'), 'Content');
 $html->setElement('author', SmartyPants($quote[0]->getAuthor()), 'Content');
 $html->setElement('source', SmartyPants($quote[0]->getSource()), 'Content');
+$html->setElement('nbQuotes', $nbQuotes, 'Footer');
 echo $html->returnHtml();
 ?>
