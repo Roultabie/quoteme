@@ -85,17 +85,20 @@ class quote
 
 class quoteQueries
 {
-    private $elements;
-    private $toAdd;
-    private $toDelete;
-    private $toEdit;
-    private static $stack;
-    public static $nbQuotes;
+    private         $elements;
+    private         $toAdd;
+    private         $toDelete;
+    private         $toEdit;
+    private static  $stack;
+    private static  $table;
+    public  static  $nbQuotes;
+    
 
     function __construct()
     {
-        $quotesIds = $this->selElements('all', 'id');
-        self::$nbQuotes = count($quotesIds);
+        self::$table    = 'quotes_test';
+        $nbQuotes       = $this->selElements('count');
+        self::$nbQuotes = $nbQuotes[0]->nb;
     }
 
     /**
@@ -113,7 +116,7 @@ class quoteQueries
             $quotesList = $this->selElements('one', $option);
         }
         elseif ($option[0] === "(") { // get multiple quotes
-            $quantity = trim($option, '()');
+            $quantity   = trim($option, '()');
             $quotesList = $this->selElements('limit', $quantity);
         }
         elseif (strpos($option, ';') !== FALSE) { // get multi specific quotes
@@ -121,14 +124,10 @@ class quoteQueries
             $quotesList = $this->selElements('multi', $ids);
         }
         elseif (empty($option)) { // get randomized quote
-            // test de performances random
-            $quotesList = $this->getQuote('all', TRUE, FALSE); // version 1 : Temps d'exécution (script total) : 0.7875189781189 secondes pour 1000 itérations
-                
-            /*$myQuotes = $this->selElements('all', 'id', FALSE); // version 2 : Temps d'exécution (script total) : 0.89189100265503 secondes pour 1000 itérations
-            if (is_array($myQuotes)) {
-                $id = array_rand($myQuotes, 1);
-                $quotesList = $this->getQuote($id, FALSE, FALSE);
-            }*/
+            $quotesList = $this->selElements('random', 1);
+        }
+        elseif ($option === "like") { // search WIP
+            $quotesList = $this->selElements('like');
         }
         if ($random === TRUE) { // randomize quotes / get randomized quotes
             $quotesList = $this->randomizeQuotes($quotesList);
@@ -247,11 +246,11 @@ class quoteQueries
     private function selElements($option, $fields = "")
     {
         if ($option === "all") {
-            $stmt = dbConnexion::getInstance()->prepare('SELECT quote, author, source FROM quotes;');
+            $stmt = dbConnexion::getInstance()->prepare('SELECT quote, author, source FROM ' . self::$table .';');
             $stmt->execute();
         }
         elseif ($option === "one") {
-            $stmt = dbConnexion::getInstance()->prepare('SELECT quote, author, source FROM quotes WHERE id=:id;');
+            $stmt = dbConnexion::getInstance()->prepare('SELECT quote, author, source FROM ' . self::$table .' WHERE id=:id;');
             $stmt->bindValue(':id', $fields, PDO::PARAM_INT);
             $stmt->execute();
         }
@@ -259,11 +258,22 @@ class quoteQueries
             $idsPH = preg_replace('/\d+/', '?', $fields);
             $ids   = explode(',', $fields);
             $nbIds = count($ids);
-            $stmt  = dbConnexion::getInstance()->prepare('SELECT quote, author, source FROM quotes WHERE id IN(' .$idsPH . ');');
+            $stmt  = dbConnexion::getInstance()->prepare('SELECT quote, author, source FROM ' . self::$table .' WHERE id IN(' .$idsPH . ');');
             for ($i = 0; $i < $nbIds; $i++) { 
                  $stmt->bindValue($i+1, $ids[$i], PDO::PARAM_INT);
             }
             $stmt->execute();
+        }
+        elseif ($option === "like") {
+            $stmt = dbConnexion::getInstance()->prepare('SELECT quote, author, source FROM ' . self::$table .' LIKE ;'); // WIP
+        }
+        elseif ($option === "random") {
+            $stmt = dbConnexion::getInstance()->prepare('SELECT id, quote, author, source FROM ' . self::$table .' JOIN ( SELECT FLOOR( COUNT( * ) * RAND( ) ) AS ValeurAleatoire FROM ' . self::$table . ' ) AS V ON ' . self::$table . '.id >= V.ValeurAleatoire LIMIT 1;');
+            $stmt->execute();
+        }
+        elseif ($option === "count") {
+             $stmt = dbConnexion::getInstance()->prepare('SELECT COUNT(*) AS nb FROM ' . self::$table .';');
+             $stmt->execute();
         }
         $result = $stmt->fetchAll(PDO::FETCH_OBJ);
         $stmt->closeCursor();
@@ -273,7 +283,7 @@ class quoteQueries
 
     private function delElements($elements) // $ids = quotes to del (array)
     {
-        $stmt = dbConnexion::getInstance()->prepare('DELETE quotes WHERE id = :id;');
+        $stmt = dbConnexion::getInstance()->prepare('DELETE ' . self::$table .' WHERE id = :id;');
         if (is_array($elements)) {
             foreach ($elements as $datas) {
                 $stmt->bindValue(':id', $datas, PDO::PARAM_INT);
@@ -284,7 +294,7 @@ class quoteQueries
 
     private function addElements($elements) // array = quotes to add (array key[] = array key = fields, value = values)
     {
-        $stmt = dbConnexion::getInstance()->prepare('INSERT INTO quotes (quote, author, source) VALUES (:quote, :author, :source);');
+        $stmt = dbConnexion::getInstance()->prepare('INSERT INTO ' . self::$table .' (quote, author, source) VALUES (:quote, :author, :source);');
         if (is_array($elements)) {
             foreach ($elements as $datas) {
                 $stmt->bindValue(':quote', $datas['quote'], PDO::PARAM_STR);
@@ -298,7 +308,7 @@ class quoteQueries
 
     private function editElements($elements) // array multidimentional = quotes to edit (array keys = ids of elements, array inside: key fields, values values)
     {
-        $stmt = dbConnexion::getInstance()->prepare('UPDATE quotes SET quote = :quote, author = :author, source = :source WHERE id = :id');
+        $stmt = dbConnexion::getInstance()->prepare('UPDATE ' . self::$table .' SET quote = :quote, author = :author, source = :source WHERE id = :id');
         if (is_array($elements)) {
             foreach ($elements as $datas) {
                 $stmt->bindValue(':id', $datas['id'], PDO::PARAM_INT);
