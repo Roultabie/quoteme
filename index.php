@@ -10,7 +10,7 @@ require_once 'libs/smartypants.php';
 define('TIMPLY_DIR', 'themes/simple/');
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'quoteme');
-define('DB_USR', 'user');
+define('DB_USR', 'dbuser');
 define('DB_PWD', 'pass');
 
 $html     = new timply('index.html');
