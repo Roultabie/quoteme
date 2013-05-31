@@ -17,9 +17,9 @@ $html     = new timply('index.html');
 $quote    = new quoteQueries();
 $nbQuotes = quoteQueries::$nbQuotes;
 $quote    = $quote->getQuote();
-$html->setElement('text', SmartyPants($quote[0]->getText(), 'f+:+t+h+H+'), 'Content');
-$html->setElement('author', SmartyPants($quote[0]->getAuthor()), 'Content');
-$html->setElement('source', SmartyPants($quote[0]->getSource()), 'Content');
-$html->setElement('nbQuotes', $nbQuotes, 'Footer');
+$html->setElement('text', SmartyPants($quote[0]->getText(), 'f+:+t+h+H+'));
+$html->setElement('author', SmartyPants($quote[0]->getAuthor()));
+$html->setElement('source', SmartyPants($quote[0]->getSource()));
+$html->setElement('nbQuotes', $nbQuotes);
 echo $html->returnHtml();
 ?>

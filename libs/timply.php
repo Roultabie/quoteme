@@ -98,8 +98,8 @@ class timply
     private function addElement()
     {
         if (is_array($this->element)) {
-            $file = $this->getFile();
             foreach ($this->element as $key => $data) {
+                $file = $this->getFile();
                 $this->setFile(str_replace('{' . $key . '}', $data, $file));
             }
         }
