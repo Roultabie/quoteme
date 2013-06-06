@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+    <channel>
+        <title>{title}</title>
+        <link>{link}</link>
+        <description>{description}</description>
+        <language>{language}</language>
+        <pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>
+        <lastBuildDate>{lastBuildDate}</lastBuildDate>
+        <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+        <managingEditor>contact@aelys-info.fr</managingEditor>
+        <webMaster>contact@aelys-info.fr</webMaster>
+        <!-- start Item -->
+        <item>
+            <title>{itemTitle}</title>
+            <link>{itemLink}</link>
+            <description>{itemDescription}</description>
+            <pubDate>{itemPubDate}</pubDate>
+            <guid>{itemGuid}</guid>
+        </item>
+        <!-- end Item -->
+    </channel>
+</rss>
