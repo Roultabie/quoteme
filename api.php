@@ -1,5 +1,5 @@
 <?php
-// TODO: Sanitizer for $_GET, multi quotes return tag search
+// TODO: multi quotes return tag search
 require_once 'libs/mysql.php';
 require_once 'libs/quoteme.php';
 require_once 'libs/timply.php';
@@ -12,10 +12,6 @@ define('DB_NAME', 'quoteme');
 define('DB_USR', 'dbuser');
 define('DB_PWD', 'pass');
 define('TIMPLY_DIR', 'themes/simple/');
-
-$wParser = 'parser/' . $_GET['p'] . '.php';
-$options = $_GET['o'];
-$GLOBALS['class'] = $_GET['p'] . 'Parser';
 
 
 function parseQuote($wParser)
@@ -50,5 +46,25 @@ function parseQuote($wParser)
     }
 }
 
-echo parseQuote($wParser);
+function testGet($var, $pattern)
+{
+    $regexp = array('options' => array('regexp' => $pattern));
+    if (filter_var($var, FILTER_VALIDATE_REGEXP, $regexp) !== FALSE) {
+        return $var;
+    }
+    else {
+        return FALSE;
+    }
+}
+$p = testGet($_GET['p'], '|^[\w\d_-]{2,4}$|');
+if ($p !== FALSE) {
+    $wParser = 'parser/' . $p . '.php';
+    $options = $_GET['o'];
+    $GLOBALS['class'] = $p . 'Parser';
+    echo parseQuote($wParser);
+}
+else {
+    echo 'ERROR: parser is not valid !';
+}
+
 ?>
