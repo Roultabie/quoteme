@@ -96,8 +96,8 @@ class quoteQueries
 
     function __construct()
     {
-        self::$table    = 'quotes_test';
-        $nbQuotes       = $this->selElements('count');
+        self::$table    = 'quotes';
+        $nbQuotes       = $this->countElements('count');
         self::$nbQuotes = $nbQuotes[0]->nb;
     }
 
@@ -107,45 +107,18 @@ class quoteQueries
      * @param  boolean $random to ramdomize quote list set to TRUE
      * @return array   $quote  one line by quote
      */
-    public function getQuote($option = '', $random = FALSE, $createObj = TRUE) // options : all, number: for one, (number): for quantity, nb1;nb2;nbX: for multiple,   random, multi: all,random or 10,random, or (57), random or 1;5,18,39,radom
+    public function getQuote($options = '')
     {
-        if ($option === "all") { // get all quotes
-            $quotesList = $this->selElements('all');
-        }
-        elseif (is_int($option)) { // get specific quote
-            $quotesList = $this->selElements('one', $option);
-        }
-        elseif ($option[0] === "(") { // get multiple quotes
-            $quantity   = trim($option, '()');
-            $quotesList = $this->selElements('limit', $quantity);
-        }
-        elseif (strpos($option, ';') !== FALSE) { // get multi specific quotes
-            $ids = trim(trim(str_replace(';', ',', str_replace(' ', '', $option)), ',')); // convert (10;48; 92;) to 10,48,92
-            $quotesList = $this->selElements('multi', $ids);
-        }
-        elseif (empty($option)) { // get randomized quote
-            $quotesList = $this->selElements('random', 1);
-        }
-        elseif ($option === "like") { // search WIP
-            $quotesList = $this->selElements('like');
-        }
-        if ($random === TRUE) { // randomize quotes / get randomized quotes
-            $quotesList = $this->randomizeQuotes($quotesList);
-        }
-        if ($createObj) {
-            if (is_array($quotesList)) {
-                $nbElements = count($quotesList);
-                for ($i = 0; $i < $nbElements; $i++) {
-                    $quote[$i] = new quote();
-                    $quote[$i]->setText($quotesList[$i]->quote);
-                    $quote[$i]->setAuthor($quotesList[$i]->author);
-                    $quote[$i]->setSource($quotesList[$i]->source);
-                }
-                return $quote;
+        $quotesList = $this->selElements($options);
+        if (is_array($quotesList)) {
+            $nbElements = count($quotesList);
+            for ($i = 0; $i < $nbElements; $i++) {
+                $quote[$i] = new quote();
+                $quote[$i]->setText($quotesList[$i]->quote);
+                $quote[$i]->setAuthor($quotesList[$i]->author);
+                $quote[$i]->setSource($quotesList[$i]->source);
             }
-        }
-        else {
-            return $quotesList;
+            return $quote;
         }
     }
 
@@ -243,38 +216,69 @@ class quoteQueries
         }
     }
 
-    private function selElements($option, $fields = "")
+    private function selElements($opt = "")
     {
-        if ($option === "all") {
-            $stmt = dbConnexion::getInstance()->prepare('SELECT quote, author, source FROM ' . self::$table .';');
-            $stmt->execute();
-        }
-        elseif ($option === "one") {
-            $stmt = dbConnexion::getInstance()->prepare('SELECT quote, author, source FROM ' . self::$table .' WHERE id=:id;');
-            $stmt->bindValue(':id', $fields, PDO::PARAM_INT);
-            $stmt->execute();
-        }
-        elseif ($option === "multi") {
-            $idsPH = preg_replace('/\d+/', '?', $fields);
-            $ids   = explode(',', $fields);
-            $nbIds = count($ids);
-            $stmt  = dbConnexion::getInstance()->prepare('SELECT quote, author, source FROM ' . self::$table .' WHERE id IN(' .$idsPH . ');');
-            for ($i = 0; $i < $nbIds; $i++) { 
-                 $stmt->bindValue($i+1, $ids[$i], PDO::PARAM_INT);
+        // On contrôle si pas d'option afin de n'afficher qu'une citation aléatoire, c'est crade mais provisoire
+        $ctrl = FALSE;
+        if (is_array($opt)) {
+            foreach ($opt as $value) {
+                if (!empty($value)) $ctrl = TRUE;
             }
-            $stmt->execute();
         }
-        elseif ($option === "like") {
-            $stmt = dbConnexion::getInstance()->prepare('SELECT quote, author, source FROM ' . self::$table .' LIKE ;'); // WIP
+        if ($ctrl === FALSE) $opt = array('sort' => 'random', 'limit' => 1);
+        if (!empty($opt['where']) && !empty($opt['whereOpt'])) {
+            $wOpt    = explode(',', $opt['whereOpt']);
+            $wOpt[0] = str_replace('minus', '<', $wOpt[0]);
+            $wOpt[0] = str_replace('plus', '>', $wOpt[0]);
+            $wOpt[0] = str_replace('equal', '=', $wOpt[0]);
+            if ($wOpt[0] === 'like') {
+                $wOpt[0] = strtoupper($wOpt[0]);
+                $wOpt[1] = '%' . $wOpt[1] . '%';
+            }
+            $where   = ' WHERE ' .$opt['where'] . ' ' .$wOpt[0] . ' "' . $wOpt[1] . '"';
+            if (!empty($opt['and']) && !empty($opt['andOpt'])) {
+                $aOpt    = explode(',', $opt['andOpt']);
+                $aOpt[0] = str_replace('minus', '<', $aOpt[0]);
+                $aOpt[0] = str_replace('plus', '>', $aOpt[0]);
+                $aOpt[0] = str_replace('equal', '=', $aOpt[0]);
+                if ($aOpt[0] === 'like') {
+                    $aOpt[0] = strtoupper($wOpt[0]);
+                    $aOpt[1] = '%' . $aOpt[1] . '%';
+                }
+                $where .= ' AND ' .$opt['and'] . ' ' .$aOpt[0] . ' "' . $aOpt[1] . '"';
+
+            }
         }
-        elseif ($option === "random") {
-            $stmt = dbConnexion::getInstance()->prepare('SELECT id, quote, author, source FROM ' . self::$table .' JOIN ( SELECT FLOOR( COUNT( * ) * RAND( ) ) AS ValeurAleatoire FROM ' . self::$table . ' ) AS V ON ' . self::$table . '.id >= V.ValeurAleatoire LIMIT 1;');
-            $stmt->execute();
+        if (!empty($opt['limit'])) {
+            if (strpos($opt['limit'], ',') !== FALSE) {
+                $limit = explode(',', $opt['limit']);
+                $limit[1] = ',' . $limit[1];
+            }
+            else {
+                $limit[0] = $opt['limit'];
+            }
+            $limit = ' LIMIT ' . $limit[0] . $limit[1];
         }
-        elseif ($option === "count") {
-             $stmt = dbConnexion::getInstance()->prepare('SELECT COUNT(*) AS nb FROM ' . self::$table .';');
-             $stmt->execute();
+        if (!empty($opt['sort'])) {
+            if ($opt['sort'] == 'random') $rand = ' JOIN ( SELECT FLOOR( COUNT( * ) * RAND( ) ) AS ValeurAleatoire FROM ' . self::$table . ' ) AS V ON ' . self::$table . '.id >= V.ValeurAleatoire';
+            if (strpos($opt['sort'], ',')) {
+                $sOpt = explode(',', $opt['sort']);
+                $sort = ' ORDER BY ' . $sOpt[0] . ' ' .$sOpt[1];
+            }
         }
+        $query = 'SELECT quote, author, source FROM ' . self::$table . $rand . $where . $sort . $limit . ';';
+        $stmt = dbConnexion::getInstance()->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $stmt->closeCursor();
+        $stmt = NULL;
+        return $result;
+    }
+
+    private function countElements()
+    {
+        $stmt = dbConnexion::getInstance()->prepare('SELECT COUNT(*) AS nb FROM ' . self::$table .';');
+        $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_OBJ);
         $stmt->closeCursor();
         $stmt = NULL;
