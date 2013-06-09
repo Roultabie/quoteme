@@ -1,17 +1,21 @@
 <?php
+/**
+ * Loading configuration
+ */
+require_once 'config.php';
+
+/**
+ * Loading libs
+ */
 require_once 'libs/mysql.php';
 require_once 'libs/quoteme.php';
 require_once 'libs/timply.php';
+
+/**
+ * Loading parser class & interface
+ */
 require_once 'parser/parser.php';
 require_once 'parser/template.php';
-
-
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'quoteme');
-define('DB_USR', 'dbuser');
-define('DB_PWD', 'pass');
-define('TIMPLY_DIR', 'themes/simple/');
-
 
 function parseQuote($parser = '', $options = '')
 {
