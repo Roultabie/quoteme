@@ -1,5 +1,4 @@
 <?php
-// TODO: multi quotes return tag search
 require_once 'libs/mysql.php';
 require_once 'libs/quoteme.php';
 require_once 'libs/timply.php';
@@ -16,36 +15,41 @@ define('TIMPLY_DIR', 'themes/simple/');
 
 function parseQuote($parser = '', $options = '')
 {
-    if (empty($parser)) $parser = 'php';
-    $parserUri = 'parser/' . $parser . '.php';
-    if (file_exists($parserUri)) {
-        require_once $parserUri;
-        $class = $parser . 'Parser';
-        if (class_exists($class)) {
-            $parser = new $class;
-            if ($parser instanceof parserTemplate) {
-                $quote  = new quoteQueries();
-                if (is_object($quote)) {
-                    if (is_array($options)) {
-                        $quote = $quote->getQuote($options);
+    if ($parser !== 'php') {
+        $parserUri = 'parser/' . $parser . '.php';
+        if (file_exists($parserUri)) {
+            require_once $parserUri;
+            $class = $parser . 'Parser';
+            if (class_exists($class)) {
+                $parser = new $class;
+                if ($parser instanceof parserTemplate) {
+                    $quote  = new quoteQueries();
+                    if (is_object($quote)) {
+                        if (is_array($options)) {
+                            $quote = $quote->getQuote($options);
+                        }
+                        $result = $parser->parse($quote);
                     }
-                    $result = $parser->parse($quote);
+                    else {
+                        $result = 'ERROR: No data found !';
+                    }
+                    return $result;
                 }
                 else {
-                    $result = 'ERROR: No data found !';
+                    return 'ERROR: class ' . $class . ' not implement parserTemplate !';
                 }
-                return $result;
             }
             else {
-                return 'ERROR: class ' . $class . ' not implement parserTemplate !';
+                return 'ERROR: class ' . $class . ' not exist !';
             }
         }
         else {
-            return 'ERROR: class ' . $class . ' not exist !';
+            return 'ERROR: ' . $parserUri . ' not found !';
         }
     }
     else {
-        return 'ERROR: ' . $parserUri . ' not found !';
+        $quote  = new quoteQueries();
+        return array('obj' => $quote->getQuote($options), 'nb' => quoteQueries::$nbQuotes);
     }
 }
 
@@ -67,10 +71,17 @@ $opt['where']    = testGet($_GET['w'], '/^[\w\d_-]+$/');
 $opt['whereOpt'] = testGet($_GET['wo'], '/^[\w\d_-]+,{0,}[\w\d_-]{0,}$/');
 $opt['and']      = testGet($_GET['a'], '/^[\w\d_-]+$/');
 $opt['andOpt']   = testGet($_GET['ao'], '/^[\w\d_-]+,{0,}[\w\d_-]{0,}$/');
-if ($parser !== FALSE) {
-    echo parseQuote($parser, $opt);
+$currentScript   = str_replace('/', '', $_SERVER['SCRIPT_NAME']);
+
+if ($currentScript !== 'api.php') {
+    $GLOBALS['quoteObj'] = parseQuote('php', $opt); // permet de générer une quote en php, retour : la quote et le nb de quotes. Pour utiliser les options, charger $_GET
 }
 else {
-    echo 'ERROR: parser is not valid !';
+    if ($parser !== FALSE) {
+        echo parseQuote($parser, $opt);
+    }
+    else {
+        echo 'ERROR: parser is not valid !';
+    }
 }
 ?>
