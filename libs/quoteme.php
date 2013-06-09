@@ -227,26 +227,9 @@ class quoteQueries
         }
         if ($ctrl === FALSE) $opt = array('sort' => 'random', 'limit' => 1);
         if (!empty($opt['where']) && !empty($opt['whereOpt'])) {
-            $wOpt    = explode(',', $opt['whereOpt']);
-            $wOpt[0] = str_replace('minus', '<', $wOpt[0]);
-            $wOpt[0] = str_replace('plus', '>', $wOpt[0]);
-            $wOpt[0] = str_replace('equal', '=', $wOpt[0]);
-            if ($wOpt[0] === 'like') {
-                $wOpt[0] = strtoupper($wOpt[0]);
-                $wOpt[1] = '%' . $wOpt[1] . '%';
-            }
-            $where   = ' WHERE ' .$opt['where'] . ' ' .$wOpt[0] . ' "' . $wOpt[1] . '"';
+            $where = $this->constructWhere($opt['where'], $opt['whereOpt']);
             if (!empty($opt['and']) && !empty($opt['andOpt'])) {
-                $aOpt    = explode(',', $opt['andOpt']);
-                $aOpt[0] = str_replace('minus', '<', $aOpt[0]);
-                $aOpt[0] = str_replace('plus', '>', $aOpt[0]);
-                $aOpt[0] = str_replace('equal', '=', $aOpt[0]);
-                if ($aOpt[0] === 'like') {
-                    $aOpt[0] = strtoupper($wOpt[0]);
-                    $aOpt[1] = '%' . $aOpt[1] . '%';
-                }
-                $where .= ' AND ' .$opt['and'] . ' ' .$aOpt[0] . ' "' . $aOpt[1] . '"';
-
+                $where .= $this->constructWhere($opt['and'], $opt['andOpt'], TRUE);
             }
         }
         if (!empty($opt['limit'])) {
@@ -322,5 +305,19 @@ class quoteQueries
                 $stmt->execute();
             }
         }
+    }
+
+    private function constructWhere($where, $whereOpt, $and = FALSE)
+    {
+        $cond   = ($and) ? 'AND' : 'WHERE';
+        $opt    = explode(',', $whereOpt);
+        $opt[0] = str_replace('minus', '<', $opt[0]);
+        $opt[0] = str_replace('plus', '>', $opt[0]);
+        $opt[0] = str_replace('equal', '=', $opt[0]);
+        if ($opt[0] === 'like') {
+            $opt[0] = strtoupper($opt[0]);
+            $opt[1] = '%' . $opt[1] . '%';
+        }
+        return ' ' . $cond . ' ' .$where . ' ' .$opt[0] . ' "' . $opt[1] . '"';
     }
 }
