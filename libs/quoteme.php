@@ -97,14 +97,13 @@ class quoteQueries
     function __construct()
     {
         self::$table    = 'quotes';
-        $nbQuotes       = $this->countElements('count');
+        $nbQuotes       = $this->countElements();
         self::$nbQuotes = $nbQuotes[0]->nb;
     }
 
     /**
      * [getQuote description]
-     * @param  string  $option quote options like all, number, (number), nb1:nbX
-     * @param  boolean $random to ramdomize quote list set to TRUE
+     * @param  array  $option quote sql options
      * @return array   $quote  one line by quote
      */
     public function getQuote($options = '')
@@ -168,6 +167,10 @@ class quoteQueries
         return $result;
     }
 
+    /**
+     * Execute sql queries (insert, update and delete) stacked in self::$stack
+     * @return void
+     */
     public function execStack()
     {
         $stack = self::getStacking();
@@ -196,26 +199,33 @@ class quoteQueries
         
     // Start # private functions ----------------------------------------------
      
-    private function randomizeQuotes($quotesList)
-    {
-        if (is_array($quotesList)) {
-            shuffle($quotesList);
-        }
-        return $quotesList;
-    }
-    
+    /**
+     * Return sql queries stacked in self:$stack
+     * @return array array of sql delete, update and insert queries
+     */
     private static function getStacking()
     {
         return self::$stack;
     }
 
-    private static function stack($type, $elements) // type : select, insert, update, delete
+    /**
+     * Add query in self::$stack
+     * @param  string $type     insert, update or delete
+     * @param  array  $elements array('sqlField' => 'fieldContent');
+     * @return void
+     */
+    private static function stack($type, $elements)
     {
         if (!empty($type)) {
             self::$stack[] = array($type => $elements);
         }
     }
 
+    /**
+     * Execute SELECT sql query
+     * @param  string $opt empty or array of sql option array('where' => 'id', 'whereOpt' => 'equal,10');
+     * @return array an array of object result
+     */
     private function selElements($opt = "")
     {
         // On contrôle si pas d'option afin de n'afficher qu'une citation aléatoire, c'est crade mais provisoire
@@ -243,14 +253,14 @@ class quoteQueries
             $limit = ' LIMIT ' . $limit[0] . $limit[1];
         }
         if (!empty($opt['sort'])) {
-            if ($opt['sort'] == 'random') $rand = ' JOIN ( SELECT FLOOR( COUNT( * ) * RAND( ) ) AS ValeurAleatoire FROM ' . self::$table . ' ) AS V ON ' . self::$table . '.id >= V.ValeurAleatoire';
+            if ($opt['sort'] === 'random') $rand = ' JOIN ( SELECT FLOOR( COUNT( * ) * RAND( ) ) AS ValeurAleatoire FROM ' . self::$table . ' ) AS V ON ' . self::$table . '.id >= V.ValeurAleatoire';
             if (strpos($opt['sort'], ',')) {
                 $sOpt = explode(',', $opt['sort']);
                 $sort = ' ORDER BY ' . $sOpt[0] . ' ' .$sOpt[1];
             }
         }
         $query = 'SELECT quote, author, source FROM ' . self::$table . $rand . $where . $sort . $limit . ';';
-        $stmt = dbConnexion::getInstance()->prepare($query);
+        $stmt  = dbConnexion::getInstance()->prepare($query);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_OBJ);
         $stmt->closeCursor();
@@ -258,6 +268,10 @@ class quoteQueries
         return $result;
     }
 
+    /**
+     * Return nb of all quotes
+     * @return array array[0]->nb
+     */
     private function countElements()
     {
         $stmt = dbConnexion::getInstance()->prepare('SELECT COUNT(*) AS nb FROM ' . self::$table .';');
@@ -268,6 +282,11 @@ class quoteQueries
         return $result;
     }
 
+    /**
+     * Execute DELETE sql query
+     * @param  array array('sqlField' => 'fieldContent');
+     * @return void
+     */
     private function delElements($elements) // $ids = quotes to del (array)
     {
         $stmt = dbConnexion::getInstance()->prepare('DELETE ' . self::$table .' WHERE id = :id;');
@@ -279,6 +298,11 @@ class quoteQueries
         }
     }
 
+    /**
+     * Execute INSERT sql query
+     * @param array array('sqlField' => 'fieldContent');
+     * @return void
+     */
     private function addElements($elements) // array = quotes to add (array key[] = array key = fields, value = values)
     {
         $stmt = dbConnexion::getInstance()->prepare('INSERT INTO ' . self::$table .' (quote, author, source) VALUES (:quote, :author, :source);');
@@ -289,11 +313,15 @@ class quoteQueries
                 $stmt->bindValue(':source', $datas['source'], PDO::PARAM_STR);
                 $stmt->execute();
             }
-
         }
     }
 
-    private function editElements($elements) // array multidimentional = quotes to edit (array keys = ids of elements, array inside: key fields, values values)
+    /**
+     * Execute UPDATE sql query
+     * @param  array array('sqlField' => 'fieldContent');
+     * @return void
+     */
+    private function editElements($elements)
     {
         $stmt = dbConnexion::getInstance()->prepare('UPDATE ' . self::$table .' SET quote = :quote, author = :author, source = :source WHERE id = :id');
         if (is_array($elements)) {
@@ -307,6 +335,13 @@ class quoteQueries
         }
     }
 
+    /**
+     * Return WHERE of AND sql structure
+     * @param  string  $where    sql field
+     * @param  string  $whereOpt where condition (ex like,lorem)
+     * @param  boolean $and      if AND condition, set TRUE
+     * @return string            sql structure
+     */
     private function constructWhere($where, $whereOpt, $and = FALSE)
     {
         $cond   = ($and) ? 'AND' : 'WHERE';
