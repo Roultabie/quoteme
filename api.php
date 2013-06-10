@@ -52,7 +52,7 @@ function parseQuote($parser = '', $options = '')
         }
     }
     else {
-        $quote  = new quoteQueries();
+        $quote = new quoteQueries();
         return array('obj' => $quote->getQuote($options), 'nb' => quoteQueries::$nbQuotes);
     }
 }
