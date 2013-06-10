@@ -10,3 +10,5 @@ Actually, you have your favorite quotes in multiple txt files, one for your mail
 When you find a new quote, you have to update your files... It can be boring !
 
 With this script, you manage only one SQL database. With his API, you read it in your favorite format (actualy, json, rss2, csv).
+
+[...] WIP
