@@ -22,15 +22,17 @@ implements parserTemplate
         $col2   = $this->enclose('author');
         $col3   = rtrim($this->enclose('source'), ',');
         $result = $col1 . $col2 . $col3 . PHP_EOL;
-        foreach ($elements as $value) {
-            $text   = str_replace('"', '""', $value->getText());
-            $text   = $this->enclose($text);
-            $author = str_replace('"', '""', $value->getAuthor());
-            $author = $this->enclose($author);
-            $source = str_replace('"', '""', $value->getSource());
-            $source = $this->enclose($source);
-            $source = rtrim($source, ',');
-            $result .= $text . $author . $source . PHP_EOL;
+        if (is_array($elements)) {
+            foreach ($elements as $value) {
+                $text   = str_replace('"', '""', $value->getText());
+                $text   = $this->enclose($text);
+                $author = str_replace('"', '""', $value->getAuthor());
+                $author = $this->enclose($author);
+                $source = str_replace('"', '""', $value->getSource());
+                $source = $this->enclose($source);
+                $source = rtrim($source, ',');
+                $result .= $text . $author . $source . PHP_EOL;
+            }
         }
         return trim($result);
     }
