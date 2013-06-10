@@ -18,7 +18,7 @@ class timply
     
     function __construct($source)
     {
-        $this->themeDir = (TIMPLY_DIR) ? TIMPLY_DIR : 'themes/default/';
+        $this->themeDir = $GLOBALS['config']['themeDir'];
         $this->fileName = $source;
         $this->setFile();
         $this->setBlockList();
