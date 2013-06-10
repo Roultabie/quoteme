@@ -9,9 +9,7 @@ require_once 'api.php';
  */
 require_once 'libs/smartypants.php';
 
-define('TIMPLY_DIR', 'themes/simple/');
-
-$html     = new timply('index.html');
+$html  = new timply('index.html');
 $quote = $GLOBALS['quoteObj']['obj'][0];
 if (is_object($quote)) {
     $html->setElement('text', SmartyPants($quote->getText(), 'f+:+t+h+H+'));
