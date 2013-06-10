@@ -83,6 +83,13 @@ class quote
     }
 }
 
+/**
+ * quoteQueries class
+ * Used to populate quote object
+ * @package quoteme
+ * @author      Daniel Douat <daniel.douat@aelys-info.fr>
+ * @link        http://www.aelys-info.fr
+ */
 class quoteQueries
 {
     private         $elements;
