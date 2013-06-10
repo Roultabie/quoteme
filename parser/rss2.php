@@ -1,5 +1,4 @@
 <?php
-
 class rss2Parser
 extends parser
 implements parserTemplate

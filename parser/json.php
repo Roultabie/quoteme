@@ -1,17 +1,8 @@
 <?php
-
 class jsonParser
 extends parser
 implements parserTemplate
 {
-
-    //private $object;
-
-    function __construct()
-    {
-       // $this->object = $object;
-    }
-
     public function parse($elements)
     {
         $i = 0;

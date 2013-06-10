@@ -109,7 +109,7 @@ class quoteQueries
     }
 
     /**
-     * [getQuote description]
+     * Create quote object
      * @param  array  $option quote sql options
      * @return array   $quote  one line by quote
      */
@@ -129,7 +129,7 @@ class quoteQueries
     }
 
     /**
-     * [addQuote description]
+     * prepare code to add
      * @param  string $text   quote text, can't be empty
      * @param  string $author author or empty
      * @param  string $source quote source or empty (ex, book, internet)
@@ -144,7 +144,7 @@ class quoteQueries
     }
 
     /**
-     * [delQuote description]
+     * Prepare quote to delete
      * @param  int   $id the sql id of quote
      * @return array $result an array contains deleted quote elements (key / values) 
      */
@@ -157,7 +157,7 @@ class quoteQueries
     }
 
     /**
-     * [editQuote description]
+     * Prepare quote to edit
      * @param  int    $id     sql id of quote
      * @param  string $text   quote (can't be empty)
      * @param  string $author author or empty
