@@ -10,13 +10,9 @@ class dbConnexion
     private static $dbUser;
     private static $dbPass;
 
-    function __construct()
-    {
-        self::setDbInfos();
-    }
-
     public static function getInstance(){
         if(!isset(self::$instance)){
+            self::setDbInfos();
             self::setInstance();
         }
         return self::$instance;
