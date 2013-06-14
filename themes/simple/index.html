@@ -47,6 +47,10 @@ section {
     font-size: 1.6em;
     font-style: italic;
 }
+#text a, #text a:link, #text a:hover, #text a:active, #text a:visited {
+    color: #555555;
+    text-decoration: none;
+}
 #author, #source {
     display: inline-block;
     float: right;
@@ -82,7 +86,7 @@ footer div {
     </header>
     <section>
         <div id="quote">
-            <span id="text">« {text} »</span><span id="author">({author})</span>
+            <span id="text"><a href="{permalink}" alt="permalink" title="permalink">« {text} »</a></span><span id="author">({author})</span>
         </div>
     </section>
     <footer>

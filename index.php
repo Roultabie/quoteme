@@ -25,6 +25,7 @@ if (is_object($quote)) {
     $html->setElement('text', SmartyPants($quote->getText(), 'f+:+t+h+H+'));
     $html->setElement('author', SmartyPants($quote->getAuthor()));
     $html->setElement('source', SmartyPants($quote->getSource()));
+    $html->setElement('permalink', '?' .$quote->getPermalink());
 }
 $html->setElement('nbQuotes', $GLOBALS['quoteObj']['nb']);
 echo $html->returnHtml();
