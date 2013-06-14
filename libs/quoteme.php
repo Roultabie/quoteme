@@ -53,6 +53,36 @@ class quote
     }
 
     /**
+     * Return tags of quote
+     * @access public
+     * @return array
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * Return date of quote
+     * @access public
+     * @return array
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * Return date of quote
+     * @access public
+     * @return array
+     */
+    public function getPermalink()
+    {
+        return $this->permalink;
+    }
+
+    /**
      * Add new quote
      * @access public
      * @return void
@@ -80,6 +110,36 @@ class quote
     public function setSource($source)
     {
         $this->source = $source;
+    }
+
+    /**
+     * Add tag(s) for quote
+     * @access public
+     * @return void
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+    }
+
+    /**
+     * Add date for quote
+     * @access public
+     * @return void
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+    }
+
+    /**
+     * Add date for quote
+     * @access public
+     * @return void
+     */
+    public function setPermalink($permalink)
+    {
+        $this->permalink = $permalink;
     }
 }
 
@@ -123,6 +183,9 @@ class quoteQueries
                 $quote[$i]->setText($quotesList[$i]->quote);
                 $quote[$i]->setAuthor($quotesList[$i]->author);
                 $quote[$i]->setSource($quotesList[$i]->source);
+                $quote[$i]->setTags($quotesList[$i]->tags);
+                $quote[$i]->setDate($quotesList[$i]->date);
+                $quote[$i]->setPermalink($quotesList[$i]->permalink);
             }
             return $quote;
         }
@@ -135,10 +198,11 @@ class quoteQueries
      * @param  string $source quote source or empty (ex, book, internet)
      * @return array  $result an array contains all quotes added
      */
-    public function addQuote($text, $author = '', $source = '')
+    public function addQuote($text, $author = '', $source = '', $tags = '')
     {
         if (!empty($text)) {
-            $result[] = array('quote' => $text, 'author' => $author, 'source' => $source);
+            $permalink = $this->smallHash(date(DATE_RFC822));
+            $result[]  = array('quote' => $text, 'author' => $author, 'source' => $source, 'tags' => $tags, 'permalink' => $permalink);
         }
         return $result;
     }
@@ -164,11 +228,11 @@ class quoteQueries
      * @param  string $source source or empty
      * @return array          an array contains all quotes edited
      */
-    public function editQuote($id, $text, $author = '', $source = '')
+    public function editQuote($id, $text, $author = '', $source = '', $tags = '')
     {
         if (is_int($id)) {
             if (!empty($text)) {
-                $result[$id] = array('quote' => $text, 'author' => $author, 'source' => $source);
+                $result[$id] = array('quote' => $text, 'author' => $author, 'source' => $source, 'tags' => $tags);
             }
         }
         return $result;
@@ -266,7 +330,7 @@ class quoteQueries
                 $sort = ' ORDER BY ' . $sOpt[0] . ' ' .$sOpt[1];
             }
         }
-        $query = 'SELECT quote, author, source FROM ' . self::$table . $rand . $where . $sort . $limit . ';';
+        $query = 'SELECT quote, author, source, tags, permalink, date FROM ' . self::$table . $rand . $where . $sort . $limit . ';';
         $stmt  = dbConnexion::getInstance()->prepare($query);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -312,12 +376,15 @@ class quoteQueries
      */
     private function addElements($elements) // array = quotes to add (array key[] = array key = fields, value = values)
     {
-        $stmt = dbConnexion::getInstance()->prepare('INSERT INTO ' . self::$table .' (quote, author, source) VALUES (:quote, :author, :source);');
+        $stmt = dbConnexion::getInstance()->prepare('INSERT INTO ' . self::$table .' (quote, author, source, date) VALUES (:quote, :author, :source, :tags, :permalink, NOW();');
         if (is_array($elements)) {
             foreach ($elements as $datas) {
                 $stmt->bindValue(':quote', $datas['quote'], PDO::PARAM_STR);
                 $stmt->bindValue(':author', $datas['author'], PDO::PARAM_STR);
                 $stmt->bindValue(':source', $datas['source'], PDO::PARAM_STR);
+                $stmt->bindValue(':tags', $datas['tags'], PDO::PARAM_STR);
+                $stmt->bindValue(':permalink', $datas['permalink'], PDO::PARAM_STR);
+                $stmt->bindValue(':date', $datas['date'], PDO::PARAM_STR);
                 $stmt->execute();
             }
         }
@@ -330,13 +397,16 @@ class quoteQueries
      */
     private function editElements($elements)
     {
-        $stmt = dbConnexion::getInstance()->prepare('UPDATE ' . self::$table .' SET quote = :quote, author = :author, source = :source WHERE id = :id');
+        $stmt = dbConnexion::getInstance()->prepare('UPDATE ' . self::$table .' SET quote = :quote, author = :author, source = :source, tags = :tags WHERE id = :id');
         if (is_array($elements)) {
             foreach ($elements as $datas) {
                 $stmt->bindValue(':id', $datas['id'], PDO::PARAM_INT);
                 $stmt->bindValue(':quote', $datas['quote'], PDO::PARAM_STR);
                 $stmt->bindValue(':author', $datas['author'], PDO::PARAM_STR);
                 $stmt->bindValue(':source', $datas['source'], PDO::PARAM_STR);
+                $stmt->bindValue(':tags', $datas['tags'], PDO::PARAM_STR);
+                $stmt->bindValue(':permalink', $datas['permalink'], PDO::PARAM_STR);
+                $stmt->bindValue(':date', $datas['date'], PDO::PARAM_STR);
                 $stmt->execute();
             }
         }
@@ -361,5 +431,18 @@ class quoteQueries
             $opt[1] = '%' . $opt[1] . '%';
         }
         return ' ' . $cond . ' ' .$where . ' ' .$opt[0] . ' "' . $opt[1] . '"';
+    }
+    /**
+     * SmallHash via shaarli (sebsauvage)
+     * @param  string $string [description]
+     * @return string $hash   [description]
+     */
+    private function smallHash($string)
+    {
+        $hash = rtrim(base64_encode(hash('crc32', $string, TRUE)), '=');
+        $hash = str_replace('+', '-', $hash); // Get rid of characters which need encoding in URLs.
+        $hash = str_replace('/', '_', $hash);
+        $hash = str_replace('=', '@', $hash);
+        return $hash;
     }
 }
