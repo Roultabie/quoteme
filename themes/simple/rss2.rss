@@ -6,7 +6,6 @@
         <description>{description}</description>
         <language>{language}</language>
         <pubDate>{pubDate}</pubDate>
-        <lastBuildDate>{lastBuildDate}</lastBuildDate>
         <docs>{docs}</docs>
         <managingEditor>contact@aelys-info.fr</managingEditor>
         <webMaster>contact@aelys-info.fr</webMaster>
