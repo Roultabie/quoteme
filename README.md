@@ -37,7 +37,7 @@ To extract datas, use api.php (ex: http://q.uote.me/api.php) and use the followi
 - To extract a random quote in json format :  
 **http://q.uote.me/api.php?p=json**
 - To extract a quote in csv format :  
-**http://q.uote.me/api.php?p=csv&w=permalink&wo=equal,XxU_7**
+**http://q.uote.me/api.php?p=csv&w=permalink&wo=equal,xHlefA**
 - To extract last 10 quotes in rss2 format :  
 **http://q.uote.me/api.php?p=rss2&s=date,desc&l=10**
 - TO extract the 10 following quotes :  
