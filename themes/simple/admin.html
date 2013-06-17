@@ -42,13 +42,13 @@ td {
     <header>
     </header>
     <section>
-        <form name="addQuote">
+        <form name="addQuote" method="post">
             <textarea name="text" id="text" placeholder="Type quote here ...">{formInputText}</textarea>
             <input type="text" name="author" id="author" placeholder="Author" value="{formInputAuthor}">
             <input type="text" name="source" id="source" placeholder="Source" value="{formInputSource}">
             <input type="text" name="tags" id="tags" placeholder="tag1, tag2, tag3, ..." value="{formInputTags}">
             <input type="date">
-            <input type="submit" name="save" value="save">
+            <input type="submit" value="save">
         </form>
     </section>
     <section>
