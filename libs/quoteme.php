@@ -11,6 +11,7 @@
 
 class quote
 {
+    private $id;
     private $text;
     private $author;
     private $source;
@@ -20,6 +21,16 @@ class quote
         //$this->setText('');
         //$this->setAuthor('');
         //$this->setSource('');
+    }
+
+    /**
+     * Return quote id
+     * @access public
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -80,6 +91,16 @@ class quote
     public function getPermalink()
     {
         return $this->permalink;
+    }
+
+    /**
+     * Add id for quote
+     * @access public
+     * @return void
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
@@ -180,6 +201,7 @@ class quoteQueries
             $nbElements = count($quotesList);
             for ($i = 0; $i < $nbElements; $i++) {
                 $quote[$i] = new quote();
+                $quote[$i]->setId($quotesList[$i]->id);
                 $quote[$i]->setText($quotesList[$i]->quote);
                 $quote[$i]->setAuthor($quotesList[$i]->author);
                 $quote[$i]->setSource($quotesList[$i]->source);
@@ -330,7 +352,7 @@ class quoteQueries
                 $sort = ' ORDER BY ' . $sOpt[0] . ' ' .$sOpt[1];
             }
         }
-        $query = 'SELECT quote, author, source, tags, permalink, date FROM ' . self::$table . $rand . $where . $sort . $limit . ';';
+        $query = 'SELECT id, quote, author, source, tags, permalink, date FROM ' . self::$table . $rand . $where . $sort . $limit . ';';
         $stmt  = dbConnexion::getInstance()->prepare($query);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_OBJ);
