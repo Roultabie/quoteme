@@ -236,10 +236,11 @@ class quoteQueries
      * @param  int   $id the sql id of quote
      * @return array $result an array contains deleted quote elements (key / values) 
      */
-    public function delQuote($id) // si la quote est supprimée, on retourne celle-ci au cas ou on veuille revenir en arrière
+    public function delQuote($permalink) // si la quote est supprimée, on retourne celle-ci au cas ou on veuille revenir en arrière
     {
-        if (is_int($id)) {
-            $result[] = $id;
+        if (!empty($permalink)) {
+            $result[] = $permalink;
+            $this->delElements($result);
         }
         return $result;
     }
@@ -252,11 +253,12 @@ class quoteQueries
      * @param  string $source source or empty
      * @return array          an array contains all quotes edited
      */
-    public function editQuote($id, $text, $author = '', $source = '', $tags = '')
+    public function editQuote($permalink, $text, $author = '', $source = '', $tags = '')
     {
-        if (is_int($id)) {
+        if (!empty($permalink)) {
             if (!empty($text)) {
-                $result[$id] = array('quote' => $text, 'author' => $author, 'source' => $source, 'tags' => $tags);
+                $result[$permalink] = array('quote' => $text, 'author' => $author, 'source' => $source, 'tags' => $tags);
+                $this->editElements($result);
             }
         }
         return $result;
@@ -384,10 +386,10 @@ class quoteQueries
      */
     private function delElements($elements) // $ids = quotes to del (array)
     {
-        $stmt = dbConnexion::getInstance()->prepare('DELETE ' . self::$table .' WHERE id = :id;');
+        $stmt = dbConnexion::getInstance()->prepare('DELETE FROM ' . self::$table .' WHERE permalink = :permalink;');
         if (is_array($elements)) {
             foreach ($elements as $datas) {
-                $stmt->bindValue(':id', $datas, PDO::PARAM_INT);
+                $stmt->bindValue(':permalink', $datas, PDO::PARAM_INT);
                 $stmt->execute();
             }
         }
@@ -421,16 +423,15 @@ class quoteQueries
      */
     private function editElements($elements)
     {
-        $stmt = dbConnexion::getInstance()->prepare('UPDATE ' . self::$table .' SET quote = :quote, author = :author, source = :source, tags = :tags WHERE id = :id');
+        $stmt = dbConnexion::getInstance()->prepare('UPDATE ' . self::$table .' SET quote = :quote, author = :author, source = :source, tags = :tags WHERE permalink = :permalink');
         if (is_array($elements)) {
-            foreach ($elements as $datas) {
-                $stmt->bindValue(':id', $datas['id'], PDO::PARAM_INT);
+            foreach ($elements as $permalink => $datas) {
                 $stmt->bindValue(':quote', $datas['quote'], PDO::PARAM_STR);
                 $stmt->bindValue(':author', $datas['author'], PDO::PARAM_STR);
                 $stmt->bindValue(':source', $datas['source'], PDO::PARAM_STR);
                 $stmt->bindValue(':tags', $datas['tags'], PDO::PARAM_STR);
-                $stmt->bindValue(':permalink', $datas['permalink'], PDO::PARAM_STR);
-                $stmt->bindValue(':date', $datas['date'], PDO::PARAM_STR);
+                $stmt->bindValue(':permalink', $permalink, PDO::PARAM_STR);
+                //$stmt->bindValue(':date', $datas['date'], PDO::PARAM_STR);
                 $stmt->execute();
             }
         }
