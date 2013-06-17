@@ -12,8 +12,18 @@ require_once 'libs/quoteme.php';
 require_once 'libs/timply.php';
 require_once 'libs/smartypants.php';
 
+if (!empty($_POST)) {
+    $quote = new quoteQueries();
+    $add   = $quote->addQuote($_POST['text'], $_POST['author'], $_POST['source'], $_POST['tags']);
+}
+
 $html = new timply('admin.html');
 
+/* Form */
+$html->setElement('formInputText', $_POST['text']);
+$html->setElement('formInputAuthor', $_POST['author']);
+$html->setElement('formInputSource', $_POST['source']);
+$html->setElement('formInputTags', $_POST['tags']);
 
 /* Quotes list */
 $quotes = new quoteQueries();
@@ -29,6 +39,6 @@ if (is_array($quotes)) {
         $html->setElement('quoteTablePermalink', '?' .$quote->getPermalink(), 'quoteTable');
     }
 }
-
+//quoteQueries::execStack();
 echo $html->returnHtml();
 ?>
