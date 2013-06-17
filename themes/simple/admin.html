@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Administration - Q.uote.me</title>
+<style type="text/css">
+body {
+    margin: 0;
+    padding: 0;
+}
+form {
+    width: 50%;
+}
+form, table {
+    margin: 0 auto;
+}
+textarea {
+    height: 100px;
+}
+textarea, input[type=text] {
+    width: 100%;
+}
+textarea, input {
+    margin: 5px 0;
+    background-color: white;
+    color: black;
+    border: 1px solid grey;
+}
+table {
+    margin: 10px 10px;
+    border: 1px solid grey;
+}
+table tr:nth-child(odd){
+    background-color: lightgrey;
+}
+td {
+    padding: 3px;
+}
+</style>
+</head>
+<body>
+    <header>
+    </header>
+    <section>
+        <form name="addQuote">
+            <textarea name="text" id="text" placeholder="Type quote here ...">{formInputText}</textarea>
+            <input type="text" name="author" id="author" placeholder="Author" value="{formInputAuthor}">
+            <input type="text" name="source" id="source" placeholder="Source" value="{formInputSource}">
+            <input type="text" name="tags" id="tags" placeholder="tag1, tag2, tag3, ..." value="{formInputTags}">
+            <input type="date">
+            <input type="submit" name="save" value="save">
+        </form>
+    </section>
+    <section>
+        <table>
+            <tr>
+                <th>id</th><th>quote</th><th>author</th><th>source</th><th>tags</th><th>date</th>
+            </tr>
+            <!-- start quoteTable -->
+            <tr>
+                <td>{quoteTableId}</td><td>{quoteTableText}</td><td>{quoteTableAuthor}</td><td>{quoteTableSource}</td><td>{quoteTableTags}</td><td>{quoteTableDate}</td>
+            </tr>
+            <!-- end quoteTable -->
+        </table>
+    </section>
+    <footer>
+
+    </footer>
+</body>
+</html>
