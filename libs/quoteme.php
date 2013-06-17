@@ -224,7 +224,9 @@ class quoteQueries
     {
         if (!empty($text)) {
             $permalink = $this->smallHash(date(DATE_RFC822));
-            $result[]  = array('quote' => $text, 'author' => $author, 'source' => $source, 'tags' => $tags, 'permalink' => $permalink);
+            $result[] = array('quote' => $text, 'author' => $author, 'source' => $source, 'tags' => $tags, 'permalink' => $permalink);
+            //self::stack('insert', $result);
+            $this->addElements($result);
         }
         return $result;
     }
@@ -264,7 +266,7 @@ class quoteQueries
      * Execute sql queries (insert, update and delete) stacked in self::$stack
      * @return void
      */
-    public function execStack()
+    public static function execStack()
     {
         $stack = self::getStacking();
         if (is_array($stack)) {
@@ -398,7 +400,7 @@ class quoteQueries
      */
     private function addElements($elements) // array = quotes to add (array key[] = array key = fields, value = values)
     {
-        $stmt = dbConnexion::getInstance()->prepare('INSERT INTO ' . self::$table .' (quote, author, source, date) VALUES (:quote, :author, :source, :tags, :permalink, NOW();');
+        $stmt = dbConnexion::getInstance()->prepare('INSERT INTO ' . self::$table . ' (quote, author, source, tags, permalink, date) VALUES (:quote, :author, :source, :tags, :permalink, NOW());');
         if (is_array($elements)) {
             foreach ($elements as $datas) {
                 $stmt->bindValue(':quote', $datas['quote'], PDO::PARAM_STR);
@@ -406,7 +408,7 @@ class quoteQueries
                 $stmt->bindValue(':source', $datas['source'], PDO::PARAM_STR);
                 $stmt->bindValue(':tags', $datas['tags'], PDO::PARAM_STR);
                 $stmt->bindValue(':permalink', $datas['permalink'], PDO::PARAM_STR);
-                $stmt->bindValue(':date', $datas['date'], PDO::PARAM_STR);
+                //$stmt->bindValue(':date', $datas['date'], PDO::PARAM_STR);
                 $stmt->execute();
             }
         }
