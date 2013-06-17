@@ -27,14 +27,55 @@ textarea, input {
     border: 1px solid grey;
 }
 table {
-    margin: 10px 10px;
+    margin: 10px 75px;
     border: 1px solid grey;
+    border-collapse: collapse;
 }
 table tr:nth-child(odd){
     background-color: lightgrey;
 }
+tr, td {
+    padding: 0;
+    margin: 0;
+    height: 35px;
+    vertical-align: middle;
+}
 td {
-    padding: 3px;
+    padding: 6px;
+}
+.text {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+}
+.action {
+    display: none;
+}
+tr:hover .action {
+    display: inline-block;
+    position: absolute;
+    float: left;
+    margin: 0;
+    vertical-align: middle;
+    left: 0;
+    top: 4px;
+    z-index: 1000;
+}
+.edit, .delete {
+    box-shadow: 0 0 3px #999;
+    padding: 3px 8px;
+}
+.edit {
+    border-radius: 3px 0 0 3px;
+    background-image:linear-gradient(#ffffff, #007f00);
+}
+.delete {
+    border-radius: 0 3px 3px 0; 
+    background-image:linear-gradient(#ffffff, #7f0000);
+}
+.author {
+    white-space: nowrap;
 }
 </style>
 </head>
@@ -47,18 +88,20 @@ td {
             <input type="text" name="author" id="author" placeholder="Author" value="{formInputAuthor}">
             <input type="text" name="source" id="source" placeholder="Source" value="{formInputSource}">
             <input type="text" name="tags" id="tags" placeholder="tag1, tag2, tag3, ..." value="{formInputTags}">
-            <input type="date">
+            <!--<input type="date">-->
+            <input type="hidden" name="action" value="{formAction}">
+            <input type="hidden" name="permalink" value="{formPermalink}">
             <input type="submit" value="save">
         </form>
     </section>
     <section>
         <table>
             <tr>
-                <th>id</th><th>quote</th><th>author</th><th>source</th><th>tags</th><th>date</th>
+                <th>quote</th><th>author</th><th>source</th><th>tags</th>
             </tr>
             <!-- start quoteTable -->
             <tr>
-                <td>{quoteTableId}</td><td>{quoteTableText}</td><td>{quoteTableAuthor}</td><td>{quoteTableSource}</td><td>{quoteTableTags}</td><td>{quoteTableDate}</td>
+                <td><span class="text">{quoteTableText}<span class="action"><span class="edit"><a href="{edit}">Edit</a></span><span class="delete"><a href="{delete}">Delete</a></span></span></span></td><td class="author">{quoteTableAuthor}</td><td>{quoteTableSource}</td><td>{quoteTableTags}</td>
             </tr>
             <!-- end quoteTable -->
         </table>
