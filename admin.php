@@ -12,7 +12,7 @@ require_once 'libs/quoteme.php';
 require_once 'libs/timply.php';
 require_once 'libs/smartypants.php';
 
-function getLink($action, $options)
+/*function getLink($action, $options)
 {
     $url  = '//' . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'] . '/?';
     $url .= 'action=' . $action;
@@ -23,7 +23,7 @@ function getLink($action, $options)
         }
      }
     return $url;
-}
+}*/
 
 $quote = new quoteQueries();
 
@@ -69,8 +69,10 @@ if (is_array($quotes)) {
         $html->setElement('quoteTableSource', SmartyPants($quote->getSource()), 'quoteTable');
         $html->setElement('quoteTableTags', SmartyPants($quote->getTags()), 'quoteTable');
         $html->setElement('quoteTableDate', SmartyPants($quote->getDate()), 'quoteTable');
-        $html->setElement('edit', getLink('edit', array('permalink' => $quote->getPermalink())), 'quoteTable');
-        $html->setElement('delete', getLink('delete', array('permalink' => $quote->getPermalink())), 'quoteTable');
+        $html->setElement('edit', http_build_query(array('action' => 'edit', 'permalink' => $quote->getPermalink()), '', '&'));
+        $html->setElement('edit', http_build_query(array('action' => 'delete', 'permalink' => $quote->getPermalink()), '', '&'));
+        //$html->setElement('edit', getLink('edit', array('permalink' => $quote->getPermalink())), 'quoteTable');
+        //$html->setElement('delete', getLink('delete', array('permalink' => $quote->getPermalink())), 'quoteTable');
     }
 }
 //quoteQueries::execStack();
