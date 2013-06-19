@@ -26,7 +26,7 @@ To extract datas, use api.php (ex: http://q.uote.me/api.php) and use the followi
 **l** > limit : like sql syntax _ex : l=10 l=5,25_  
 **w** > where : like sql syntax _ex : w=quote_ must be followed by:  
 **wo** > where options, the first part of the option can be **minus = <**, **plus = >**, **equal = =** and **like** _ex : w=quote&wo=like,lorem_  
-**a** > and : like (and must be preceded by) **where** 
+**a** > and : like (and must be preceded by) **where**  
 **ao** > and second part (and option) like **and option**
 
 ####Availables columns :  
@@ -40,7 +40,7 @@ To extract datas, use api.php (ex: http://q.uote.me/api.php) and use the followi
 **http://q.uote.me/api.php?p=csv&w=permalink&wo=equal,xHlefA**
 - To extract last 10 quotes in rss2 format :  
 **http://q.uote.me/api.php?p=rss2&s=date,desc&l=10**
-- TO extract the 10 following quotes :  
+- To extract the 10 following quotes :  
 **http://q.uote.me/api.php?p=rss2&s=date,desc&l=11,21**
 - Fun, one extraction with all options :  
 **http://q.uote.me/api.php?p=json&w=quote&wo=like,a&a=author&ao=like,douat&s=date,asc&l=5&s=random**
