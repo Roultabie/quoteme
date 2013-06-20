@@ -70,8 +70,8 @@ if (is_array($quotes)) {
         $html->setElement('quoteTableSource', SmartyPants($quote->getSource()), 'quoteTable');
         $html->setElement('quoteTableTags', SmartyPants($quote->getTags()), 'quoteTable');
         $html->setElement('quoteTableDate', SmartyPants($quote->getDate()), 'quoteTable');
-        $html->setElement('edit', '?' . http_build_query(array('action' => 'edit', 'permalink' => $quote->getPermalink()), '', '&'));
-        $html->setElement('delete', '?' . http_build_query(array('action' => 'delete', 'permalink' => $quote->getPermalink()), '', '&'));
+        $html->setElement('edit', '?' . http_build_query(array('action' => 'edit', 'permalink' => $quote->getPermalink()), '', '&'), 'quoteTable');
+        $html->setElement('delete', '?' . http_build_query(array('action' => 'delete', 'permalink' => $quote->getPermalink()), '', '&'), 'quoteTable');
         //$html->setElement('edit', getLink('edit', array('permalink' => $quote->getPermalink())), 'quoteTable');
         //$html->setElement('delete', getLink('delete', array('permalink' => $quote->getPermalink())), 'quoteTable');
     }
