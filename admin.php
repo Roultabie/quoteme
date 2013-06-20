@@ -7,6 +7,7 @@ require_once 'config.php';
 /**
  * Loading libs
  */
+require_once 'libs/login.php';
 require_once 'libs/mysql.php';
 require_once 'libs/quoteme.php';
 require_once 'libs/timply.php';
