@@ -9,6 +9,12 @@ body {
     padding: 0;
     background-color: #3c3c3c;
 }
+header #actions {
+    display: inline-block;
+    width: 100%;
+    font-size: 0.8em;
+    background-color: lightgrey;
+}
 form {
     width: 50%;
 }
@@ -84,6 +90,8 @@ tr:hover .action {
 </head>
 <body>
     <header>
+        <span id="actions"><a href="?disconnect=1">Disconnect</a></span>
+        
     </header>
     <section>
         <form name="addQuote" method="post">
