@@ -138,8 +138,9 @@ if (!empty($_POST['login']) && !empty($_POST['pass'])) {
 }
 $user = $session->loginCheck($user, $pass);
 if (!is_object($user) || $_POST['disconnect'] === '1' || $_GET['disconnect'] === '1') {
+    if ($_GET['disconnect'] === '1') $loginAction = 'action="' . $_SERVER['SCRIPT_NAME'] . '"';
     userWriter::killSession();
-    require 'form.php';
+    require 'loginform.php';
     exit();
 }
 
