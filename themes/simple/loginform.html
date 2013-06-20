@@ -1,0 +1,31 @@
+<html>
+<head>
+<title>{pagetitle}</title>
+<style type="text/css">
+body {
+    background-color: #3c3c3c;
+}
+div {
+    width: 500px;
+    margin: 30px auto;
+    text-align: center;
+}
+h3 {
+    color: lightgrey;
+}
+input {
+    margin-bottom: 5px;
+}
+</style>
+</head>
+<body>
+    <div>
+        <h3>{pagetitle}</h3>
+        <form name="login" method="post" {formaction}>
+            <input type="text" name="login" placeholder="username..."><br>
+            <input type="password" name="pass" placeholder="password..."><br>
+            <input type="submit" value="Connection">
+        </form>
+    </div>
+</body>
+</html>
