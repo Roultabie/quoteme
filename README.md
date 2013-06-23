@@ -1,6 +1,6 @@
 #Q.uote.me
 
-*PHP script to store and view random quotes.*
+*PHP script to store and view random quotes. (v1.0b)*
 
 Q.uote.me is a simple PHP script to manage your quotes.
 
@@ -47,9 +47,16 @@ To extract datas, use api.php (ex: http://q.uote.me/api.php) and use the followi
 
 ###_Index of website :_
 
-[WIP]
+Just type address of website to view random quote. Add permalink option in the URL to view a specific quote.  
+Permalink format example : http://q.uote.me?xHlefA (thank to [sebsauvage](https://github.com/sebsauvage/Shaarli) for permalink function)
 
 ###Updates :
+
+_2013-06-23 :_  
+- Added login module,
+- Added administration,
+- Optimized quoteme lib.  
+
 _2013-06-14 :_
 - Added permalinks,
 - Added creation date (in the future maybe changed by quote date),
@@ -59,3 +66,21 @@ _2013-06-14 :_
 _2013-06-14 :_
 - Fixed RSS (dates, links other errors like {item} in source,
 - Foreach control for json and csv parser.
+
+##Licence :
+
+Q.uote.me is distributed under the zlib/libpng License :
+
+Copyright (c) 2013 Daniel Douat, [Aélys Informatique](http://aelys-info.fr)
+
+This software is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any damages arising from the use of this software.  
+
+Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions :  
+
+1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.  
+
+2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.  
+
+3. This notice may not be removed or altered from any source distribution.  
+
+
