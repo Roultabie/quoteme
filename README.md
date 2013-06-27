@@ -52,6 +52,9 @@ Permalink format example : http://q.uote.me?xHlefA (thank to [sebsauvage](https:
 
 ###Updates :
 
+_2013-06-28 :_  
+- Added daily check update for script
+
 _2013-06-23 :_  
 - Added login module,
 - Added administration,
