@@ -55,7 +55,7 @@ function getUpdate()
 {
     $currentDate = date($GLOBALS['system']['dateFormat']);
     
-    if ($GLOBALS['config']['checkUpdates'] === TRUE && $GLOBALS['system']['lastUpdate'] < $currentDate) {
+    if (!empty($GLOBALS['config']['appVers']) && $GLOBALS['system']['lastUpdate'] < $currentDate) {
         $update = file_get_contents('http://q.uote.me/checkupdate.php?cliv=' . $GLOBALS['config']['appVers']);
         editConfig(array('lastUpdate' => $currentDate));
     }
