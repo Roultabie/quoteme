@@ -13,19 +13,55 @@ require_once 'libs/quoteme.php';
 require_once 'libs/timply.php';
 require_once 'libs/smartypants.php';
 
-/*function getLink($action, $options)
+function editConfig($newConfig)
 {
-    $url  = '//' . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'] . '/?';
-    $url .= 'action=' . $action;
-    if (is_array($options)) {
-        reset($options);
-        while (list($key, $val) = each($options)) {
-            $url .= '&' . $key . '=' . $val;
+    //on récupere config.php dans un tableau
+    $config = file('config.php');
+    //on crée un tableau avec comme clé les clés de $configommOrder
+    // Sauf pour les balise et commentaire ou l'on garde la clé chiffrée
+    foreach($config as $key => $val) {
+        $elements = explode('=', $val);
+        if ($val[0] === "$") {
+            $key  = substr(trim($elements[0]), strpos(trim($elements[0]), "'")+1, -2);
         }
-     }
-    return $url;
-}*/
+        $tmpConfig[$key] = $val;
+    }
+    print_r($tmpConfig);
+    // Ensuite on remplace les éléments du tableau temporaire avec les valeurs correspondantes aux clés
+    // En ajoutant la variable $config ou autre
+    foreach($newConfig as $key => $val) {
+        $elements = explode('=', $tmpConfig[$key]);
+        $var   = trim($elements[0]);
+        $value = trim($elements[1]);
+        if ($value[0] === "'") {
+            $value = "'" . $val . "';";
+        }
+        else {
+            $value = $val . ';';
+        }
+        $tmpConfig[$key] = $var . ' = ' . $value . PHP_EOL;
+    }
+    // Puis on réécrit config.php
+    if (!$fd = fopen('config.php',"w+")) {
+    echo "Echec de l'ouverture du fichier";
+    exit;
+    }
+    foreach($tmpConfig as $val) {
+        fwrite($fd, $val);
+    }
+}
 
+function getUpdate()
+{
+    $currentDate = date($GLOBALS['system']['dateFormat']);
+    
+    if ($GLOBALS['config']['checkUpdates'] === TRUE && $GLOBALS['system']['lastUpdate'] < $currentDate) {
+        $update = file_get_contents('http://q.uote.me/checkupdate.php?cliv=' . $GLOBALS['config']['appVers']);
+        editConfig(array('lastUpdate' => $currentDate));
+    }
+    
+}
+echo getUpdate();
 $quote = new quoteQueries();
 
 if (!empty($_POST)) {
@@ -74,6 +110,5 @@ if (is_array($quotes)) {
         $html->setElement('delete', '?' . http_build_query(array('action' => 'delete', 'permalink' => $quote->getPermalink()), '', '&'), 'quoteTable');
     }
 }
-//quoteQueries::execStack();
 echo $html->returnHtml();
 ?>
