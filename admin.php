@@ -26,7 +26,6 @@ function editConfig($newConfig)
         }
         $tmpConfig[$key] = $val;
     }
-    print_r($tmpConfig);
     // Ensuite on remplace les éléments du tableau temporaire avec les valeurs correspondantes aux clés
     // En ajoutant la variable $config ou autre
     foreach($newConfig as $key => $val) {
