@@ -43,7 +43,6 @@ function editConfig($newConfig)
     // Puis on réécrit config.php
     if (!$fd = fopen('config.php',"w+")) {
     echo "Echec de l'ouverture du fichier";
-    exit;
     }
     foreach($tmpConfig as $val) {
         fwrite($fd, $val);
@@ -54,13 +53,19 @@ function getUpdate()
 {
     $currentDate = date($GLOBALS['system']['dateFormat']);
     
-    if (!empty($GLOBALS['config']['appVers']) && $GLOBALS['system']['lastUpdate'] < $currentDate) {
+    if ($GLOBALS['system']['lastUpdate'] < $currentDate) {
         $update = file_get_contents('http://q.uote.me/checkupdate.php?cliv=' . $GLOBALS['config']['appVers']);
-        editConfig(array('lastUpdate' => $currentDate));
+        editConfig(array('lastVersion' => $update, 'lastUpdate' => $currentDate));
     }
     
 }
-echo getUpdate();
+
+getUpdate();
+
+if ($GLOBALS['system']['currenVersion'] !== $GLOBALS['system']['lastVersion']) {
+    $updateInfo = '<a href="https://github.com/Roultabie/quoteme/archive/' . $GLOBALS['system']['lastVersion'] . '.zip">new update is available : ' . $GLOBALS['system']['lastVersion'] . '</a>';
+}
+
 $quote = new quoteQueries();
 
 if (!empty($_POST)) {
@@ -86,6 +91,9 @@ if ($_GET['action'] === "delete" && !empty($_GET['permalink'])) {
 }
 
 $html = new timply('admin.html');
+
+/* Update link */
+$html->setElement('updateInfo', $updateInfo);
 
 /* Form */
 $html->setElement('formPermalink', $formPermalink);
