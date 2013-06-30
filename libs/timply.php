@@ -10,19 +10,48 @@
  */
 class timply
 {
-    private $themeDir;
+    private static $themeDir;
+    private static $fileName;
+    private static $dictionary;
     private $blockList;
     private $file;
     private $firstElement;
-    public $block;
+    public  $block;
     
-    function __construct($source)
+    function __construct()
     {
-        $this->themeDir = $GLOBALS['config']['themeDir'];
-        $this->fileName = $source;
         $this->setFile();
         $this->setBlockList();
     }
+
+
+    /**
+     * Load theme uri
+     * @param string $uri dir of theme
+     */
+    public static function setUri($uri)
+    {
+        if (!empty($uri)) {
+            $length    = strlen($url);
+            $lastSlash = strpos($url, '/') + 1;
+            if ($lenght !== $lastSlash) {
+                $uri = $uri . '/';
+            }
+        }
+        self::$themeDir = $uri;
+    }
+
+    /**
+     * Load file of them
+     * @param string $fileName filename
+     */
+    public static function setFileName($fileName)
+    {
+        if (!empty($fileName)) {
+            self::$fileName = $fileName;
+        }
+    }
+
     /**
      * Create an array with element name to replace by datas
      * @access   public
@@ -50,7 +79,23 @@ class timply
     {
         $this->addBlock();
         $this->addElement();
+        if (is_array(self::$dictionary)) {
+            $this->traduct();
+        }
         return $this->getFile();
+    }
+
+    public static function addDictionary($file)
+    {
+        if (file_exists($file)) {
+            include $file;
+            if (!is_array(self::$dictionary)) {
+                self::$dictionary = array();
+            }
+            if (is_array($lang)) {
+                self::$dictionary = array_merge(self::$dictionary, $lang);
+            }
+        }
     }
 
     // End # public functions -------------------------------------------------
@@ -130,7 +175,9 @@ class timply
     private function setFile($datas = "")
     {
         if (empty($datas)) {
-            $this->file = file_get_contents($this->themeDir . $this->fileName);
+            if (file_exists(self::$themeDir . self::$fileName)) {
+                $this->file = file_get_contents(self::$themeDir . self::$fileName);
+            }
         }
         else {
             $this->file = $datas;
@@ -152,6 +199,22 @@ class timply
             // and replace Content block by [Content] flag in the file.
             $this->setFile(str_replace($matches[0][$i], "[" . $matches['blockName'][$i]. "]", $this->getFile()));
         }
+    }
+
+    /**
+     * Replace [trad::] blocks by dictionary entries]
+     * @return void
+     */
+    private function traduct()
+    {
+        $file    = $this->getFile();
+        $pattern = '/\[trad::([\d\w\-_]+)\]/';
+        preg_match_all($pattern, $file, $matches);
+        $count   = count($matches[0]);
+        for ($i = 0; $i < $count; $i++) {
+            $file = str_replace($matches[0][$i], self::$dictionary[$matches[1][$i]], $file);
+        }
+        $this->setFile($file);
     }
 }
 ?>
