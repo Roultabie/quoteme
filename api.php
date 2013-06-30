@@ -17,6 +17,8 @@ require_once 'libs/timply.php';
 require_once 'parser/parser.php';
 require_once 'parser/template.php';
 
+timply::setUri($GLOBALS['config']['themeDir']);
+
 function parseQuote($parser = '', $options = '')
 {
     if ($parser !== 'php') {
