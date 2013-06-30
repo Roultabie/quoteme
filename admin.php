@@ -62,7 +62,7 @@ function getUpdate()
 
 getUpdate();
 
-if ($GLOBALS['system']['currenVersion'] !== $GLOBALS['system']['lastVersion']) {
+if ($GLOBALS['system']['version'] !== $GLOBALS['system']['lastVersion']) {
     $updateInfo = '<a href="https://github.com/Roultabie/quoteme/archive/' . $GLOBALS['system']['lastVersion'] . '.zip">[trad::new_update_available] : ' . $GLOBALS['system']['lastVersion'] . '</a>';
 }
 
