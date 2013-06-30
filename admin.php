@@ -17,7 +17,7 @@ function editConfig($newConfig)
 {
     //on récupere config.php dans un tableau
     $config = file('config.php');
-    //on crée un tableau avec comme clé les clés de $configommOrder
+    //on crée un tableau avec comme clé les clés de $config
     // Sauf pour les balise et commentaire ou l'on garde la clé chiffrée
     foreach($config as $key => $val) {
         $elements = explode('=', $val);
