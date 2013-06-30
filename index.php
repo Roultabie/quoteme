@@ -19,7 +19,12 @@ require_once 'api.php';
  * Loading libs
  */
 require_once 'libs/smartypants.php';
-$html  = new timply('index.html');
+
+timply::setFileName('index.html');
+timply::addDictionary($GLOBALS['config']['langDir'] . 'en_EN.php');
+//timply::addDictionary('fr_FR.php');
+
+$html  = new timply();
 $quote = $GLOBALS['quoteObj']['obj'][0];
 if (is_object($quote)) {
     $html->setElement('text', SmartyPants($quote->getText(), 'f+:+t+h+H+'));
