@@ -4,8 +4,8 @@
  */
 $system['dateFormat'] = 'Y-m-d';
 $system['version'] = '1.2b';
-$system['lastUpdate'] = '0000-00-00';
-$system['lastVersion'] = '';
+$system['lastUpdate'] = '2013-06-30';
+$system['lastVersion'] = '1.2b';
 
 /**
  * config options, put your informations here
