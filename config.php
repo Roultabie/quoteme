@@ -3,7 +3,7 @@
  * System options don't modify them
  */
 $system['dateFormat'] = 'Y-m-d';
-$system['version'] = '1.1b';
+$system['version'] = '1.2b';
 $system['lastUpdate'] = '0000-00-00';
 
 /**
