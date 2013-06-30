@@ -5,6 +5,7 @@
 $system['dateFormat'] = 'Y-m-d';
 $system['version'] = '1.2b';
 $system['lastUpdate'] = '0000-00-00';
+$system['lastVersion'] = '';
 
 /**
  * config options, put your informations here
