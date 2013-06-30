@@ -63,7 +63,7 @@ function getUpdate()
 getUpdate();
 
 if ($GLOBALS['system']['currenVersion'] !== $GLOBALS['system']['lastVersion']) {
-    $updateInfo = '<a href="https://github.com/Roultabie/quoteme/archive/' . $GLOBALS['system']['lastVersion'] . '.zip">new update is available : ' . $GLOBALS['system']['lastVersion'] . '</a>';
+    $updateInfo = '<a href="https://github.com/Roultabie/quoteme/archive/' . $GLOBALS['system']['lastVersion'] . '.zip">[trad::new_update_available] : ' . $GLOBALS['system']['lastVersion'] . '</a>';
 }
 
 $quote = new quoteQueries();
@@ -90,7 +90,11 @@ if ($_GET['action'] === "delete" && !empty($_GET['permalink'])) {
     $del = $quote->delQuote($_GET['permalink']);
 }
 
-$html = new timply('admin.html');
+timply::setUri($GLOBALS['config']['themeDir']);
+timply::setFileName('admin.html');
+timply::addDictionary($GLOBALS['config']['langDir'] . 'en_EN.php');
+timply::addDictionary($GLOBALS['config']['langDir'] . 'fr_FR.php');
+$html = new timply();
 
 /* Update link */
 $html->setElement('updateInfo', $updateInfo);

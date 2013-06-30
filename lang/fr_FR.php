@@ -9,4 +9,14 @@ $lang['username'] = 'utilisateur';
 $lang['password'] = 'mot de passe';
 $lang['administration'] = 'administration';
 $lang['connection'] = 'connexion';
+$lang['type_quote'] = 'votre citation';
+$lang['author'] = 'auteur';
+$lang['source'] = 'source';
+$lang['save'] = 'sauvegarder';
+$lang['tags'] = 'mots clé';
+$lang['tag1_tag2_tag3'] = 'motclé1, motclé2, motclé3';
+$lang['edit'] = 'editer';
+$lang['delete'] = 'supprimer';
+$lang['disconnect'] = 'se déconnecter';
+$lang['new_update_available'] = 'nouvelle mise à jour disponible';
 ?>

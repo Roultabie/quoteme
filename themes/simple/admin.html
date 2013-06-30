@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Administration - Q.uote.me</title>
+<title>[trad::administration] - Q.uote.me</title>
 <style type="text/css">
 body {
     margin: 0;
@@ -100,28 +100,28 @@ tr:hover .action {
 </head>
 <body>
     <header>
-        <span id="actions"><a href="?disconnect=1">disconnect</a></span><span id="update">{updateInfo}</span>   
+        <span id="actions"><a href="?disconnect=1">[trad::disconnect]</a></span><span id="update">{updateInfo}</span>   
     </header>
     <section>
         <form name="addQuote" method="post">
-            <textarea name="text" id="text" placeholder="Type quote here ...">{formInputText}</textarea>
-            <input type="text" name="author" id="author" placeholder="Author" value="{formInputAuthor}">
-            <input type="text" name="source" id="source" placeholder="Source" value="{formInputSource}">
-            <input type="text" name="tags" id="tags" placeholder="tag1, tag2, tag3, ..." value="{formInputTags}">
+            <textarea name="text" id="text" placeholder="[trad::type_quote] ...">{formInputText}</textarea>
+            <input type="text" name="author" id="author" placeholder="[trad::author]" value="{formInputAuthor}">
+            <input type="text" name="source" id="source" placeholder="[trad::source]" value="{formInputSource}">
+            <input type="text" name="tags" id="tags" placeholder="[trad::tag1_tag2_tag3] ..." value="{formInputTags}">
             <!--<input type="date">-->
             <input type="hidden" name="action" value="{formAction}">
             <input type="hidden" name="permalink" value="{formPermalink}">
-            <input type="submit" value="save">
+            <input type="submit" value="[trad::save]">
         </form>
     </section>
     <section>
         <table>
             <tr>
-                <th>quote</th><th>author</th><th>source</th><th>tags</th>
+                <th>[trad::quote]</th><th>[trad::author]</th><th>[trad::source]</th><th>[trad::tags]</th>
             </tr>
             <!-- start quoteTable -->
             <tr>
-                <td><span class="text">{quoteTableText}<span class="action"><span class="edit"><a href="{edit}">Edit</a></span><span class="delete"><a href="{delete}">Delete</a></span></span></span></td><td class="author">{quoteTableAuthor}</td><td>{quoteTableSource}</td><td>{quoteTableTags}</td>
+                <td><span class="text">{quoteTableText}<span class="action"><span class="edit"><a href="{edit}">[trad::edit]</a></span><span class="delete"><a href="{delete}">[trad::delete]</a></span></span></span></td><td class="author">{quoteTableAuthor}</td><td>{quoteTableSource}</td><td>{quoteTableTags}</td>
             </tr>
             <!-- end quoteTable -->
         </table>
