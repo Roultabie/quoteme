@@ -82,6 +82,7 @@ class timply
         if (is_array(self::$dictionary)) {
             $this->traduct();
         }
+        $this->cleanFile();
         return $this->getFile();
     }
 
@@ -199,6 +200,13 @@ class timply
             // and replace Content block by [Content] flag in the file.
             $this->setFile(str_replace($matches[0][$i], "[" . $matches['blockName'][$i]. "]", $this->getFile()));
         }
+    }
+
+    private function cleanFile()
+    {
+        $file = $this->getFile();
+        $file = preg_replace('/{[\d\w\-_]+}/', '', $file);
+        $this->setFile($file);
     }
 
     /**
