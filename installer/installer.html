@@ -1,0 +1,41 @@
+<html>
+<head>
+    <title></title>
+    <style type="text/css">
+    #infos {
+        display: none;
+    }
+    input {
+        color: black;
+        background: white;
+    }
+    </style>
+</head>
+<body>
+    <form name="lang" method="get">
+        <fieldset>
+            <h3>[trad::language] :</h3>
+            <label for="lang">[trad::choose_language] : </label>{langSelect}
+        </fieldset>
+    </form>
+    <form name="installer" method="post">
+        <input type="hidden" name="lang" value="{lang}">
+        <fieldset>
+            <h3>[trad::database] :</h3>
+            <span id="infos" style="{display}">{sqlInfos}</span>
+            <label for="dblocation">[trad::database_location] : </label><input type="text" name="dblocation" value="{postDbHost}" {disabled}> <em>[trad::leave_empty_for_localhost]</em><br>
+            <label for="dbuser">[trad::username] : </label><input type="text" name="dbuser" value="{postDbUser}" {disabled}><br>
+            <label for="dbpass">[trad::password] : </label><input type="text" name="dbpass" value="{postDbPass}" {disabled}><br>
+            <label for="dbname">[trad::database_name] : </label><input type="text" name="dbname" value="{postDbName}" {disabled}><br>
+            <label for="dbtable">[trad::table_name] : </label><input type="text" name="dbtable" value="{postDbTable}" {disabled}><br>
+        </fieldset>
+        <fieldset>
+            <h3>[trad::user] :</h3>
+            <label for="user">[trad::username] : </label><input type="text" name="user" value=""><br>
+            <label for="password">[trad::password] : </label><input type="text" name="password" value=""><br>
+            <label for="email">[trad::email] : </label><input type="text" name="email" value="">
+        </fieldset>
+        <input type="submit" value="[trad::install_script]">
+    </form>
+</body>
+</html>
