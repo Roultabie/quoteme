@@ -2,9 +2,13 @@
 <head>
     <title>Q.uote.me - [trad::installation_script]</title>
     <style type="text/css">
+    body {
+        font-family: 'Deja Vu Sans';
+        /*background-color: lightgrey;*/
+    }
     h2 {
         text-align: center;
-        margin: 25px 0;
+        margin: 35px 0;
     }
     #infos {
         display: none;
@@ -19,6 +23,8 @@
     fieldset {
         padding-bottom: 20px;
         margin-bottom: 20px;
+        border: 1px solid;
+        border-radius: 3px;
     }
     div {
         margin-top: -5px;
@@ -36,12 +42,16 @@
         height: 25px;
         margin-top: 5px;
     }
-    input {
+    input, select {
         float: right;
         color: black;
         background: white;
         width: 40%;
         margin-top: 5px;
+        border: 1px solid grey;
+        height: 25px;
+        border-radius: 3px;
+        padding-left: 5px;
     }
     input[type=checkbox] {
         margin-top: 10px;
@@ -55,14 +65,14 @@
         float: left;
         width: 160px;
         margin-right: 10px;
-
+        background-color: lightgrey;
+        font-style: italic;
     }
     </style>
 </head>
 <body>
     <h2>Q.uote.me - [trad::installation_script]</h2>
     <form name="installer" method="post">
-        <input type="hidden" name="passed" value="{passed}">
         <fieldset>
             <div>
                 <h3>[trad::language]</h3>

@@ -85,19 +85,40 @@ function checkConfig()
     return $result;
 }
 
-function writeConfig($username, $password, $email = "")
+function writeConfig($newConfig)
 {
-    #
-}
-
-function createTable($table)
-{
-    #
-}
-
-function sanitizeString($string)
-{
-    #
+    //on récupere config.php dans un tableau
+    $config = file('../config.php');
+    //on crée un tableau avec comme clé les clés de $configommOrder
+    // Sauf pour les balise et commentaire ou l'on garde la clé chiffrée
+    foreach($config as $key => $val) {
+        $elements = explode('=', $val);
+        if ($val[0] === "$") {
+            $key  = substr(trim($elements[0]), strpos(trim($elements[0]), "'")+1, -2);
+        }
+        $tmpConfig[$key] = $val;
+    }
+    // Ensuite on remplace les éléments du tableau temporaire avec les valeurs correspondantes aux clés
+    // En ajoutant la variable $config ou autre
+    foreach($newConfig as $key => $val) {
+        $elements = explode('=', $tmpConfig[$key]);
+        $var   = trim($elements[0]);
+        $value = trim($elements[1]);
+        if ($value[0] === "'") {
+            $value = "'" . $val . "';";
+        }
+        else {
+            $value = $val . ';';
+        }
+        $tmpConfig[$key] = $var . ' = ' . $value . PHP_EOL;
+    }
+    // Puis on réécrit config.php
+    if (!$fd = fopen('../config.php',"w+")) {
+    echo "Echec de l'ouverture du fichier";
+    }
+    foreach($tmpConfig as $val) {
+        fwrite($fd, $val);
+    }
 }
 
 function navLang($format = '')
@@ -160,8 +181,29 @@ function genSelectLang($defaultLang = "")
     return $select;
 }
 
-function install($posted)
+function install()
 {
+    $password = hash('sha256', $_SESSION['password']);
+    $table = 'CREATE TABLE IF NOT EXISTS `' . $_SESSION['dbTable'] . '` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `quote` text NOT NULL,
+  `author` varchar(100) NOT NULL,
+  `source` varchar(100) NOT NULL,
+  `tags` text NOT NULL,
+  `permalink` char(6) NOT NULL,
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;';
+
+    $instance = checkDbInfos($_SESSION['dbHost'], $_SESSION['dbName'], $_SESSION['dbUser'], $_SESSION['dbPass']);
+    $stmt = $instance->prepare($table);
+    $stmt->execute();
+    if ($stmt !== FALSE) {
+        writeConfig(array('dbHost' => $_SESSION['dbHost'], 'dbName' => $_SESSION['dbName'],
+            'dbUser' => $_SESSION['dbUser'], 'dbPass' => $_SESSION['dbPass'],
+            'dbTable' => $_SESSION['dbTable'], 'lang' => $_SESSION['lang'],
+            'user' => $_SESSION['user'], 'password' => $password));
+    }
     return FALSE;
 }
 
@@ -202,19 +244,14 @@ if (empty($config['password'])) {
         $html->setElement('postPass', $_SESSION['pass']);
         $html->setElement('postEmail', $_SESSION['email']);
 
-        if ($_SESSION['passed'] === '0') {
-            $db   = checkDb($_SESSION['dbHost'], $_SESSION['dbUser'], $_SESSION['dbPass'], $_SESSION['dbName'], $_SESSION['dbTable']);
-            $conf = checkConfig();
-            if ($db && $conf) {
-                $html->setElement('install', '<input type="submit" name="install" value="[trad::install_script]">');
-            }
+        $db   = checkDb($_SESSION['dbHost'], $_SESSION['dbUser'], $_SESSION['dbPass'], $_SESSION['dbName'], $_SESSION['dbTable']);
+        $conf = checkConfig();
+        if ($db && $conf) {
+            $html->setElement('install', '<input type="submit" name="install" value="[trad::install_script]">');
+            $canInstall = TRUE;
         }
-
-        $installed = install($_POST);
-        if ($installed === TRUE) {
-            $infoMessage[] = "installation successful !";
-            require '../admin.php';
-            exit();
+        if (isset($_POST['install']) && $canInstall) {
+            $install = install();
         }
     }
     $html->setElement('test', '<input type="submit" name="test" value="[trad::test_datas]">');
