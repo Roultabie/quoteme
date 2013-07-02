@@ -25,6 +25,46 @@ function checkDbInfos($host, $name, $user, $pass)
     }
 }
 
+function checkDb()
+{
+    if (empty($_POST['dblocation'])) {
+        $_POST['dblocation'] = 'localhost';
+    }
+    $GLOBALS['html']->setElement('display', 'display: block;');
+    $GLOBALS['html']->setElement('postDbHost', $_POST['dblocation']);
+    $GLOBALS['html']->setElement('postDbUser', $_POST['dbuser']);
+    $GLOBALS['html']->setElement('postDbPass', $_POST['dbpass']);
+    $GLOBALS['html']->setElement('postDbName', $_POST['dbname']);
+    $GLOBALS['html']->setElement('postDbTable', $_POST['dbtable']);
+    if (!empty($_POST['dbname'])) {
+        $checkDb = checkDbInfos($_POST['dblocation'], $_POST['dbname'], $_POST['dbuser'], $_POST['dbpass']);
+        if (is_array($checkDb)) {
+            if ($checkDb[0] === 2002) $sqlInfo = '[trad::sqlError2002]';
+            if ($checkDb[0] === 1044) $sqlInfo = '[trad::sqlError1044]';
+            if ($checkDb[0] === 1045) $sqlInfo = '[trad::sqlError1045]';
+            $passed = FALSE;
+        }
+        else {
+            $checkDbTable = checkDbTable($checkDb, $_POST['dbtable']);
+            if ($checkDbTable === FALSE) {
+                $sqlInfos = '[trad::table_already_exist]';
+                $passed = FALSE;
+            }
+            else {
+                $sqlInfos = '[trad::db_infos_correct]';
+                $GLOBALS['html']->setElement('disabled', 'disabled');
+                $passed = TRUE;
+            }
+        }
+    }
+    else {
+        $sqlInfo = '[trad::dbname_cant_be_empty]';
+        $passed  = FALSE;
+    }
+    $GLOBALS['html']->setElement('sqlInfos', $sqlInfos);
+    return $passed;
+}
+
 function checkDbTable($instance, $table)
 {
     if (is_object($instance)) {;
@@ -41,14 +81,16 @@ function checkDbTable($instance, $table)
     return $result;
 }
 
-function checkConfigRights()
+function checkConfig()
 {
-    if (is_writable('config.php')) {
-        return TRUE;
+    if (is_writable('../config.php')) {
+        $GLOBALS['html']->setElement('checked', 'checked');
+        $result = TRUE;
     }
     else {
-        return FALSE;
+        $result = FALSE;
     }
+    return $result;
 }
 
 function createTable($table)
@@ -151,45 +193,26 @@ timply::addDictionary('../lang/' .$_GET['lang'] . '.php');
 $html = new timply();
 
 if (!empty($_POST)) {
-    if (empty($_POST['dblocation'])) {
-        $_POST['dblocation'] = 'localhost';
-    }
-
-    $html->setElement('display', 'display: block;');
-
-    $html->setElement('postDbHost', $_POST['dblocation']);
-    $html->setElement('postDbUser', $_POST['dbuser']);
-    $html->setElement('postDbPass', $_POST['dbpass']);
-    $html->setElement('postDbName', $_POST['dbname']);
-    $html->setElement('postDbTable', $_POST['dbtable']);
-    if (!empty($_POST['dbname'])) {
-        $checkDb = checkDbInfos($_POST['dblocation'], $_POST['dbname'], $_POST['dbuser'], $_POST['dbpass']);
-        if (is_array($checkDb)) {
-            if ($checkDb[0] === 2002) $sqlInfo = '[trad::sqlError2002]';
-            if ($checkDb[0] === 1044) $sqlInfo = '[trad::sqlError1044]';
-            if ($checkDb[0] === 1045) $sqlInfo = '[trad::sqlError1045]';
+    if (empty($_POST['passed']) || $_POST['passed'] === '0') {
+        $db   = checkDb();
+        $conf = checkConfig();
+        if ($db && $conf) {
+            $html->setElement('submit', '[trad::install_script]');
         }
         else {
-            $checkDbTable = checkDbTable($checkDb, $_POST['dbtable']);
-            if ($checkDbTable === FALSE) {
-                $sqlInfos = '[trad::table_already_exist]';
-            }
-            else {
-                $sqlInfos = '[trad::db_infos_correct]';
-                $html->setElement('disabled', 'disabled');
-            }
+            $html->setElement('submit', '[trad::test_datas]');
         }
     }
-    else {
-        $sqlInfo = '[trad::dbname_cant_be_empty]';
-    }
-    $html->setElement('sqlInfos', $sqlInfos);
+    
     $installed = install($_POST);
     if ($installed === TRUE) {
         $infoMessage[] = "installation successful !";
         require '../admin.php';
         exit();
     }
+}
+else{
+    $html->setElement('submit', '[trad::test_datas]');
 }
 $html->setElement('langSelect', genSelectLang($_GET['lang']));
 $html->setElement('lang', $_GET['lang']);
