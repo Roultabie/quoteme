@@ -39,4 +39,5 @@ $lang['test_datas'] = 'tester les informations';
 $lang['config_file'] = 'fichier de configuration';
 $lang['config_php_must_be_writable'] = 'config.php avec les droits en écriture';
 $lang['installation_script'] = 'script d\'installation';
+$lang['update_datas'] = 'MAJ les données';
 ?>

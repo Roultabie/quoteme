@@ -39,4 +39,5 @@ $lang['test_datas'] = 'test datas';
 $lang['config_file'] = 'config file';
 $lang['config_php_must_be_writable'] = 'config.php must be writable';
 $lang['installation_script'] = 'installation script';
+$lang['update_datas'] = 'update datas';
 ?>
