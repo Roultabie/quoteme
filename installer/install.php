@@ -9,6 +9,7 @@
  * Loading libs
  */
 
+require '../config.php';
 require '../libs/mysql.php';
 require '../libs/timply.php';
 
@@ -25,19 +26,10 @@ function checkDbInfos($host, $name, $user, $pass)
     }
 }
 
-function checkDb()
+function checkDb($dbHost, $dbUser, $dbPass, $dbName, $dbTable)
 {
-    if (empty($_POST['dblocation'])) {
-        $_POST['dblocation'] = 'localhost';
-    }
-    $GLOBALS['html']->setElement('display', 'display: block;');
-    $GLOBALS['html']->setElement('postDbHost', $_POST['dblocation']);
-    $GLOBALS['html']->setElement('postDbUser', $_POST['dbuser']);
-    $GLOBALS['html']->setElement('postDbPass', $_POST['dbpass']);
-    $GLOBALS['html']->setElement('postDbName', $_POST['dbname']);
-    $GLOBALS['html']->setElement('postDbTable', $_POST['dbtable']);
     if (!empty($_POST['dbname'])) {
-        $checkDb = checkDbInfos($_POST['dblocation'], $_POST['dbname'], $_POST['dbuser'], $_POST['dbpass']);
+        $checkDb = checkDbInfos($dbHost, $dbName, $dbUser, $dbPass);
         if (is_array($checkDb)) {
             if ($checkDb[0] === 2002) $sqlInfo = '[trad::sqlError2002]';
             if ($checkDb[0] === 1044) $sqlInfo = '[trad::sqlError1044]';
@@ -45,7 +37,7 @@ function checkDb()
             $passed = FALSE;
         }
         else {
-            $checkDbTable = checkDbTable($checkDb, $_POST['dbtable']);
+            $checkDbTable = checkDbTable($checkDb, $dbTable);
             if ($checkDbTable === FALSE) {
                 $sqlInfos = '[trad::table_already_exist]';
                 $passed = FALSE;
@@ -93,12 +85,12 @@ function checkConfig()
     return $result;
 }
 
-function createTable($table)
+function writeConfig($username, $password, $email = "")
 {
     #
 }
 
-function createUser($username, $password, $email = "")
+function createTable($table)
 {
     #
 }
@@ -157,7 +149,7 @@ function genSelectLang($defaultLang = "")
                     $selected = ' selected';
                     $isSelected = TRUE;
                 }
-                
+
                 $select .= '<option value="' . $lang . '"' . $selected . '>' . $lang . '</option>';
             }
             unset($selected);
@@ -168,53 +160,66 @@ function genSelectLang($defaultLang = "")
     return $select;
 }
 
-function checkHtmlElement($state)
-{
-    if ($state === TRUE) {
-        $element = '-';
-    }
-    else {
-        $element = 'X';
-    }
-}
-
 function install($posted)
 {
     return FALSE;
 }
 
-if (empty($_GET['lang'])) {
-    $_GET['lang'] = navLang('script');
-}
+if (empty($config['password'])) {
+    if (empty($_POST['lang'])) {
+        $_POST['lang'] = navLang('script');
+    }
+    session_start();
+    timply::setUri('');
+    timply::setFileName('installer.html');
+    timply::addDictionary('../lang/' .$_POST['lang'] . '.php');
+    $html = new timply();
 
-timply::setUri($GLOBALS['config']['themeDir']);
-timply::setFileName('installer.html');
-timply::addDictionary('../lang/' .$_GET['lang'] . '.php');
-$html = new timply();
+    if (!empty($_POST)) {
+        if (empty($_SESSION['passed'])) $_POST['passed'] = '0';
+        if (empty($_POST['passed']))    $_POST['passed'] = '0';
+        if (empty($_POST['dbhost']))    $_POST['dbhost'] = 'localhost';
+        if (empty($_POST['user']))      $_POST['user']   = $_POST['dbuser'];
+        if (empty($_POST['password']))  $_POST['password']   = $_POST['dbpass'];
+        $_SESSION['passed']  = $_POST['passed'];
+        $_SESSION['lang']    = $_POST['lang'];
+        $_SESSION['dbHost']  = $_POST['dbhost'];
+        $_SESSION['dbUser']  = $_POST['dbuser'];
+        $_SESSION['dbPass']  = $_POST['dbpass'];
+        $_SESSION['dbName']  = $_POST['dbname'];
+        $_SESSION['dbTable'] = $_POST['dbtable'];
+        $_SESSION['user']    = $_POST['user'];
+        $_SESSION['pass']    = $_POST['password'];
+        $_SESSION['email']   = $_POST['email'];
 
-if (!empty($_POST)) {
-    if (empty($_POST['passed']) || $_POST['passed'] === '0') {
-        $db   = checkDb();
-        $conf = checkConfig();
-        if ($db && $conf) {
-            $html->setElement('submit', '[trad::install_script]');
+        //$html->setElement('display', 'display: block;');
+        $html->setElement('postDbHost', $_SESSION['dbHost']);
+        $html->setElement('postDbUser', $_SESSION['dbUser']);
+        $html->setElement('postDbPass', $_SESSION['dbPass']);
+        $html->setElement('postDbName', $_SESSION['dbName']);
+        $html->setElement('postDbTable', $_SESSION['dbTable']);
+        $html->setElement('postUser', $_SESSION['user']);
+        $html->setElement('postPass', $_SESSION['pass']);
+        $html->setElement('postEmail', $_SESSION['email']);
+
+        if ($_SESSION['passed'] === '0') {
+            $db   = checkDb($_SESSION['dbHost'], $_SESSION['dbUser'], $_SESSION['dbPass'], $_SESSION['dbName'], $_SESSION['dbTable']);
+            $conf = checkConfig();
+            if ($db && $conf) {
+                $html->setElement('install', '<input type="submit" name="install" value="[trad::install_script]">');
+            }
         }
-        else {
-            $html->setElement('submit', '[trad::test_datas]');
+
+        $installed = install($_POST);
+        if ($installed === TRUE) {
+            $infoMessage[] = "installation successful !";
+            require '../admin.php';
+            exit();
         }
     }
-    
-    $installed = install($_POST);
-    if ($installed === TRUE) {
-        $infoMessage[] = "installation successful !";
-        require '../admin.php';
-        exit();
-    }
+    $html->setElement('test', '<input type="submit" name="test" value="[trad::test_datas]">');
+    $html->setElement('langSelect', genSelectLang($_POST['lang']));
+    echo $html->returnHtml();
 }
-else{
-    $html->setElement('submit', '[trad::test_datas]');
-}
-$html->setElement('langSelect', genSelectLang($_GET['lang']));
-$html->setElement('lang', $_GET['lang']);
-echo $html->returnHtml();
+
 ?>
