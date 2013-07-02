@@ -180,11 +180,11 @@ class quoteQueries
     private static  $stack;
     private static  $table;
     public  static  $nbQuotes;
-    
+
 
     function __construct()
     {
-        self::$table    = 'quotes';
+        self::$table    = $GLOBALS['config']['dbTable'];
         $nbQuotes       = $this->countElements();
         self::$nbQuotes = $nbQuotes[0]->nb;
     }
@@ -234,7 +234,7 @@ class quoteQueries
     /**
      * Prepare quote to delete
      * @param  int   $id the sql id of quote
-     * @return array $result an array contains deleted quote elements (key / values) 
+     * @return array $result an array contains deleted quote elements (key / values)
      */
     public function delQuote($permalink) // si la quote est supprimée, on retourne celle-ci au cas ou on veuille revenir en arrière
     {
@@ -275,17 +275,17 @@ class quoteQueries
             foreach ($stack as $array) {
                 foreach ($array as $type => $elements) { // on ventille les différentes requetes
                     if ($type === "insert") {
-                        $insert[] = $elements;    
+                        $insert[] = $elements;
                     }
                     elseif ($type === "update") {
                         $update[] = $elements;
                     }
                     elseif ($type === "delete") {
-                        $delete[] = $elements;  
+                        $delete[] = $elements;
                     }
                 }
             }
-            // puis on les exécute 
+            // puis on les exécute
             $this->addElements($insert);
             $this->editElements($update);
             $this->delElements($delete);
@@ -293,9 +293,9 @@ class quoteQueries
     }
 
     // End # public functions -------------------------------------------------
-        
+
     // Start # private functions ----------------------------------------------
-     
+
     /**
      * Return sql queries stacked in self:$stack
      * @return array array of sql delete, update and insert queries
