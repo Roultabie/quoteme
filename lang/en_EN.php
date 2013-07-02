@@ -26,7 +26,7 @@ $lang['database_name'] = 'database name';
 $lang['table_name'] = 'table name';
 $lang['user'] = 'user';
 $lang['email'] = 'email';
-$lang['database_location'] = 'database location';
+$lang['database_host'] = 'database host';
 $lang['leave_empty_for_localhost'] = 'leave empty for localhost';
 $lang['install_script'] = 'install script';
 $lang['sqlError1044'] = 'database error, is it the good name ?';
@@ -35,4 +35,8 @@ $lang['dbname_cant_be_empty'] = 'dbname can\'t be empty';
 $lang['sqlError2002'] = 'cannot connect to host';
 $lang['db_infos_correct'] = 'db informations are correct';
 $lang['table_already_exist'] = 'table already exist';
+$lang['test_datas'] = 'test datas';
+$lang['config_file'] = 'config file';
+$lang['config_php_must_be_writable'] = 'config.php must be writable';
+$lang['installation_script'] = 'installation script';
 ?>

@@ -26,7 +26,7 @@ $lang['database_name'] = 'nom de la base de données';
 $lang['table_name'] = 'nom de la table';
 $lang['user'] = 'utilisateur';
 $lang['email'] = 'courriel';
-$lang['database_location'] = 'emplacement de la base de données';
+$lang['database_host'] = 'emplacement de la base de données';
 $lang['leave_empty_for_localhost'] = 'laissez vide pour une base locale (localhost)';
 $lang['install_script'] = 'installer le script';
 $lang['sqlError1044'] = 'erreur sur la base de données, est-ce le bon nom ?';
@@ -35,4 +35,8 @@ $lang['dbname_cant_be_empty'] = 'vous devez indiquer un nom pour votre base de d
 $lang['sqlError2002'] = 'impossible de se connecter à cet emplacement';
 $lang['db_infos_correct'] = 'informations correctes';
 $lang['table_already_exist'] = 'cette table existe déjà';
+$lang['test_datas'] = 'tester les informations';
+$lang['config_file'] = 'fichier de configuration';
+$lang['config_php_must_be_writable'] = 'config.php avec les droits en écriture';
+$lang['installation_script'] = 'script d\'installation';
 ?>
