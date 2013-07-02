@@ -21,8 +21,7 @@ require_once 'api.php';
 require_once 'libs/smartypants.php';
 
 timply::setFileName('index.html');
-timply::addDictionary($GLOBALS['config']['langDir'] . 'en_EN.php');
-//timply::addDictionary('fr_FR.php');
+timply::addDictionary($GLOBALS['config']['langDir'] . $GLOBALS['config']['lang'] . '.php');
 
 $html  = new timply();
 $quote = $GLOBALS['quoteObj']['obj'][0];
