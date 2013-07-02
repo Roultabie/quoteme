@@ -4,22 +4,23 @@
  */
 $system['dateFormat'] = 'Y-m-d';
 $system['version'] = '1.2b';
-$system['lastUpdate'] = '2013-07-02';
-$system['lastVersion'] = '1.2b';
+$system['lastUpdate'] = '0000-00-00';
+$system['lastVersion'] = '';
 
 /**
  * config options, put your informations here
  */
 $config['dbHost'] = 'localhost';
-$config['dbName'] = 'quoteme';
-$config['dbUser'] = 'dbuser';
-$config['dbPass'] = 'pass';
-$config['lang'] = 'fr_FR';
+$config['dbName'] = '';
+$config['dbUser'] = '';
+$config['dbPass'] = '';
+$config['dbTable'] = '';
+$config['lang'] = '';
 $config['themeDir'] = 'themes/simple/';
 $config['langDir'] = 'lang/';
 $config['siteDoc'] = 'http://q.uote.me/api.php';
-$config['siteContact'] = 'contact@aelys-info.fr';
-$config['user'] = 'demo';
+$config['email'] = '';
+$config['user'] = '';
 $config['password'] = '';
 $config['sessionExpire'] = 1800;
 $config['appVers'] = $system['version']; // your app version
