@@ -83,37 +83,19 @@ function checkConfigFile()
 
 function writeConfigFile($newOptions)
 {
-    $fileName       = 'config.php';
-    $fileUri        = '../';
-    $originalConfig = file($fileName . $fileUri);
-    foreach($originalConfig as $key => $line) {
-        $firstChar = $line[0];
-        if ($firstChar === "$") {
-            $arrayNameEnd    = strpos($line, '=') - 1;
-            $arrayName       = trim(substr($line, 0, $arrayNameEnd)); // $config['optionName']
-            $optionNameStart = strpos($arrayName, "'") + 1;
-            $optionName      = substr($arrayName, $optionNameStart, -2);
-            $key             = $optionName;
-        }
-        $tempConfig[$key] = $line;
-    }
-    // Ensuite on remplace les éléments du tableau temporaire avec les valeurs correspondantes aux clés
-    // En ajoutant la variable $config ou autre
-    foreach($newOptions as $key => $value) {
+    $fileName = 'config.php';
+    $fileUri  = '../';
+    $configContent = file_get_contents($fileUri . $fileName);
+    foreach ($newOptions as $key => $value) {
+        $keys = explode(">", $key);
         if (is_string($value)) {
-            $newValue = "'" . str_replace("'", "\'", $value) . "'";
+            $value = "'" . str_replace("'", "\'", $value) . "'";
         }
-        else {
-            $newValue = $value;
-        }
-        $tempConfig[$key] = $key . ' = ' . $newValue . PHP_EOL;
+        $pattern   = "/^\$" . $key[0] . "\['" . $key[1] . "'\]\s{0,}=\s{0,}['\"]{0,1}[\w\d-_\+-]['\"]{0,1};$/";
+        $replace   = $key[0] . "['" . $key[1] . "'] = " . $value . ";";
+        $newConfig = preg_replace($pattern, $replace, $configContent);
     }
-    // Puis on réécrit config.php
-    if ($fd = fopen($fileName . $fileUri,"w+")) {
-        foreach($tempConfig as $val) {
-            fwrite($fd, $val);
-        }
-    }
+    file_put_contents($fileUri . $fileName, $newConfig, LOCK_EX);
 }
 
 function navLang($format = '')
