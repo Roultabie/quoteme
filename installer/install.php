@@ -13,111 +13,106 @@ require '../config.php';
 require '../libs/mysql.php';
 require '../libs/timply.php';
 
-function checkDbInfos($host, $name, $user, $pass)
+function dbConnexion($host, $name, $user, $pass)
 {
     try {
         $instance = new PDO('mysql:host=' . $host . ';dbname=' . $name, $user, $pass);
         $instance->query("SET NAMES 'utf8'");
-        return $instance;
+        $result = $instance;
     } catch (Exception $e) {
         $error[] = $e->getCode();
         $error[] = $e->getMessage();
-        return $error;
+        $result = $error;
     }
+    return $result;
 }
 
-function checkDb($dbHost, $dbUser, $dbPass, $dbName, $dbTable)
+function checkDbIds($host, $user, $password, $dbName, $tableName)
 {
-    if (!empty($_POST['dbname'])) {
-        $checkDb = checkDbInfos($dbHost, $dbName, $dbUser, $dbPass);
-        if (is_array($checkDb)) {
-            if ($checkDb[0] === 2002) $sqlInfo = '[trad::sqlError2002]';
-            if ($checkDb[0] === 1044) $sqlInfo = '[trad::sqlError1044]';
-            if ($checkDb[0] === 1045) $sqlInfo = '[trad::sqlError1045]';
+    if (!empty($dbName)) {
+        $connexion = dbConnexion($host, $dbName, $user, $password);
+        if (is_array($connexion)) {
+            if ($connexion[0] === 2002) $sqlInfo = '[trad::sqlError2002]';
+            if ($connexion[0] === 1044) $sqlInfo = '[trad::sqlError1044]';
+            if ($connexion[0] === 1045) $sqlInfo = '[trad::sqlError1045]';
             $passed = FALSE;
         }
         else {
-            $checkDbTable = checkDbTable($checkDb, $dbTable);
-            if ($checkDbTable === FALSE) {
-                $sqlInfos = '[trad::table_already_exist]';
-                $passed = FALSE;
+            $ifTableExist = ifDbTableExist($connexion, $tableName);
+            if ($ifTableExist === FALSE) {
+                $message = '[trad::table_already_exist]';
+                $passed  = FALSE;
             }
             else {
-                $sqlInfos = '[trad::db_infos_correct]';
                 $GLOBALS['html']->setElement('disabled', 'disabled');
+                $message = '[trad::db_infos_correct]';
                 $passed = TRUE;
             }
         }
     }
     else {
-        $sqlInfo = '[trad::dbname_cant_be_empty]';
+        $message = '[trad::dbname_cant_be_empty]';
         $passed  = FALSE;
     }
-    $GLOBALS['html']->setElement('sqlInfos', $sqlInfos);
+    $GLOBALS['html']->setElement('sqlInfos', $message);
     return $passed;
 }
 
-function checkDbTable($instance, $table)
+function ifDbTableExist($instance, $table)
 {
     if (is_object($instance)) {;
         $tables = $instance->prepare("SHOW TABLES LIKE '" . $table . "'");
         $tables->execute();
         $result = $tables->fetchAll(PDO::FETCH_OBJ);
         if (count($result) > 0) {
-            $result = FALSE;
+            $tableExist = FALSE;
         }
         else {
-            $result = TRUE;
+            $tableExist = TRUE;
         }
     }
-    return $result;
+    return $tableExist;
 }
 
-function checkConfig()
+function checkConfigFile()
 {
-    if (is_writable('../config.php')) {
-        $GLOBALS['html']->setElement('checked', 'checked');
-        $result = TRUE;
-    }
-    else {
-        $result = FALSE;
-    }
-    return $result;
+    $fileName = 'config.php';
+    $fileUri  = '../';
+    return is_writable($fileUri . $fileName);
 }
 
-function writeConfig($newConfig)
+function writeConfigFile($newOptions)
 {
-    //on récupere config.php dans un tableau
-    $config = file('../config.php');
-    //on crée un tableau avec comme clé les clés de $configommOrder
-    // Sauf pour les balise et commentaire ou l'on garde la clé chiffrée
-    foreach($config as $key => $val) {
-        $elements = explode('=', $val);
-        if ($val[0] === "$") {
-            $key  = substr(trim($elements[0]), strpos(trim($elements[0]), "'")+1, -2);
+    $fileName       = 'config.php';
+    $fileUri        = '../';
+    $originalConfig = file($fileName . $fileUri);
+    foreach($originalConfig as $key => $line) {
+        $firstChar = $line[0];
+        if ($firstChar === "$") {
+            $arrayNameEnd    = strpos($line, '=') - 1;
+            $arrayName       = trim(substr($line, 0, $arrayNameEnd)); // $config['optionName']
+            $optionNameStart = strpos($arrayName, "'") + 1;
+            $optionName      = substr($arrayName, $optionNameStart, -2);
+            $key             = $optionName;
         }
-        $tmpConfig[$key] = $val;
+        $tempConfig[$key] = $line;
     }
     // Ensuite on remplace les éléments du tableau temporaire avec les valeurs correspondantes aux clés
     // En ajoutant la variable $config ou autre
-    foreach($newConfig as $key => $val) {
-        $elements = explode('=', $tmpConfig[$key]);
-        $var   = trim($elements[0]);
-        $value = trim($elements[1]);
-        if ($value[0] === "'") {
-            $value = "'" . $val . "';";
+    foreach($newOptions as $key => $value) {
+        if (is_string($value)) {
+            $newValue = "'" . str_replace("'", "\'", $value) . "'";
         }
         else {
-            $value = $val . ';';
+            $newValue = $value;
         }
-        $tmpConfig[$key] = $var . ' = ' . $value . PHP_EOL;
+        $tempConfig[$key] = $key . ' = ' . $newValue . PHP_EOL;
     }
     // Puis on réécrit config.php
-    if (!$fd = fopen('../config.php',"w+")) {
-    echo "Echec de l'ouverture du fichier";
-    }
-    foreach($tmpConfig as $val) {
-        fwrite($fd, $val);
+    if ($fd = fopen($fileName . $fileUri,"w+")) {
+        foreach($tempConfig as $val) {
+            fwrite($fd, $val);
+        }
     }
 }
 
@@ -196,11 +191,11 @@ function install($resetPassword = FALSE)
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;';
 
-        $instance = checkDbInfos($_SESSION['dbHost'], $_SESSION['dbName'], $_SESSION['dbUser'], $_SESSION['dbPass']);
+        $instance = dbConnexion($_SESSION['dbHost'], $_SESSION['dbName'], $_SESSION['dbUser'], $_SESSION['dbPass']);
         $stmt = $instance->prepare($table);
         $stmt->execute();
         if ($stmt !== FALSE) {
-            writeConfig(array('dbHost' => $_SESSION['dbHost'], 'dbName' => $_SESSION['dbName'],
+            writeConfigFile(array('dbHost' => $_SESSION['dbHost'], 'dbName' => $_SESSION['dbName'],
                 'dbUser' => $_SESSION['dbUser'], 'dbPass' => $_SESSION['dbPass'],
                 'dbTable' => $_SESSION['dbTable'], 'lang' => $_SESSION['lang'],
                 'user' => $_SESSION['user'], 'password' => $password, 'email' => $_SESSION['email']));
@@ -208,7 +203,7 @@ function install($resetPassword = FALSE)
         }
     }
     else {
-        writeConfig(array('user' => $_SESSION['user'], 'password' => $password, 'email' => $_SESSION['email']));
+        writeConfigFile(array('user' => $_SESSION['user'], 'password' => $password, 'email' => $_SESSION['email']));
         $install = TRUE;
     }
     return $install;
@@ -238,7 +233,7 @@ if (empty($config['password'])) {
             $_SESSION['user']    = $_POST['user'];
             $_SESSION['pass']    = $_POST['password'];
             $_SESSION['email']   = $_POST['email'];
-            $db                  = checkDb($_SESSION['dbHost'], $_SESSION['dbUser'], $_SESSION['dbPass'], $_SESSION['dbName'], $_SESSION['dbTable']);
+            $db                  = checkDbIds($_SESSION['dbHost'], $_SESSION['dbUser'], $_SESSION['dbPass'], $_SESSION['dbName'], $_SESSION['dbTable']);
         }
         else {
             $_SESSION['lang']    = $GLOBALS['config']['lang'];
@@ -263,7 +258,7 @@ if (empty($config['password'])) {
         $html->setElement('postPass', $_SESSION['pass']);
         $html->setElement('postEmail', $_SESSION['email']);
 
-        $conf = checkConfig();
+        $conf = checkConfigFile();
         if ($db && $conf) {
             if ($resetPassword) {
                 $value = '[trad::update_datas]';
@@ -271,6 +266,7 @@ if (empty($config['password'])) {
             else {
                 $value = '[trad::install_script]';
             }
+            $GLOBALS['html']->setElement('checked', 'checked');
             $html->setElement('install', '<input type="submit" name="install" value="' . $value . '">');
             $canInstall = TRUE;
         }
