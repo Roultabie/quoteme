@@ -107,7 +107,7 @@ function httpAcceptLanguageToArray()
     for ($i = 0; $i < $nb; $i++) {
         if (strpos($elements[$i], 'q=') === FALSE) {
             $n = $i + 1;
-            if (strpos($elements[$n], 'q=') === TRUE) {
+            if (strpos($elements[$n], 'q=') !== FALSE) {
                 $q = substr($elements[$n], 2);
             }
             $languages[strtolower($elements[$i])] = $q;
@@ -126,20 +126,25 @@ function getUserLanguage()
     if (strlen($favorite) === 2) {
         $favorite .= '-' . $favorite;
     }
-    $favorite = preg_replace('/(\w+)-(\w+)/i', '\1_strtoupper(\2)', $favorite);
+    $favorite = preg_replace_callback('/(\w+)-(\w+)/i',
+        function($matches) {
+            return $matches[1] . "_" . strtoupper($matches[2]);
+        }, $favorite);
     return $favorite;
 }
 
-function arrayToSelect($languages, $defaultOption)
+function arrayToSelect($languages, $post)
 {
     if (is_array($languages)) {
         $select = '<select name="lang" id="lang" onChange="javascript:this.form.submit();">';
         foreach ($languages as $option) {
-            $selected = '';
-            if ($defaultOption === $option || ($selected !== 'selected' && getUserLanguage() === $lang)) {
-                $selected = ' selected';
+            if ($post === $option || (getUserLanguage() === $option && $selected !== 'selected')) {
+                $selected = 'selected';
             }
-            $select .= '<option value="' . $lang . '"' . $selected . '>' . $lang . '</option>';
+            else {
+                unset($selected);
+            }
+            $select .= '<option value="' . $option . '" ' . $selected . '>' . $option . '</option>';
         }
         $select .= '</select>';
     }
@@ -176,7 +181,7 @@ function install($resetPassword = FALSE)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;';
 
         $instance = dbConnexion($_SESSION['dbHost'], $_SESSION['dbName'], $_SESSION['dbUser'], $_SESSION['dbPass']);
-        $stmt = $instance->prepare($table);
+        $stmt     = $instance->prepare($table);
         $stmt->execute();
         if ($stmt !== FALSE) {
             writeConfigFile(array('dbHost' => $_SESSION['dbHost'], 'dbName' => $_SESSION['dbName'],
