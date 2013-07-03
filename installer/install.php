@@ -92,46 +92,42 @@ function writeConfigFile($newOptions)
             $value = "'" . str_replace("'", "\'", $value) . "'";
         }
         $pattern   = "/^\$" . $key[0] . "\['" . $key[1] . "'\]\s{0,}=\s{0,}['\"]{0,1}[\w\d-_\+-]['\"]{0,1};$/";
-        $replace   = $key[0] . "['" . $key[1] . "'] = " . $value . ";";
+        $replace   = "\$" . $key[0] . "['" . $key[1] . "'] = " . $value . ";";
         $newConfig = preg_replace($pattern, $replace, $configContent);
     }
     file_put_contents($fileUri . $fileName, $newConfig, LOCK_EX);
 }
 
-function navLang($format = '')
+function httpAcceptLanguageToArray()
 {
-    // traitement de http_accept_language pour placer le q en avec la bonne langue.
-    $bl = str_replace(',', ';', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-    $bltable = explode(';', $bl);
-    $number = count($bltable);
-    for ($i = 0; $i < $number; $i++) {
-        // Si la valeur est bien une langue (et pas un q=)
-        if ($bltable[$i][1] !== '=') {
-            // Si la valeur suivante est bien u q= (et pas une langue) elle appartient à la valeur (langue) courante.
-            if ($bltable[$i + 1][1] === '=') {
-                $q = substr($bltable[$i + 1], 2);
+    $string   = str_replace(',', ';', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    $elements = explode(';', $string);
+    $nb       = count($elements);
+    $q        = "1";
+    for ($i = 0; $i < $nb; $i++) {
+        if (strpos($elements[$i], 'q=') === FALSE) {
+            $n = $i + 1;
+            if (strpos($elements[$n], 'q=') === TRUE) {
+                $q = substr($elements[$n], 2);
             }
-            // Sinon c'est que la valeur est à 1 (explicite)
-            else {
-                $q = "1";
-            }
-            $preferedLangtable[strtolower($bltable[$i])] = $q;
+            $languages[strtolower($elements[$i])] = $q;
         }
         unset($q);
     }
-    arsort($preferedLangtable);
-    $preferedLang = array_flip($preferedLangtable);
-    $preferedLang = array_values($preferedLang);
-    $preferedLang = $preferedLang[0];
-    // Pour formater les langues courtes xx en xx-xx
-    if (strlen($preferedLang) === 2) {
-        $preferedLang .= '-' . $preferedLang;
+    arsort($languages);
+    return $languages;
+}
+
+function getUserLanguage()
+{
+    $languages = array_flip(httpAcceptLanguageToArray());
+    $languages = array_values($languages);
+    $favorite  = $languages[0];
+    if (strlen($favorite) === 2) {
+        $favorite .= '-' . $favorite;
     }
-    if ($format = "script") {
-        $table = explode('-', $preferedLang);
-        $preferedLang = $table[0] . '_' . strtoupper($table[1]);
-    }
-    return $preferedLang;
+    $favorite = preg_replace('/(\w+)-(\w+)/i', '\1_strtoupper(\2)', $favorite);
+    return $favorite;
 }
 
 function genSelectLang($defaultLang = "")
@@ -143,7 +139,7 @@ function genSelectLang($defaultLang = "")
             if ($file !== '.' && $file !== '..') {
                 $lang = substr($file, 0, -4);
                 $selected = '';
-                if ($defaultLang === $lang || ($isSelected === FALSE && navLang() === strtolower(str_replace('_', '-', $lang)))) {
+                if ($defaultLang === $lang || ($isSelected === FALSE && getUserLanguage() === $lang)) {
                     $selected = ' selected';
                     $isSelected = TRUE;
                 }
@@ -185,7 +181,7 @@ function install($resetPassword = FALSE)
         }
     }
     else {
-        writeConfigFile(array('user' => $_SESSION['user'], 'password' => $password, 'email' => $_SESSION['email']));
+        writeConfigFile(array('config>user' => $_SESSION['user'], 'config>password' => $password, 'config>email' => $_SESSION['email']));
         $install = TRUE;
     }
     return $install;
@@ -193,7 +189,7 @@ function install($resetPassword = FALSE)
 
 if (empty($config['password'])) {
     if (empty($_POST['lang'])) {
-        $_POST['lang'] = navLang('script');
+        $_POST['lang'] = getUserLanguage();
     }
     session_start();
     timply::setUri('');
