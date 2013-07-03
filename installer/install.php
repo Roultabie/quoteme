@@ -130,28 +130,34 @@ function getUserLanguage()
     return $favorite;
 }
 
-function genSelectLang($defaultLang = "")
+function arrayToSelect($languages, $defaultOption)
 {
-    $select = '<select name="lang" id="lang" onChange="javascript:this.form.submit();">';
+    if (is_array($languages)) {
+        $select = '<select name="lang" id="lang" onChange="javascript:this.form.submit();">';
+        foreach ($languages as $option) {
+            $selected = '';
+            if ($defaultOption === $option || ($selected !== 'selected' && getUserLanguage() === $lang)) {
+                $selected = ' selected';
+            }
+            $select .= '<option value="' . $lang . '"' . $selected . '>' . $lang . '</option>';
+        }
+        $select .= '</select>';
+    }
+    return $select;
+}
+
+function listAvailableLanguages()
+{
     if (($dir = opendir('../lang'))) {
-        $isSelected = FALSE;
         while (($file = readdir($dir)) !== FALSE) {
             if ($file !== '.' && $file !== '..') {
-                $lang = substr($file, 0, -4);
-                $selected = '';
-                if ($defaultLang === $lang || ($isSelected === FALSE && getUserLanguage() === $lang)) {
-                    $selected = ' selected';
-                    $isSelected = TRUE;
-                }
-
-                $select .= '<option value="' . $lang . '"' . $selected . '>' . $lang . '</option>';
+                $languages[] = substr($file, 0, -4);
             }
             unset($selected);
         }
         closedir($dir);
     }
-    $select .= '</select>';
-    return $select;
+    return $languages;
 }
 
 function install($resetPassword = FALSE)
@@ -253,7 +259,7 @@ if (empty($config['password'])) {
         }
     }
     $html->setElement('test', '<input type="submit" name="test" value="[trad::test_datas]">');
-    $html->setElement('langSelect', genSelectLang($_POST['lang']));
+    $html->setElement('langSelect', arrayToSelect(listAvailableLanguages(), $_POST['lang']));
     echo $html->returnHtml();
 }
 
