@@ -3,9 +3,9 @@
  * System options don't modify them
  */
 $system['dateFormat']  = 'Y-m-d';
-$system['version']     = 'devel';
+$system['version']     = '1.3b';
 $system['lastUpdate']  = '0000-00-00';
-$system['lastVersion'] = '1.2b';
+$system['lastVersion'] = '';
 
 /**
  * config options, put your informations here
