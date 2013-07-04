@@ -2,15 +2,15 @@
 /**
  * System options don't modify them
  */
-$system['dateFormat'] = 'Y-m-d';
-$system['version'] = '1.2b';
-$system['lastUpdate'] = '0000-00-00';
-$system['lastVersion'] = '';
+$system['dateFormat']  = 'Y-m-d';
+$system['version']     = 'devel';
+$system['lastUpdate']  = '0000-00-00';
+$system['lastVersion'] = '1.2b';
 
 /**
  * config options, put your informations here
  */
-$config['dbHost'] = 'localhost';
+$config['dbHost'] = '';
 $config['dbName'] = '';
 $config['dbUser'] = '';
 $config['dbPass'] = '';
