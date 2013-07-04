@@ -20,8 +20,7 @@ function dbConnexion($host, $name, $user, $pass)
         $instance->query("SET NAMES 'utf8'");
         $result = $instance;
     } catch (Exception $e) {
-        $error[] = $e->getCode();
-        $error[] = $e->getMessage();
+        $error = $e->getCode();
         $result = $error;
     }
     return $result;
@@ -30,39 +29,33 @@ function dbConnexion($host, $name, $user, $pass)
 function checkDbIds($host, $user, $password, $dbName, $tableName)
 {
     $connexion = dbConnexion($host, $dbName, $user, $password);
-    if (is_array($connexion)) {
-        if ($connexion[0] === 2002) $error = '[trad::sqlError2002]';
-        if ($connexion[0] === 1044) $error = '[trad::sqlError1044]';
-        if ($connexion[0] === 1045) $error = '[trad::sqlError1045]';
-        $passed = FALSE;
+    $state     = array('dbHost' => TRUE, 'dbIds' => TRUE, 'dbName' => TRUE, 'tableName' => TRUE);
+    if (!is_object($connexion)) {
+        if ($connexion === 2002) {
+            $state['dbHost'] = 10;
+        }
+        if ($connexion === 1045) {
+            $state['dbIds'] = 20;
+        }
+        if ($connexion === 1044) {
+            $state['dbName'] = 30;
+        }
     }
-    elseif (empty($dbName)) {
-        $error  = '[trad::dbname_cant_be_empty]';
-        $passed = FALSE;
+    if (empty($dbName)) {
+        $state['dbName'] = 31;
     }
-    elseif (empty($tableName)) {
-        $error  = '[trad::table_cant_be_empty]';
-        $passed = FALSE;
+    if (empty($tableName)) {
+        $state['tableName'] = 40;
     }
     else {
-        $ifTableExist = ifDbTableExist($connexion, $tableName);
-        if ($ifTableExist === FALSE) {
-            $error = '[trad::table_already_exist]';
-            $passed  = FALSE;
+        if (ifDbTableExist($connexion, $tableName) === FALSE) {
+            $state['tableName'] = 41;
         }
         else {
-            $passed = TRUE;
+            $state = TRUE;
         }
     }
-    if ($passed === FALSE) {
-        $GLOBALS['html']->setElement('sqlError', $error);
-        $GLOBALS['html']->setElement('sqlErrorDisplay', 'display: block;');
-    }
-    else {
-        $GLOBALS['html']->setElement('sqlSuccess', '[trad::db_infos_correct]');
-        $GLOBALS['html']->setElement('sqlSuccessDisplay', 'display: block;');
-    }
-    return $passed;
+    return $state;
 }
 
 function ifDbTableExist($instance, $table)
@@ -206,16 +199,20 @@ function install($resetPassword = FALSE)
 }
 
 if (empty($config['password'])) {
-    if (empty($_POST['lang'])) {
-        $_POST['lang'] = getUserLanguage();
-    }
     session_start();
+    $lang = $_SESSION['lang'];
+    if (empty($_POST['lang']) && empty($lang)) {
+        $lang = getUserLanguage();
+    }
+    elseif (!empty($_POST['lang'])) {
+        $lang = $_POST['lang'];
+    }
+
     timply::setUri('');
     timply::setFileName('installer.html');
-    timply::addDictionary('../lang/' .$_POST['lang'] . '.php');
+    timply::addDictionary('../lang/' .$lang . '.php');
     $html = new timply();
-
-    if (!empty($_POST)) {
+    if (!empty($_POST) && implode('', $_POST) !== $lang) {
         if (empty($GLOBALS['config']['dbName'])) {
             if (empty($_POST['dbhost']))    $_POST['dbhost'] = 'localhost';
             if (empty($_POST['user']))      $_POST['user']   = $_POST['dbuser'];
@@ -229,7 +226,7 @@ if (empty($config['password'])) {
             $_SESSION['user']    = $_POST['user'];
             $_SESSION['pass']    = $_POST['password'];
             $_SESSION['email']   = $_POST['email'];
-            $db                  = checkDbIds($_SESSION['dbHost'], $_SESSION['dbUser'], $_SESSION['dbPass'], $_SESSION['dbName'], $_SESSION['dbTable']);
+            $dbState             = checkDbIds($_SESSION['dbHost'], $_SESSION['dbUser'], $_SESSION['dbPass'], $_SESSION['dbName'], $_SESSION['dbTable']);
         }
         else {
             $_SESSION['lang']    = $GLOBALS['config']['lang'];
@@ -241,7 +238,7 @@ if (empty($config['password'])) {
             $_SESSION['user']    = $GLOBALS['config']['user'];
             $_SESSION['email']   = $GLOBALS['config']['email'];
             $_SESSION['pass']    = $_POST['password'];
-            $db                  = TRUE;
+            $dbState             = TRUE;
             $resetPassword       = TRUE;
         }
         $html->setElement('postDbHost', $_SESSION['dbHost']);
@@ -253,12 +250,34 @@ if (empty($config['password'])) {
         $html->setElement('postPass', $_SESSION['pass']);
         $html->setElement('postEmail', $_SESSION['email']);
 
-        $conf = checkConfigFile();
-        if (!$conf) {
-            $GLOBALS['html']->setElement('confError', '[trad::config_file_is_not_writable]');
-            $GLOBALS['html']->setElement('confErrorDisplay', 'display: block;');
+        $confState = checkConfigFile();
+
+        if ($dbState !== TRUE) {
+            if (is_array($dbState)) {
+                foreach ($dbState as $key => $value) {
+                    if (is_int($value)) {
+                        $html->setElement('notChecked' .  $key, 'visible');
+                        $html->setElement('dbError', '[trad::db_error_' . $value . ']', 'dbErrors');
+                    }
+                    elseif ($value === TRUE) {
+                        $html->setElement('checked' .  $key, 'visible');
+                    }
+                }
+            }
         }
-        if ($db && $conf) {
+        else {
+            $html->setElement('checkedDb', 'visible');
+            $html->setElement('dbSuccess', '[trad::db_infos_correct]');
+        }
+        if ($confState === FALSE) {
+            $html->setElement('notCheckedConfigFile', 'visible');
+            $html->setElement('configFileError', '[trad::config_file_is_not_writable]');
+        }
+        else {
+            $html->setElement('checkedConfigFile', 'visible');
+            $html->setElement('configFileSuccess', '[trad::config_file_is_writable]');
+        }
+        if ($dbState === TRUE && $confState === TRUE) {
             if ($resetPassword) {
                 $value = '[trad::update_datas]';
             }
@@ -274,7 +293,8 @@ if (empty($config['password'])) {
         }
     }
     $html->setElement('test', '<input type="submit" name="test" value="[trad::test_datas]">');
-    $html->setElement('langSelect', arrayToSelect(listAvailableLanguages(), $_POST['lang']));
+    $html->setElement('langSelect', arrayToSelect(listAvailableLanguages(), $lang));
     echo $html->returnHtml();
 }
+print_r($_SESSION);
 ?>

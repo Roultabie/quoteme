@@ -10,9 +10,6 @@
         text-align: center;
         margin: 35px 0;
     }
-    .infos {
-        display: none;
-    }
     div {
         width: 600px;
     }
@@ -38,9 +35,29 @@
     label {
         float: left;
         display: block;
-        width: 60%;
+        width: 55%;
         height: 25px;
         margin-top: 5px;
+    }
+    .check {
+        display: none;
+        float: left;
+        width: 5%;
+        height: 25px;
+        margin-top: 5px;
+        font-size: 1.2em;
+    }
+    .notchecked {
+        color: #ff0000;
+    }
+    .checked {
+        color: #00ff00;
+    }
+    .visible {
+        display: inline-block;
+    }
+    .hidden {
+        display: none;
     }
     input, select {
         float: right;
@@ -69,14 +86,18 @@
         font-style: italic;
     }
     .error {
+        display: block;
         background-color: #ff0000;
         text-align: center;
         border-radius: 3px;
+        margin-top: 1px;
     }
     .success {
+        display: block;
         background-color: #00ff00;
         text-align: center;
         border-radius: 3px;
+        margin-top: 1px;
     }
     </style>
 </head>
@@ -93,20 +114,23 @@
             <div>
                 <h3>[trad::database]</h3>
             </div>
-            <span class="error infos" style="{sqlErrorDisplay}">{sqlError}</span>
-            <span class="success infos" style="{sqlSuccessDisplay}">{sqlSuccess}</span>
-            <label for="dbhost">[trad::database_host] : </label><input type="text" name="dbhost" value="{postDbHost}"><br>
-            <label for="dbuser">[trad::username] : </label><input type="text" name="dbuser" value="{postDbUser}"><br>
-            <label for="dbpass">[trad::password] : </label><input type="text" name="dbpass" value="{postDbPass}"><br>
-            <label for="dbname">[trad::database_name] : </label><input type="text" name="dbname" value="{postDbName}"><br>
-            <label for="dbtable">[trad::table_name] : </label><input type="text" name="dbtable" value="{postDbTable}"><br>
+            <!-- start dbErrors -->
+            <span class="error infos">{dbError}</span>
+            <!-- end dbErrors -->
+            <span class="success infos">{dbSuccess}</span>
+            <label for="dbhost">[trad::database_host] : </label><span class='check {checkedDb} {checkeddbHost} checked'>&#10004;</span><span class='check {notCheckeddbHost} notchecked'>&#10008;</span><input type="text" name="dbhost" value="{postDbHost}"><br>
+            <label for="dbuser">[trad::username] : </label><span class='check {checkedDb} {checkeddbIds} checked'>&#10004;</span><span class='check {notCheckeddbIds} notchecked'>&#10008;</span><input type="text" name="dbuser" value="{postDbUser}"><br>
+            <label for="dbpass">[trad::password] : </label><span class='check {checkedDb} {checkeddbIds} checked'>&#10004;</span><span class='check {notCheckeddbIds} notchecked'>&#10008;</span><input type="text" name="dbpass" value="{postDbPass}"><br>
+            <label for="dbname">[trad::database_name] : </label><span class='check {checkedDb} {checkeddbName} checked'>&#10004;</span><span class='check {notCheckeddbName} notchecked'>&#10008;</span><input type="text" name="dbname" value="{postDbName}"><br>
+            <label for="dbtable">[trad::table_name] : </label><span class='check {checkedDb} {checkedtableName} checked'>&#10004;</span><span class='check {notCheckedtableName} notchecked'>&#10008;</span><input type="text" name="dbtable" value="{postDbTable}"><br>
         </fieldset>
         <fieldset>
             <div>
                 <h3>[trad::config_file]</h3>
             </div>
-            <span class="error infos" style="{confErrorDisplay}">{confError}</span>
-            <label for="iswritable">[trad::config_php_must_be_writable] :</label><input type="checkbox" value="iswritable" {checked} disabled>
+            <span class="error infos">{configFileError}</span>
+            <span class="success infos">{configFileSuccess}</span>
+            <label for="iswritable">[trad::config_php_must_be_writable] :</label><span class='check {checkedConfigFile} checked'>&#10004;</span><span class='check {notCheckedConfigFile} notchecked'>&#10008;</span>
         </fieldset>
         <fieldset>
             <div>
