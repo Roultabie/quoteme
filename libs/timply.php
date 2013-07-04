@@ -3,7 +3,7 @@
  * Timply class
  *
  * Genarate webpage from html sources
- *                             
+ *
  * @package     Timply
  * @author      Daniel Douat <daniel.douat@aelys-info.fr>
  * @link        http://www.aelys-info.fr
@@ -17,7 +17,7 @@ class timply
     private $file;
     private $firstElement;
     public  $block;
-    
+
     function __construct()
     {
         $this->setFile();
@@ -100,8 +100,8 @@ class timply
     }
 
     // End # public functions -------------------------------------------------
-        
-    // Start # private functions ----------------------------------------------  
+
+    // Start # private functions ----------------------------------------------
 
     /**
      * Create an array with elements replaced by datas only for blocks
@@ -204,8 +204,9 @@ class timply
 
     private function cleanFile()
     {
-        $file = $this->getFile();
-        $file = preg_replace('/{[\d\w\-_]+}/', '', $file);
+        $file     = $this->getFile();
+        $patterns = array('/{[\d\w\-_]+}/', '/\[[\d\w\-_]+\]/');
+        $file     = preg_replace($patterns, '', $file);
         $this->setFile($file);
     }
 
