@@ -99,6 +99,10 @@
         border-radius: 3px;
         margin-top: 1px;
     }
+    .complemetary {
+        font-size: 0.7em;
+        font-style: italic;
+    }
     </style>
 </head>
 <body>
@@ -136,8 +140,8 @@
             <div>
                 <h3>[trad::user]</h3>
             </div>
-            <label for="user">[trad::username] : </label><input type="text" name="user" value="{postUser}"><br>
-            <label for="password">[trad::password] : </label><input type="text" name="password" value="{postPass}"><br>
+            <label for="user">[trad::username] : <span class="complemetary">([trad::empty_if_like_db_user])</span></label><input type="text" name="user" value="{postUser}"><br>
+            <label for="password">[trad::password] : <span class="complemetary">([trad::empty_if_like_db_password])</span></label><input type="text" name="password" value="{postPass}"><br>
             <label for="email">[trad::email] : </label><input type="text" name="email" value="{postEmail}">
         </fieldset>
         <div id="submit">
