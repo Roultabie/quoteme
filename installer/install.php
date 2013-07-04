@@ -91,11 +91,11 @@ function writeConfigFile($newOptions)
         if (is_string($value)) {
             $value = "'" . str_replace("'", "\'", $value) . "'";
         }
-        $pattern   = "/^\$" . $key[0] . "\['" . $key[1] . "'\]\s{0,}=\s{0,}['\"]{0,1}[\w\d-_\+-]['\"]{0,1};$/";
-        $replace   = "\$" . $key[0] . "['" . $key[1] . "'] = " . $value . ";";
-        $newConfig = preg_replace($pattern, $replace, $configContent);
+        $pattern       = '/\$' . $keys[0] . '\[\'' . $keys[1] . '\'\]\s*=\s*[\'"]{0,1}.*[\'"]{0,1};/i';
+        $replace       = '$' . $keys[0] . '[\'' . $keys[1] . '\'] = ' .$value . ';';
+        $configContent = preg_replace($pattern, $replace, $configContent);
     }
-    file_put_contents($fileUri . $fileName, $newConfig, LOCK_EX);
+    file_put_contents($fileUri . $fileName, $configContent, LOCK_EX);
 }
 
 function httpAcceptLanguageToArray()
@@ -168,7 +168,7 @@ function listAvailableLanguages()
 function install($resetPassword = FALSE)
 {
     $password = hash('sha256', $_SESSION['password']);
-    if ($resetPassword === FALSE) {
+    if ($resetPassword !== TRUE) {
         $table = 'CREATE TABLE IF NOT EXISTS `' . $_SESSION['dbTable'] . '` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `quote` text NOT NULL,
@@ -184,10 +184,10 @@ function install($resetPassword = FALSE)
         $stmt     = $instance->prepare($table);
         $stmt->execute();
         if ($stmt !== FALSE) {
-            writeConfigFile(array('dbHost' => $_SESSION['dbHost'], 'dbName' => $_SESSION['dbName'],
-                'dbUser' => $_SESSION['dbUser'], 'dbPass' => $_SESSION['dbPass'],
-                'dbTable' => $_SESSION['dbTable'], 'lang' => $_SESSION['lang'],
-                'user' => $_SESSION['user'], 'password' => $password, 'email' => $_SESSION['email']));
+            writeConfigFile(array('config>dbHost' => $_SESSION['dbHost'], 'config>dbName' => $_SESSION['dbName'],
+                'config>dbUser' => $_SESSION['dbUser'], 'config>dbPass' => $_SESSION['dbPass'],
+                'config>dbTable' => $_SESSION['dbTable'], 'config>lang' => $_SESSION['lang'],
+                'config>user' => $_SESSION['user'], 'config>password' => $password, 'config>email' => $_SESSION['email']));
             $install = TRUE;
         }
     }
