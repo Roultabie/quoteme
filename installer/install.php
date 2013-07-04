@@ -29,32 +29,39 @@ function dbConnexion($host, $name, $user, $pass)
 
 function checkDbIds($host, $user, $password, $dbName, $tableName)
 {
-    if (!empty($dbName)) {
-        $connexion = dbConnexion($host, $dbName, $user, $password);
-        if (is_array($connexion)) {
-            if ($connexion[0] === 2002) $sqlInfo = '[trad::sqlError2002]';
-            if ($connexion[0] === 1044) $sqlInfo = '[trad::sqlError1044]';
-            if ($connexion[0] === 1045) $sqlInfo = '[trad::sqlError1045]';
-            $passed = FALSE;
-        }
-        else {
-            $ifTableExist = ifDbTableExist($connexion, $tableName);
-            if ($ifTableExist === FALSE) {
-                $message = '[trad::table_already_exist]';
-                $passed  = FALSE;
-            }
-            else {
-                $GLOBALS['html']->setElement('disabled', 'disabled');
-                $message = '[trad::db_infos_correct]';
-                $passed = TRUE;
-            }
-        }
+    $connexion = dbConnexion($host, $dbName, $user, $password);
+    if (is_array($connexion)) {
+        if ($connexion[0] === 2002) $error = '[trad::sqlError2002]';
+        if ($connexion[0] === 1044) $error = '[trad::sqlError1044]';
+        if ($connexion[0] === 1045) $error = '[trad::sqlError1045]';
+        $passed = FALSE;
+    }
+    elseif (empty($dbName)) {
+        $error  = '[trad::dbname_cant_be_empty]';
+        $passed = FALSE;
+    }
+    elseif (empty($tableName)) {
+        $error  = '[trad::table_cant_be_empty]';
+        $passed = FALSE;
     }
     else {
-        $message = '[trad::dbname_cant_be_empty]';
-        $passed  = FALSE;
+        $ifTableExist = ifDbTableExist($connexion, $tableName);
+        if ($ifTableExist === FALSE) {
+            $error = '[trad::table_already_exist]';
+            $passed  = FALSE;
+        }
+        else {
+            $passed = TRUE;
+        }
     }
-    $GLOBALS['html']->setElement('sqlInfos', $message);
+    if ($passed === FALSE) {
+        $GLOBALS['html']->setElement('sqlError', $error);
+        $GLOBALS['html']->setElement('sqlErrorDisplay', 'display: block;');
+    }
+    else {
+        $GLOBALS['html']->setElement('sqlSuccess', '[trad::db_infos_correct]');
+        $GLOBALS['html']->setElement('sqlSuccessDisplay', 'display: block;');
+    }
     return $passed;
 }
 
@@ -167,7 +174,7 @@ function listAvailableLanguages()
 
 function install($resetPassword = FALSE)
 {
-    $password = hash('sha256', $_SESSION['password']);
+    $password = hash('sha256', $_POST['password']);
     if ($resetPassword !== TRUE) {
         $table = 'CREATE TABLE IF NOT EXISTS `' . $_SESSION['dbTable'] . '` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -237,7 +244,6 @@ if (empty($config['password'])) {
             $db                  = TRUE;
             $resetPassword       = TRUE;
         }
-        //$html->setElement('display', 'display: block;');
         $html->setElement('postDbHost', $_SESSION['dbHost']);
         $html->setElement('postDbUser', $_SESSION['dbUser']);
         $html->setElement('postDbPass', $_SESSION['dbPass']);
@@ -248,6 +254,10 @@ if (empty($config['password'])) {
         $html->setElement('postEmail', $_SESSION['email']);
 
         $conf = checkConfigFile();
+        if (!$conf) {
+            $GLOBALS['html']->setElement('confError', '[trad::config_file_is_not_writable]');
+            $GLOBALS['html']->setElement('confErrorDisplay', 'display: block;');
+        }
         if ($db && $conf) {
             if ($resetPassword) {
                 $value = '[trad::update_datas]';
@@ -267,5 +277,4 @@ if (empty($config['password'])) {
     $html->setElement('langSelect', arrayToSelect(listAvailableLanguages(), $_POST['lang']));
     echo $html->returnHtml();
 }
-
 ?>

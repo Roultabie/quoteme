@@ -34,10 +34,12 @@ $lang['sqlError1045'] = 'username / password wrong';
 $lang['dbname_cant_be_empty'] = 'dbname can\'t be empty';
 $lang['sqlError2002'] = 'cannot connect to host';
 $lang['db_infos_correct'] = 'db informations are correct';
+$lang['table_cant_be_empty'] = 'table name can\'t be empty';
 $lang['table_already_exist'] = 'table already exist';
 $lang['test_datas'] = 'test datas';
 $lang['config_file'] = 'config file';
 $lang['config_php_must_be_writable'] = 'config.php must be writable';
 $lang['installation_script'] = 'installation script';
 $lang['update_datas'] = 'update datas';
+$lang['config_file_is_not_writable'] = 'config file is not writable';
 ?>

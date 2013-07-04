@@ -34,10 +34,12 @@ $lang['sqlError1045'] = 'utilisateur et / ou mot de passe incorrect';
 $lang['dbname_cant_be_empty'] = 'vous devez indiquer un nom pour votre base de données';
 $lang['sqlError2002'] = 'impossible de se connecter à cet emplacement';
 $lang['db_infos_correct'] = 'informations correctes';
+$lang['table_cant_be_empty'] = 'vous devez donner un nom de table';
 $lang['table_already_exist'] = 'cette table existe déjà';
 $lang['test_datas'] = 'tester les informations';
 $lang['config_file'] = 'fichier de configuration';
 $lang['config_php_must_be_writable'] = 'config.php avec les droits en écriture';
 $lang['installation_script'] = 'script d\'installation';
 $lang['update_datas'] = 'MAJ les données';
+$lang['config_file_is_not_writable'] = 'config.php n\'a pas les droits en écriture';
 ?>

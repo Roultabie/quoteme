@@ -10,7 +10,7 @@
         text-align: center;
         margin: 35px 0;
     }
-    #infos {
+    .infos {
         display: none;
     }
     div {
@@ -68,6 +68,16 @@
         background-color: lightgrey;
         font-style: italic;
     }
+    .error {
+        background-color: #ff0000;
+        text-align: center;
+        border-radius: 3px;
+    }
+    .success {
+        background-color: #00ff00;
+        text-align: center;
+        border-radius: 3px;
+    }
     </style>
 </head>
 <body>
@@ -83,7 +93,8 @@
             <div>
                 <h3>[trad::database]</h3>
             </div>
-            <span id="infos" style="{display}">{sqlInfos}</span>
+            <span class="error infos" style="{sqlErrorDisplay}">{sqlError}</span>
+            <span class="success infos" style="{sqlSuccessDisplay}">{sqlSuccess}</span>
             <label for="dbhost">[trad::database_host] : </label><input type="text" name="dbhost" value="{postDbHost}"><br>
             <label for="dbuser">[trad::username] : </label><input type="text" name="dbuser" value="{postDbUser}"><br>
             <label for="dbpass">[trad::password] : </label><input type="text" name="dbpass" value="{postDbPass}"><br>
@@ -94,6 +105,7 @@
             <div>
                 <h3>[trad::config_file]</h3>
             </div>
+            <span class="error infos" style="{confErrorDisplay}">{confError}</span>
             <label for="iswritable">[trad::config_php_must_be_writable] :</label><input type="checkbox" value="iswritable" {checked} disabled>
         </fieldset>
         <fieldset>
