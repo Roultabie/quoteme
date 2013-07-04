@@ -43,4 +43,6 @@ $lang['installation_script'] = 'installation script';
 $lang['update_datas'] = 'update datas';
 $lang['config_file_is_not_writable'] = 'config.php is not writable';
 $lang['config_file_is_writable'] = 'config.php is writable';
+$lang['empty_if_like_db_user'] = 'leave empty if like db user';
+$lang['empty_if_like_db_password'] = 'leave empty if like db password';
 ?>
