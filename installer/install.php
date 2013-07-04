@@ -296,5 +296,4 @@ if (empty($config['password'])) {
     $html->setElement('langSelect', arrayToSelect(listAvailableLanguages(), $lang));
     echo $html->returnHtml();
 }
-print_r($_SESSION);
 ?>
