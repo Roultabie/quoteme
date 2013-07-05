@@ -13,6 +13,23 @@ require_once 'libs/quoteme.php';
 require_once 'libs/timply.php';
 require_once 'libs/smartypants.php';
 
+function writeConfigFile($newOptions)
+{
+    $fileName = 'config.php';
+    $fileUri  = '';
+    $configContent = file_get_contents($fileUri . $fileName);
+    foreach ($newOptions as $key => $value) {
+        list($type, $option) = explode(">", $key);
+        if (is_string($value)) {
+            $value = "'" . str_replace("'", "\'", $value) . "'";
+        }
+        $pattern       = '/\$' . $type . '\[\'' . $option . '\'\]\s*=\s*[\'"]{0,1}.*[\'"]{0,1};/i';
+        $replace       = '$' . $type . '[\'' . $option . '\'] = ' .$value . ';';
+        $configContent = preg_replace($pattern, $replace, $configContent);
+    }
+    file_put_contents($fileUri . $fileName, $configContent, LOCK_EX);
+}
+
 function editConfig($newConfig)
 {
     //on récupere config.php dans un tableau
@@ -55,7 +72,7 @@ function getUpdate()
     
     if ($GLOBALS['system']['lastUpdate'] < $currentDate) {
         $update = file_get_contents('http://q.uote.me/checkupdate.php?cliv=' . $GLOBALS['config']['appVers']);
-        editConfig(array('lastVersion' => $update, 'lastUpdate' => $currentDate));
+        writeConfigFile(array('system>lastVersion' => $update, 'system>lastUpdate' => $currentDate));
     }
     
 }
