@@ -87,12 +87,13 @@ function writeConfigFile($newOptions)
     $fileUri  = '../';
     $configContent = file_get_contents($fileUri . $fileName);
     foreach ($newOptions as $key => $value) {
-        $keys = explode(">", $key);
+        list($type, $option) = explode(">", $key);
+        //$keys = explode(">", $key);
         if (is_string($value)) {
             $value = "'" . str_replace("'", "\'", $value) . "'";
         }
-        $pattern       = '/\$' . $keys[0] . '\[\'' . $keys[1] . '\'\]\s*=\s*[\'"]{0,1}.*[\'"]{0,1};/i';
-        $replace       = '$' . $keys[0] . '[\'' . $keys[1] . '\'] = ' .$value . ';';
+        $pattern       = '/\$' . $type . '\[\'' . $option . '\'\]\s*=\s*[\'"]{0,1}.*[\'"]{0,1};/i';
+        $replace       = '$' . $type . '[\'' . $option . '\'] = ' .$value . ';';
         $configContent = preg_replace($pattern, $replace, $configContent);
     }
     file_put_contents($fileUri . $fileName, $configContent, LOCK_EX);

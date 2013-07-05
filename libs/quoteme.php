@@ -341,19 +341,18 @@ class quoteQueries
         }
         if (!empty($opt['limit'])) {
             if (strpos($opt['limit'], ',') !== FALSE) {
-                $limit = explode(',', $opt['limit']);
-                $limit[1] = ',' . $limit[1];
+                list($limitMin, $limitMax) = explode(',', $limit);
             }
             else {
-                $limit[0] = $opt['limit'];
+                $limitMin = $opt['limit'];
             }
-            $limit = ' LIMIT ' . $limit[0] . $limit[1];
+            $limit = ' LIMIT ' . rtrim($limitMin . ',' .$limitMax, ',');
         }
         if (!empty($opt['sort'])) {
             if ($opt['sort'] === 'random') $rand = ' JOIN ( SELECT FLOOR( COUNT( * ) * RAND( ) ) AS ValeurAleatoire FROM ' . self::$table . ' ) AS V ON ' . self::$table . '.id >= V.ValeurAleatoire';
             if (strpos($opt['sort'], ',')) {
-                $sOpt = explode(',', $opt['sort']);
-                $sort = ' ORDER BY ' . $sOpt[0] . ' ' .$sOpt[1];
+                list($field, $order) = explode(',', $opt['sort']);
+                $sort = ' ORDER BY ' . $field . ' ' .$order;
             }
         }
         $query = 'SELECT id, quote, author, source, tags, permalink, date FROM ' . self::$table . $rand . $where . $sort . $limit . ';';
@@ -439,23 +438,23 @@ class quoteQueries
 
     /**
      * Return WHERE of AND sql structure
-     * @param  string  $where    sql field
-     * @param  string  $whereOpt where condition (ex like,lorem)
+     * @param  string  $field    sql field
+     * @param  string  $string   where condition (ex like,lorem)
      * @param  boolean $and      if AND condition, set TRUE
      * @return string            sql structure
      */
-    private function constructWhere($where, $whereOpt, $and = FALSE)
+    private function constructWhere($field, $string, $and = FALSE)
     {
-        $cond   = ($and) ? 'AND' : 'WHERE';
-        $opt    = explode(',', $whereOpt);
-        $opt[0] = str_replace('minus', '<', $opt[0]);
-        $opt[0] = str_replace('plus', '>', $opt[0]);
-        $opt[0] = str_replace('equal', '=', $opt[0]);
-        if ($opt[0] === 'like') {
-            $opt[0] = strtoupper($opt[0]);
-            $opt[1] = '%' . $opt[1] . '%';
+        $cond = ($and) ? 'AND' : 'WHERE';
+        list($test, $string) = explode(',', $string);
+        $test = str_replace('minus', '<', $test);
+        $test = str_replace('plus', '>', $test);
+        $test = str_replace('equal', '=', $test);
+        if ($test === 'like') {
+            $test = strtoupper($test);
+            $string = '%' . $string . '%';
         }
-        return ' ' . $cond . ' ' .$where . ' ' .$opt[0] . ' "' . $opt[1] . '"';
+        return ' ' . $cond . ' ' .$field . ' ' .$test . ' "' . $string . '"';
     }
     /**
      * SmallHash via shaarli (sebsauvage)
