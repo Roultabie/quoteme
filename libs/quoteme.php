@@ -341,19 +341,18 @@ class quoteQueries
         }
         if (!empty($opt['limit'])) {
             if (strpos($opt['limit'], ',') !== FALSE) {
-                $limit = explode(',', $opt['limit']);
-                $limit[1] = ',' . $limit[1];
+                list($limitMin, $limitMax) = explode(',', $limit);
             }
             else {
-                $limit[0] = $opt['limit'];
+                $limitMin = $opt['limit'];
             }
-            $limit = ' LIMIT ' . $limit[0] . $limit[1];
+            $limit = ' LIMIT ' . rtrim($limitMin . ',' .$limitMax, ',');
         }
         if (!empty($opt['sort'])) {
             if ($opt['sort'] === 'random') $rand = ' JOIN ( SELECT FLOOR( COUNT( * ) * RAND( ) ) AS ValeurAleatoire FROM ' . self::$table . ' ) AS V ON ' . self::$table . '.id >= V.ValeurAleatoire';
             if (strpos($opt['sort'], ',')) {
-                $sOpt = explode(',', $opt['sort']);
-                $sort = ' ORDER BY ' . $sOpt[0] . ' ' .$sOpt[1];
+                list($field, $order) = explode(',', $opt['sort']);
+                $sort = ' ORDER BY ' . $field . ' ' .$order;
             }
         }
         $query = 'SELECT id, quote, author, source, tags, permalink, date FROM ' . self::$table . $rand . $where . $sort . $limit . ';';
