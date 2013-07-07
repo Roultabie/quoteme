@@ -34,7 +34,10 @@ implements parserTemplate
                 $result .= $text . $author . $source . PHP_EOL;
             }
         }
-        return trim($result);
+        header('Cache-Control: no-cache, must-revalidate');
+        header('Expires: Ven, 07 Oct 2011 23:32:00 GMT');
+        header('Content-type: text/csv');
+        exit(trim($result));
     }
 
     private function enclose($text)
