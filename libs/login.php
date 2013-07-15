@@ -128,8 +128,8 @@ class userWriter
 
     public static function initSession()
     {
-        $_SESSION['startTime'] = microtime(TRUE);
         session_start();
+        $_SESSION['startTime'] = microtime(TRUE);
     }
 
     public static function killSession()
