@@ -61,7 +61,7 @@ Permalink format example : http://q.uote.me?xHlefA (thank to [sebsauvage](https:
 
 ###Updates :
 
-_2013-07-36 (1.4b)_
+_2013-07-26 (1.4b)_
 - Added image parser
 
 _2013-07-04 (1.3b):_
