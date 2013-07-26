@@ -11,13 +11,11 @@ implements parserTemplate
     {
         $this->type = 'png';
         $this->uri = $GLOBALS['config']['themeDir'] . 'fonts/';
-        $this->fileName = 'png.png';
         $this->width    = 1024;
         $this->fontRGB  = array(85, 85, 85);
         $this->bgRGB  = array(255, 255, 255);
         $this->fontName = 'texgyrepagella-italic.ttf';
         $this->setTheme();
-        parser::addOptions($options);
     }
 
     function parse($elements)
