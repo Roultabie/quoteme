@@ -32,5 +32,6 @@ if (is_object($quote)) {
     $html->setElement('permalink', '?' .$quote->getPermalink());
 }
 $html->setElement('nbQuotes', $GLOBALS['quoteObj']['nb']);
+$html->setElement('version', $GLOBALS['system']['version']);
 echo $html->returnHtml();
 ?>
