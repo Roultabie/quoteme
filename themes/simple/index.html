@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <title>{author} - Q.uote.me</title>
+<script language="javascript" src="wget.js"></script>
 <style type="text/css">
 body {
     margin: 0;
@@ -33,6 +34,9 @@ section {
     /*background-color: white;*/
 
 }
+a, a:link, a:hover, a:active, a:visited {
+    text-decoration: none;
+}
 #quote {
     width: 50%;
     margin: 30px auto;
@@ -47,9 +51,18 @@ section {
     font-size: 1.6em;
     font-style: italic;
 }
-#text a, #text a:link, #text a:hover, #text a:active, #text a:visited {
+#reload {
+    position: absolute;
+    font-size: 2.0em;
+    top: 0.4em;
+    margin-left: -1.2em;
+}
+#reload a,  #reload a:visited {
+    color: #cccccc;
+}
+#text a, #text a:link, #text a:hover, #text a:active, #text a:visited,
+#reload a:link, #reload a:hover, #reload a:active {
     color: #555555;
-    text-decoration: none;
 }
 #author, #source {
     display: inline-block;
@@ -86,7 +99,8 @@ footer div {
     </header>
     <section>
         <div id="quote">
-            <span id="text"><a href="{permalink}" alt="permalink" title="permalink">« {text} »</a></span><span id="author">({author})</span>
+            <span id="text"><a href="{permalink}" alt="permalink" title="permalink" id="textLink">« {text} »</a></span><span id="author">({author})</span>
+            <span id="reload"><a href="#" onclick="changeQuote(); return false;" alt="[trad::get_new_quote]" title="[trad::get_new_quote]">&#10227;</a></span>
         </div>
     </section>
     <footer>
