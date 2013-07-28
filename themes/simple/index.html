@@ -4,106 +4,8 @@
 <meta charset="UTF-8" />
 <title>{author} - Q.uote.me</title>
 <script language="javascript" src="wget.js"></script>
-<style type="text/css">
-body {
-    margin: 0;
-    padding: 0;
-    color: #555555;
-    text-shadow: #fff 0 0 1px;
-}
-body:before
-{
-   content: "";
-   position: fixed;
-   top: -10px;
-   left: 0;
-   width: 100%;
-   height: 10px;
-   z-index: 100;
-   -webkit-box-shadow: 0px 0px 10px rgba(0,0,0,.8);
-   -moz-box-shadow: 0px 0px 10px rgba(0,0,0,.8);
-   box-shadow: 0px 0px 10px rgba(0,0,0,.8);
-}
-
-header {
-    height: 150px;
-    /*background-color: green;*/
-}
-section {
-    position: relative;
-    /*background-color: white;*/
-
-}
-a, a:link, a:hover, a:active, a:visited {
-    text-decoration: none;
-}
-#quote {
-    width: 50%;
-    margin: 30px auto;
-    font-size: 1em;
-    font-family: "Palatino Linotype", Palatino, Palladio, "URW Palladio L", "Book Antiqua", Baskerville, "Bookman Old Style", "Bitstream Charter", "Nimbus Roman No9 L", Garamond, "Apple Garamond", "ITC Garamond Narrow", "New Century Schoolbook", "Century Schoolbook", "Century Schoolbook L", Georgia, serif;
-    line-height: 1.3em;
-    text-shadow: #fff 0 0 1px;
-}
-#text {
-    width: 100%;
-    display: block;
-    font-size: 1.6em;
-    font-style: italic;
-}
-#text:before {
-    display: inline-block;
-    content: "«";
-    margin-right: 6px;
-    color: #555555;
-}
-#text:after {
-    display: inline-block;
-    content: "»";
-    margin-left: 6px;
-}
-#reload {
-    position: absolute;
-    font-size: 2.0em;
-    top: 0.4em;
-    margin-left: -1.2em;
-}
-#reload a,#reload a:link,  #reload a:visited {
-    color: #cccccc;
-}
-#text a, #text a:link, #text a:hover, #text a:active, #text a:visited,
-#reload a:hover, #reload a:active {
-    color: #555555;
-}
-#author, #source {
-    display: inline-block;
-    float: right;
-}
-footer {
-    position: absolute;
-    margin: 0;
-    padding: 12px 0 0 0;
-    width: 100%;
-    bottom: 0;
-    height: 50px;
-    /*background-color: red;*/
-    text-align: center;
-    font-size: 0.8em;
-    color: #888888;
-    border-top: 1px solid #cccccc;
-}
-footer a, footer a:link, footer a:hover, footer a:active, footer a:visited {
-    color: #888888;
-    text-decoration: none;
-}
-footer > span:first-child::after, footer > span:nth-child(2)::after, footer > span:nth-child(3)::after {
-    content: "-";
-    margin: 5px;
-}
-footer div {
-    font-style: italic;
-}
-</style>
+<link rel="stylesheet" href="themes/simple/css/style.css" />
+<link rel="stylesheet" href="themes/simple/css/gh-fork-ribbon.css" />
 </head>
 <body>
     <header>
@@ -117,7 +19,14 @@ footer div {
     <footer>
         <span>{nbQuotes} [trad::quotes]</span>
         <span>[trad::about]</span><span>[trad::API]</span><span><a href="https://github.com/Roultabie/quoteme">[trad::source_code]</a></span>
-        <div>q.uote.me [trad::by] <a href="http://www.aelys-info.fr">Aélys</a><div>
+        <div>
+            q.uote.me [trad::by] <a href="http://www.aelys-info.fr">Aélys</a>
+        <div>
+        <div class="github-fork-ribbon-wrapper right-bottom">
+            <div class="github-fork-ribbon">
+                <a href="https://github.com/Roultabie/quoteme">[trad::fork_me_on] GitHub</a>
+            </div>
+        </div>
     </footer>
 </body>
 </html>
