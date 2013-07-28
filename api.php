@@ -83,11 +83,18 @@ if ($currentScript !== 'api.php') {
     $GLOBALS['quoteObj'] = parseQuote('php', $opt); // permet de générer une quote en php, retour : la quote et le nb de quotes. Pour utiliser les options, charger $_GET
 }
 else {
-    if ($parser !== FALSE) {
-        echo parseQuote($parser, $opt);
+    if (!empty($_GET['p'])) {
+        if ($parser !== FALSE) {
+            echo parseQuote($parser, $opt);
+        }
+        else {
+            echo 'ERROR: parser is not valid !';
+        }
     }
     else {
-        echo 'ERROR: parser is not valid !';
+        timply::setFileName('api.html');
+        $html  = new timply();
+        echo $html->returnHtml();
     }
 }
 ?>

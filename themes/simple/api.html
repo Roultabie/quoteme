@@ -1,0 +1,129 @@
+<html>
+<head>
+    <title>API - Q.uote.me</title>
+</head>
+<body>
+    <article>
+        <h1>
+        <a name="quoteme" class="anchor" href="#quoteme"></a>Q.uote.me</h1>
+
+        <p><em>PHP script to store and view random quotes. (v1.4b)</em></p>
+
+        <p>Q.uote.me is a simple PHP script to manage your quotes.</p>
+
+        <p>Actually, you have your favorite quotes in multiple txt files, one for your mails, another for your web app, etc...</p>
+
+        <p>When you find a new quote, you have to update your files... It can be boring !</p>
+
+        <p>With this script, you manage only one SQL database. With his API, you read it in your favorite format (actualy, json, rss2, csv).</p>
+
+        <h2>
+        <a name="features" class="anchor" href="#features"></a>Features</h2>
+
+        <p><strong>Storage</strong> : Store your favorite quotes in a single place,  </p>
+
+        <p><strong>API</strong> : you can extract quotes with sql like queries in multiples formats,<br><em>Supported</em> : <strong>RSS2, JSON, CSV, IMG</strong>. in the future : XML, TXT, ATOM and <em>iCal</em> ;),  </p>
+
+        <h2>
+        <a name="how-to-use" class="anchor" href="#how-to-use"></a>How to use</h2>
+
+        <h3>
+        <a name="apiphp-" class="anchor" href="#apiphp-"></a><em>Api.php :</em>
+        </h3>
+
+        <p>To extract datas, use api.php (ex: <a href="http://q.uote.me/api.php">http://q.uote.me/api.php</a>) and use the following syntax in url :<br><strong>p</strong> &gt; parser : json rss2 csv img <em>ex : p=json</em><br><strong>s</strong> &gt; sort : data,asc desc or random <em>ex : s=date,desc s=random</em><br><strong>l</strong> &gt; limit : like sql syntax <em>ex : l=10 l=5,25</em><br><strong>w</strong> &gt; where : like sql syntax <em>ex : w=quote</em> must be followed by:<br><strong>wo</strong> &gt; where options, the first part of the option can be <strong>minus = &lt;</strong>, <strong>plus = &gt;</strong>, <strong>equal = =</strong> and <strong>like</strong> <em>ex : w=quote&amp;wo=like,lorem</em><br><strong>a</strong> &gt; and : like (and must be preceded by) <strong>where</strong><br><strong>ao</strong> &gt; and second part (and option) like <strong>and option</strong></p>
+
+        <h4>
+        <a name="availables-columns-" class="anchor" href="#availables-columns-"></a>Availables columns :</h4>
+
+        <p><strong>quote</strong> <em>(text)</em>, <strong>author</strong> <em>(varchar)</em>, <strong>source</strong> <em>(varchar)</em>, <strong>tags</strong> <em>(varchar)</em>, <strong>permalink</strong> <em>(char 6)</em>, <strong>date</strong> <em>(datetime)</em></p>
+
+        <h4>
+        <a name="image-extraction-options-" class="anchor" href="#image-extraction-options-"></a>Image extraction options :</h4>
+
+        <p><strong>t</strong> &gt; type : png gif jpeg (or all image supported by your phpgd version) <em>ex : t=png</em><br><strong>wi</strong> &gt; width : width of image in pixel <em>ex : wi=512</em><br><em>If you want extract a png image, options are not required</em>  </p>
+
+        <h4>
+        <a name="full-examples-" class="anchor" href="#full-examples-"></a>Full examples :</h4>
+
+        <ul>
+        <li>To extract a random quote in json format :<br><strong><a href="http://q.uote.me/api.php?p=json">http://q.uote.me/api.php?p=json</a></strong>
+        </li>
+        <li>To extract a quote in csv format :<br><strong><a href="http://q.uote.me/api.php?p=csv&amp;w=permalink&amp;wo=equal,xHlefA">http://q.uote.me/api.php?p=csv&amp;w=permalink&amp;wo=equal,xHlefA</a></strong>
+        </li>
+        <li>To extract last 10 quotes in rss2 format :<br><strong><a href="http://q.uote.me/api.php?p=rss2&amp;s=date,desc&amp;l=10">http://q.uote.me/api.php?p=rss2&amp;s=date,desc&amp;l=10</a></strong>
+        </li>
+        <li>To extract the 10 following quotes :<br><strong><a href="http://q.uote.me/api.php?p=rss2&amp;s=date,desc&amp;l=11,21">http://q.uote.me/api.php?p=rss2&amp;s=date,desc&amp;l=11,21</a></strong>
+        </li>
+        <li>Fun, one extraction with all options :<br><strong><a href="http://q.uote.me/api.php?p=json&amp;w=quote&amp;wo=like,a&amp;a=author&amp;ao=like,douat&amp;s=date,asc&amp;l=5&amp;s=random">http://q.uote.me/api.php?p=json&amp;w=quote&amp;wo=like,a&amp;a=author&amp;ao=like,douat&amp;s=date,asc&amp;l=5&amp;s=random</a></strong>
+        </li>
+        <li>To extract a png file (actually just random quote) :<br><strong><a href="http://q.uote.me/api.php?p=img">http://q.uote.me/api.php?p=img</a></strong><br>
+        </li>
+        <li>To extract a jpeg file of 500 pixels width :<br><strong><a href="http://q.uote.me/api.php?p=img&amp;t=jpeg&amp;wi=512">http://q.uote.me/api.php?p=img&amp;t=jpeg&amp;wi=512</a></strong><br>
+        </li>
+        </ul><h3>
+        <a name="index-of-website-" class="anchor" href="#index-of-website-"></a><em>Index of website :</em>
+        </h3>
+
+        <p>Just type address of website to view random quote. Add permalink option in the URL to view a specific quote.<br>
+        Permalink format example : <a href="http://q.uote.me?xHlefA">http://q.uote.me?xHlefA</a> (thank to <a href="https://github.com/sebsauvage/Shaarli">sebsauvage</a> for permalink function)</p>
+
+        <h3>
+        <a name="updates-" class="anchor" href="#updates-"></a>Updates :</h3>
+
+        <p><em>2013-07-26 (1.4b)</em></p>
+
+        <ul>
+        <li>Added image parser</li>
+        </ul><p><em>2013-07-04 (1.3b):</em></p>
+
+        <ul>
+        <li>Added installation script</li>
+        <li>Fixed many bugs</li>
+        </ul><p><em>2013-06-30 (1.2b):</em></p>
+
+        <ul>
+        <li>Added languages support</li>
+        </ul><p><em>2013-06-28 (1.1b):</em></p>
+
+        <ul>
+        <li>Added daily check update for script</li>
+        </ul><p><em>2013-06-23 (1.0b):</em></p>
+
+        <ul>
+        <li>Added login module,</li>
+        <li>Added administration,</li>
+        <li>Optimized quoteme lib.</li>
+        </ul><p><em>2013-06-14 :</em></p>
+
+        <ul>
+        <li>Added permalinks,</li>
+        <li>Added creation date (in the future maybe changed by quote date),</li>
+        <li>Added tags.</li>
+        </ul><h3>
+        <a name="bugfixes-" class="anchor" href="#bugfixes-"></a>Bugfixes :</h3>
+
+        <p><em>2013-06-14 :</em></p>
+
+        <ul>
+        <li>Fixed RSS (dates, links other errors like {item} in source,</li>
+        <li>Foreach control for json and csv parser.</li>
+        </ul><h2>
+        <a name="licence-" class="anchor" href="#licence-"></a>Licence :</h2>
+
+        <p>Q.uote.me is distributed under the zlib/libpng License :  </p>
+
+        <p>Copyright (c) 2013 Daniel Douat, <a href="http://aelys-info.fr">Aélys Informatique</a>  </p>
+
+        <p>This software is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any damages arising from the use of this software.  </p>
+
+        <p>Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions :  </p>
+
+        <ol>
+        <li><p>The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.  </p></li>
+        <li><p>Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.  </p></li>
+        <li><p>This notice may not be removed or altered from any source distribution.</p></li>
+        </ol>
+    </article>
+</body>
+</html>
