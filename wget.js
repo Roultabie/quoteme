@@ -22,7 +22,7 @@ function changeQuote()
                 if (quote !== false) {
                     var oldTitle                                  = document.title;
                     var titleParts                                = oldTitle.split('-');
-                    document.title                                = quote.data[0]['author'] + ' -' + titleParts[1];
+                    document.title                                = quote.data[0]['author'] + ' -' + titleParts.pop();
                     document.getElementById('textLink').innerHTML = quote.data[0]['text'];
                     document.getElementById('author').innerHTML   = quote.data[0]['author'];
                     document.getElementById('textLink').href      = '?' + quote.data[0]['permalink'];
