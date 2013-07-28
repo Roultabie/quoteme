@@ -51,17 +51,28 @@ a, a:link, a:hover, a:active, a:visited {
     font-size: 1.6em;
     font-style: italic;
 }
+#text:before {
+    display: inline-block;
+    content: "«";
+    margin-right: 6px;
+    color: #555555;
+}
+#text:after {
+    display: inline-block;
+    content: "»";
+    margin-left: 6px;
+}
 #reload {
     position: absolute;
     font-size: 2.0em;
     top: 0.4em;
     margin-left: -1.2em;
 }
-#reload a,  #reload a:visited {
+#reload a,#reload a:link,  #reload a:visited {
     color: #cccccc;
 }
 #text a, #text a:link, #text a:hover, #text a:active, #text a:visited,
-#reload a:link, #reload a:hover, #reload a:active {
+#reload a:hover, #reload a:active {
     color: #555555;
 }
 #author, #source {
@@ -99,7 +110,7 @@ footer div {
     </header>
     <section>
         <div id="quote">
-            <span id="text"><a href="{permalink}" alt="permalink" title="permalink" id="textLink">« {text} »</a></span><span id="author">({author})</span>
+            <span id="text"><a href="{permalink}" alt="permalink" title="permalink" id="textLink">{text}</a></span><span id="author">({author})</span>
             <span id="reload"><a href="#" onclick="changeQuote(); return false;" alt="[trad::get_new_quote]" title="[trad::get_new_quote]">&#10227;</a></span>
         </div>
     </section>
