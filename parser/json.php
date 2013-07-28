@@ -8,9 +8,10 @@ implements parserTemplate
         $i = 0;
         if (is_array($elements)) {
             foreach ($elements as $value) {
-                $quotes[$i]['text']   = $value->getText();
-                $quotes[$i]['author'] = $value->getAuthor();
-                $quotes[$i]['source'] = $value->getSource();
+                $quotes[$i]['text']      = $value->getText();
+                $quotes[$i]['author']    = $value->getAuthor();
+                $quotes[$i]['source']    = $value->getSource();
+                $quotes[$i]['permalink'] = $value->getPermalink();
                 $i++;
             }
             $datas['status'] = 'success' ;
