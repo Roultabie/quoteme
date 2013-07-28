@@ -45,5 +45,7 @@ $lang['config_file_is_not_writable'] = 'config.php n\'a pas les droits en écrit
 $lang['config_file_is_writable'] = 'config.php a les droits en écriture';
 $lang['empty_if_like_db_user'] = 'laisser vide si idem utilisateur db';
 $lang['empty_if_like_db_password'] = 'laisser vide si idem passe db';
+$lang['hosted_on_a'] = 'hébergé sur un';
+$lang['fork_me_on'] = 'forkez moi sur';
 $lang['get_new_quote'] = 'nouvelle citation';
 ?>

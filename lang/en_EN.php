@@ -45,5 +45,7 @@ $lang['config_file_is_not_writable'] = 'config.php is not writable';
 $lang['config_file_is_writable'] = 'config.php is writable';
 $lang['empty_if_like_db_user'] = 'leave empty if like db user';
 $lang['empty_if_like_db_password'] = 'leave empty if like db password';
+$lang['hosted_on_a'] = 'hosted on a';
+$lang['fork_me_on'] = 'fork me on';
 $lang['get_new_quote'] = 'get a new quote';
 ?>
