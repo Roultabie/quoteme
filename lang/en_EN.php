@@ -2,7 +2,7 @@
 $lang['quotes'] = 'quotes';
 $lang['quote'] = 'quote';
 $lang['by'] = 'by';
-$lang['API'] = 'api';
+$lang['api'] = 'api';
 $lang['about'] = 'about';
 $lang['source_code'] = 'source code';
 $lang['username'] = 'username';
