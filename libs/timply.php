@@ -223,18 +223,23 @@ class timply
         $count   = count($matches[0]);
         for ($i = 0; $i < $count; $i++) {
             $string = self::$dictionary[$matches[1][$i]];
-            if ($matches[2][$i] === 'F') {
-                // Not using ucfirst to preserve locales
-                $traduction = mb_strtoupper(mb_substr($string, 0, 1), 'UTF-8') . mb_substr($string, 1);
-            }
-            elseif ($matches[2][$i] === 'AF') {
-                $traduction = mb_convert_case($string, MB_CASE_TITLE, 'UTF-8');
-            }
-            elseif ($matches[2][$i] === 'A') {
-                $traduction = mb_convert_case($string, MB_CASE_UPPER, 'UTF-8');
+            if (!empty($string)) {
+                if ($matches[2][$i] === 'F') {
+                    // Not using ucfirst to preserve locales
+                    $traduction = mb_strtoupper(mb_substr($string, 0, 1), 'UTF-8') . mb_substr($string, 1);
+                }
+                elseif ($matches[2][$i] === 'AF') {
+                    $traduction = mb_convert_case($string, MB_CASE_TITLE, 'UTF-8');
+                }
+                elseif ($matches[2][$i] === 'A') {
+                    $traduction = mb_convert_case($string, MB_CASE_UPPER, 'UTF-8');
+                }
+                else {
+                    $traduction = $string;
+                }
             }
             else {
-                $traduction = $string;
+                $traduction = str_replace('_', ' ', $matches[1][$i]);
             }
             $file = str_replace($matches[0][$i], $traduction, $file);
         }
