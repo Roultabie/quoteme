@@ -1,6 +1,6 @@
 #Q.uote.me
 
-*PHP script to store and view random quotes. (v1.4b)*
+*PHP script to store and view random quotes. (v1.5b)*
 
 Q.uote.me is a simple PHP script to manage your quotes.
 
@@ -56,23 +56,27 @@ _If you want extract a png image, options are not required_
 
 ###_Index of website :_
 
-Just type address of website to view random quote. Add permalink option in the URL to view a specific quote.  
+Just type address of website to view random quote. Click on the arrow to reload a new quote. Add permalink option in the URL to view a specific quote.  
 Permalink format example : http://q.uote.me?xHlefA (thank to [sebsauvage](https://github.com/sebsauvage/Shaarli) for permalink function)
 
 ###Updates :
 
+_2013-08-06 (1.5b)_
+- Added cache for non radom requests,
+- Added ajax update on the index.
+
 _2013-07-26 (1.4b)_
-- Added image parser
+- Added image parser.
 
 _2013-07-04 (1.3b):_
-- Added installation script
-- Fixed many bugs
+- Added installation script,
+- Fixed many bugs.
 
 _2013-06-30 (1.2b):_
-- Added languages support
+- Added languages support.
 
 _2013-06-28 (1.1b):_
-- Added daily check update for script
+- Added daily check update for script.
 
 _2013-06-23 (1.0b):_
 - Added login module,
