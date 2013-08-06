@@ -63,7 +63,8 @@ Permalink format example : http://q.uote.me?xHlefA (thank to [sebsauvage](https:
 
 _2013-08-06 (1.5b)_
 - Added cache for non radom requests,
-- Added ajax update on the index.
+- Added ajax update on the index,
+- Added api doc on api.php call.
 
 _2013-07-26 (1.4b)_
 - Added image parser.
