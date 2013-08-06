@@ -326,13 +326,7 @@ class quoteQueries
     private function selElements($opt = "")
     {
         // On contrôle si pas d'option afin de n'afficher qu'une citation aléatoire, c'est crade mais provisoire
-        $ctrl = FALSE;
-        if (is_array($opt)) {
-            foreach ($opt as $value) {
-                if (!empty($value)) $ctrl = TRUE;
-            }
-        }
-        if ($ctrl === FALSE) $opt = array('sort' => 'random', 'limit' => 1);
+        if (!is_array($opt)) $opt = array('sort' => 'random', 'limit' => 1);
         if (!empty($opt['where']) && !empty($opt['whereOpt'])) {
             $where = $this->constructWhere($opt['where'], $opt['whereOpt']);
             if (!empty($opt['and']) && !empty($opt['andOpt'])) {
