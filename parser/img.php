@@ -3,15 +3,14 @@ class imgParser
 extends parser
 implements parserTemplate
 {
-    private $type;
+    private static $type;
     private static $contentTypes;
     private static $themeIsOk;
 
     function __construct()
     {
-        $this->type = 'png';
         $this->uri = $GLOBALS['config']['themeDir'] . 'fonts/';
-        $this->fileName = 'image.' . $this->type;
+        $this->fileName = 'image.' . self::$type;
         $this->width    = 1024;
         $this->fontRGB  = array(85, 85, 85);
         $this->bgRGB  = array(255, 255, 255);
@@ -21,7 +20,7 @@ implements parserTemplate
 
     function parse($elements)
     {
-        if (function_exists(imagecreatefrom . $this->type)) {
+        if (function_exists(imagecreatefrom . self::$type)) {
             // factor for width = 1024px, in comment value for 1024px
             $height               = round($this->width * 0.5625); // 576
             $x                    = round($this->width * 0.0390625); // 40
@@ -36,7 +35,7 @@ implements parserTemplate
             $permalinkY           = round($this->width * 0.522460938); // 535
 
             if (file_exists($this->uri . $this->fileName)) {
-                $content = imagecreatefrom . $this->type;
+                $content = imagecreatefrom . self::$type;
             }
             else {
                 $content = imagecreate($this->width, $height);
@@ -60,8 +59,7 @@ implements parserTemplate
             $y = $y + $nextLine;
             imagettftext($content, $authorFontSize, 0, $x, $y, $fontColor, $this->font, '(' . $elements[0]->getAuthor() . ')');
             imagettftext($content, $permalinkFontSize, 0, $permalinkX, $permalinkY, $fontColor, $this->font,  $this->returnPermalink($elements[0]->getPermalink()));
-            header('Content-type: ' . $this->contentType);
-            $functionName = 'image' . $this->type;
+            $functionName = 'image' . self::$type;
             $functionName($content);
             imagedestroy($content);
         }
@@ -70,12 +68,35 @@ implements parserTemplate
         }
     }
 
+    public static function loadHeader()
+    {
+        self::setType();
+        $contentType = self::returnContentType();
+        // Control if we can create image
+        if ($contentType) {
+            header('Content-type: ' . $contentType);
+        }
+        else {
+            exit('Bad content type');
+        }
+        
+    }
+
+    private static function setType()
+    {
+        if (!empty($_GET['t'])) {
+            self::$type = $_GET['t'];
+        }
+        else {
+            self::$type = 'png';
+        }
+    }
     private function setTheme()
     {
         $fontRGB = $this->fontRGB;
         $bgRGB   = $this->bgRGB;
         if (!empty($_GET['t'])) {
-            $this->type = $_GET['t'];
+            self::$type = $_GET['t'];
         }
         if (!empty($_GET['wi'])) {
             $this->width = (int) $_GET['wi'];
@@ -85,14 +106,6 @@ implements parserTemplate
         }
         if (!empty($_GET['bgc'])) {
             $bgRGB   = explode(',', $_GET['bgc']);
-        }
-        $contentType = $this->returnContentType();
-        // Control if we can create image
-        if ($contentType) {
-            $this->contentType = $contentType;
-        }
-        else {
-            exit('Bad content type');
         }
         if (count($fontRGB) == 3 && count($bgRGB) == 3) {
             list($this->fontRed, $this->fontGreen, $this->fontBlue) = $fontRGB;
@@ -112,7 +125,7 @@ implements parserTemplate
     private function gdSupport()
     {
         $gd = gd_info();
-        $type = strtoupper($this->type);
+        $type = strtoupper(self::$type);
         if ($type === 'FREETYPE') {
             $key = 'FreeType Support';
         }
@@ -125,11 +138,11 @@ implements parserTemplate
         return $gd[$key];
     }
 
-    private function returnContentType()
+    private static function returnContentType()
     {
-        if (defined(IMAGETYPE_ . strtoupper($this->type))) {
-            if (image_type_to_mime_type(constant(IMAGETYPE_ . strtoupper($this->type)))) {
-                $result = image_type_to_mime_type(constant(IMAGETYPE_ . strtoupper($this->type)));
+        if (defined(IMAGETYPE_ . strtoupper(self::$type))) {
+            if (image_type_to_mime_type(constant(IMAGETYPE_ . strtoupper(self::$type)))) {
+                $result = image_type_to_mime_type(constant(IMAGETYPE_ . strtoupper(self::$type)));
             }
             else {
                 $result = FALSE;

@@ -29,6 +29,12 @@ function parseQuote($parser = '', $options = '')
             if (class_exists($class)) {
                 $parser = new $class;
                 if ($parser instanceof parserTemplate) {
+                    $parser::loadHeader();
+                    if ($GLOBALS['config']['cacheState']) {
+                        parser::$cacheState = TRUE;
+                        parser::$cacheDir   = $GLOBALS['config']['cacheDir'];
+                        parser::loadCache();
+                    }
                     $quote  = new quoteQueries();
                     if (is_object($quote)) {
                         if (is_array($options)) {
@@ -96,5 +102,12 @@ else {
         $html  = new timply();
         echo $html->returnHtml();
     }
+}
+if ($GLOBALS['config']['cacheState']) {
+    //if (count($_GET) > 1) {
+        parser::addCache();
+        ob_end_clean();
+        parser::loadCache();
+    //}
 }
 ?>

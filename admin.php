@@ -12,6 +12,7 @@ require_once 'libs/mysql.php';
 require_once 'libs/quoteme.php';
 require_once 'libs/timply.php';
 require_once 'libs/smartypants.php';
+require_once 'parser/parser.php';
 
 function writeConfigFile($newOptions)
 {
@@ -92,6 +93,10 @@ if (!empty($_POST)) {
     else {
         $add = $quote->addQuote($_POST['text'], $_POST['author'], $_POST['source'], $_POST['tags']);
     }
+}
+
+if (!empty($_POST) || $_GET['action'] === "delete") {
+    parser::clearCache();
 }
 
 if ($_GET['action'] === "edit") {

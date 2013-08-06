@@ -22,10 +22,14 @@ implements parserTemplate
             $datas['data']   = 'Error, no data found';
         }
         $result = json_encode($datas);
+        return $result;
+    }
+
+    public static function loadHeader()
+    {
         header('Cache-Control: no-cache, must-revalidate'); // Gestion du cache et optimisations
         header('Expires: Ven, 11 Oct 2011 23:32:00 GMT');   // Limite la durée validité
         header('Content-type: application/json');           // Über _IMPORTANT_
-        exit($result);
     }
 }
 ?>

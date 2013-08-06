@@ -32,10 +32,14 @@ implements parserTemplate
             }
             $this->timply->setElement('pubDate', $this->formatDate(max($dates))); //WIP
         }
+        return $this->timply->returnHtml();
+    }
+
+    public static function loadHeader()
+    {
         header('Cache-Control: no-cache, must-revalidate');
         header('Expires: Ven, 07 Oct 2011 23:32:00 GMT');
         header('Content-type: application/rss+xml');
-        exit($this->timply->returnHtml());
     }
 
     private function formatDate($sqlDate)

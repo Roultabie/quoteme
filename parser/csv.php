@@ -34,10 +34,14 @@ implements parserTemplate
                 $result .= $text . $author . $source . PHP_EOL;
             }
         }
+        exit(trim($result));
+    }
+
+    public static function loadHeader()
+    {
         header('Cache-Control: no-cache, must-revalidate');
         header('Expires: Ven, 07 Oct 2011 23:32:00 GMT');
         header('Content-type: text/csv');
-        exit(trim($result));
     }
 
     private function enclose($text)
