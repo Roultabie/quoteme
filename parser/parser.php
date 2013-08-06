@@ -37,16 +37,14 @@ abstract class parser
 
     private static function clearCache()
     {
-        if (self::$cacheState) {
-            if (is_dir(self::$cacheDir) && is_writable(self::$cacheDir)) {
-                $handle = opendir(self::$cacheDir);
-                while ($file = readdir($handle)) {
-                    if ($file != '.' && $file != '..') {
-                        unlink(self::$cacheDir . '/' . $file);
-                    }
+        if (is_dir(self::$cacheDir) && is_writable(self::$cacheDir)) {
+            $handle = opendir(self::$cacheDir);
+            while ($file = readdir($handle)) {
+                if ($file != '.' && $file != '..') {
+                    unlink(self::$cacheDir . '/' . $file);
                 }
-                closedir($handle);
             }
+            closedir($handle);
         }
     }
 
@@ -54,7 +52,7 @@ abstract class parser
     {
         if (self::$cacheState) {
             if (is_dir(self::$cacheDir) && is_writable(self::$cacheDir)) {
-                $file     = self::$cacheDir . '/' . hash('sha1', serialize($_GET));
+                $file = self::$cacheDir . '/' . hash('sha1', serialize($_GET));
                 if (!file_exists($file)) {
                     file_put_contents($file, ob_get_contents());
                 }
