@@ -243,6 +243,11 @@ function install($resetPassword = FALSE)
         writeConfigFile(array('config>user' => $_SESSION['user'], 'config>password' => $password, 'config>email' => $_SESSION['email']));
         $install = TRUE;
     }
+    if (!file_exists($_SERVER['DOCUMENT_ROOT'] . 'cache')) {
+        if (mkdir($_SERVER['DOCUMENT_ROOT'] . 'cache')) {
+            $install = TRUE;
+        }
+    }
     return $install;
 }
 
