@@ -8,10 +8,52 @@
 /**
  * Loading libs
  */
-
-require '../config.php';
 require '../libs/mysql.php';
 require '../libs/timply.php';
+
+/**
+ * Loading config file if exist
+ */
+
+if (file_exists($_SERVER['DOCUMENT_ROOT'] . 'config.php')) {
+    require $_SERVER['DOCUMENT_ROOT'] . 'config.php';
+}
+
+/**
+ * $configTemplate
+ * template of config file
+ */
+$configTemplate = <<<'EOC'
+/**
+ * System options don't modify them
+ */
+$system['dateFormat']  = 'Y-m-d';
+$system['version']     = '';
+$system['lastUpdate']  = '0000-00-00';
+$system['lastVersion'] = '';
+
+/**
+ * config options, put your informations here
+ */
+$config['dbHost'] = '';
+$config['dbName'] = '';
+$config['dbUser'] = '';
+$config['dbPass'] = '';
+$config['dbTable'] = '';
+$config['lang'] = '';
+$config['themeDir'] = 'themes/simple/';
+$config['langDir'] = 'lang/';
+$config['siteDoc'] = 'http://q.uote.me/api.php';
+$config['email'] = '';
+$config['user'] = '';
+$config['password'] = '';
+$config['sessionExpire'] = 1800;
+$config['cacheState'] = TRUE;
+$config['cacheDir'] = 'cache';
+$config['appVers'] = $system['version']; // your app version
+//$config['appVers'] = 'a5e'; // (anonyme) Anonyme stat of client when check update
+//$config['appVers'] = ''; // does not generate stats of client when check update
+EOC;
 
 function dbConnexion($host, $name, $user, $pass)
 {
@@ -30,24 +72,30 @@ function checkDbIds($host, $user, $password, $dbName, $tableName)
 {
     $connexion = dbConnexion($host, $dbName, $user, $password);
     $state     = array('dbHost' => TRUE, 'dbIds' => TRUE, 'dbName' => TRUE, 'tableName' => TRUE);
+    $ctrl      = TRUE;
     if (!is_object($connexion)) {
         if ($connexion === 2002) {
             $state['dbHost'] = 10;
+            $ctrl = FALSE;
         }
         if ($connexion === 1045) {
             $state['dbIds'] = 20;
+            $ctrl = FALSE;
         }
         if ($connexion === 1044) {
             $state['dbName'] = 30;
+            $ctrl = FALSE;
         }
     }
     if (empty($dbName)) {
         $state['dbName'] = 31;
+        $ctrl = FALSE;
     }
     if (empty($tableName)) {
         $state['tableName'] = 40;
+        $ctrl = FALSE;
     }
-    else {
+    if ($ctrl === TRUE) {
         if (ifDbTableExist($connexion, $tableName) === FALSE) {
             $state['tableName'] = 41;
         }
@@ -74,18 +122,17 @@ function ifDbTableExist($instance, $table)
     return $tableExist;
 }
 
-function checkConfigFile()
+function checkScriptRights()
 {
-    $fileName = 'config.php';
-    $fileUri  = '../';
-    return is_writable($fileUri . $fileName);
+    return is_writable($_SERVER['DOCUMENT_ROOT']);
 }
 
 function writeConfigFile($newOptions)
 {
     $fileName = 'config.php';
     $fileUri  = '../';
-    $configContent = file_get_contents($fileUri . $fileName);
+    
+    $configContent = '<?php' . PHP_EOL . $GLOBALS['configTemplate'] . PHP_EOL . '?>';
     foreach ($newOptions as $key => $value) {
         list($type, $option) = explode(">", $key);
         //$keys = explode(">", $key);
@@ -250,8 +297,9 @@ if (empty($config['password'])) {
         $html->setElement('postUser', $_SESSION['user']);
         $html->setElement('postPass', $_SESSION['pass']);
         $html->setElement('postEmail', $_SESSION['email']);
+        $html->setElement('scriptDir', rtrim($_SERVER['DOCUMENT_ROOT'], '/'));
 
-        $confState = checkConfigFile();
+        $chmodState = checkScriptRights();
 
         if ($dbState !== TRUE) {
             if (is_array($dbState)) {
@@ -270,15 +318,15 @@ if (empty($config['password'])) {
             $html->setElement('checkedDb', 'visible');
             $html->setElement('dbSuccess', '[trad::db_infos_correct]');
         }
-        if ($confState === FALSE) {
+        if ($chmodState === FALSE) {
             $html->setElement('notCheckedConfigFile', 'visible');
-            $html->setElement('configFileError', '[trad::config_file_is_not_writable]');
+            $html->setElement('configFileError', '[trad::script_dir_is_not_writable]');
         }
         else {
             $html->setElement('checkedConfigFile', 'visible');
-            $html->setElement('configFileSuccess', '[trad::config_file_is_writable]');
+            $html->setElement('configFileSuccess', '[trad::script_dir_is_writable]');
         }
-        if ($dbState === TRUE && $confState === TRUE) {
+        if ($dbState === TRUE && $chmodState === TRUE) {
             if ($resetPassword) {
                 $value = '[trad::update_datas]';
             }

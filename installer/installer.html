@@ -130,11 +130,12 @@
         </fieldset>
         <fieldset>
             <div>
-                <h3>[trad::config_file]</h3>
+                <h3>[trad::script_dir]</h3>
             </div>
             <span class="error infos">{configFileError}</span>
             <span class="success infos">{configFileSuccess}</span>
-            <label for="iswritable">[trad::config_php_must_be_writable] :</label><span class='check {checkedConfigFile} checked'>&#10004;</span><span class='check {notCheckedConfigFile} notchecked'>&#10008;</span>
+            <label for="iswritable">[trad::script_dir_must_be_writable] :</label><span class='check {checkedConfigFile} checked'>&#10004;</span><span class='check {notCheckedConfigFile} notchecked'>&#10008;</span><br>
+            <span style="float:left;">[trad::example] : <code style="font-weight:bold;">chown -R http:http {scriptDir} && chmod -R 755 {scriptDir}</code></span>
         </fieldset>
         <fieldset>
             <div>
