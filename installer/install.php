@@ -265,6 +265,9 @@ if (empty($config['password'])) {
     timply::setFileName('installer.html');
     timply::addDictionary('../lang/' .$lang . '.php');
     $html = new timply();
+
+    $html->setElement('scriptDir', rtrim($_SERVER['DOCUMENT_ROOT'], '/'));
+
     if (!empty($_POST) && implode('', $_POST) !== $lang) {
         if (empty($GLOBALS['config']['dbName'])) {
             if (empty($_POST['dbhost']))    $_POST['dbhost'] = 'localhost';
@@ -302,7 +305,6 @@ if (empty($config['password'])) {
         $html->setElement('postUser', $_SESSION['user']);
         $html->setElement('postPass', $_SESSION['pass']);
         $html->setElement('postEmail', $_SESSION['email']);
-        $html->setElement('scriptDir', rtrim($_SERVER['DOCUMENT_ROOT'], '/'));
 
         $chmodState = checkScriptRights();
 
