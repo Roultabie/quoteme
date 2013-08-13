@@ -84,7 +84,8 @@ if (($get = testGet($_GET['ao'], '/^[\w\d_-]+,{0,}[\w\d_-]{0,}$/'))) $opt['andOp
 $currentScript   = str_replace('/', '', $_SERVER['SCRIPT_NAME']);
 
 if ($currentScript !== 'api.php') {
-    $GLOBALS['quoteObj'] = parseQuote('php', $opt); // permet de générer une quote en php, retour : la quote et le nb de quotes. Pour utiliser les options, charger $_GET
+    $parser = 'php';
+    $GLOBALS['quoteObj'] = parseQuote($parser, $opt); // permet de générer une quote en php, retour : la quote et le nb de quotes. Pour utiliser les options, charger $_GET
 }
 else {
     if (!empty($_GET['p'])) {
@@ -102,7 +103,7 @@ else {
     }
 }
 if (is_array($opt)) {
-    if ($opt['sort'] !== 'random') {
+    if ($opt['sort'] !== 'random' && $parser !== 'php') {
         parser::addCache();
         ob_end_clean();
         parser::loadCache();
