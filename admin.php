@@ -99,10 +99,6 @@ if (!empty($_POST)) {
     parser::clearCache();
 }
 
-/*if (!empty($_POST) || $_GET['action'] === "delete") {
-    parser::clearCache();
-}*/
-
 if ($_GET['action'] === "edit") {
     $editQuote     = $quote->getQuote(array('where' => 'permalink', 'whereOpt' => 'equal,' . $_GET['permalink']));
     $formPermalink = $editQuote[0]->getPermalink();
