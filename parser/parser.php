@@ -35,7 +35,7 @@ abstract class parser
         return $_SERVER['HTTP_HOST'] . '/?' . $permalink;
     }
 
-    private static function clearCache()
+    public static function clearCache()
     {
         if (is_dir(self::$cacheDir) && is_writable(self::$cacheDir)) {
             $handle = opendir(self::$cacheDir);

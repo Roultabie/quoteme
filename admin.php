@@ -14,6 +14,9 @@ require_once 'libs/timply.php';
 require_once 'libs/smartypants.php';
 require_once 'parser/parser.php';
 
+parser::$cacheState = TRUE;
+parser::$cacheDir   = $GLOBALS['config']['cacheDir'];
+
 function writeConfigFile($newOptions)
 {
     $fileName = 'config.php';
@@ -93,11 +96,12 @@ if (!empty($_POST)) {
     else {
         $add = $quote->addQuote($_POST['text'], $_POST['author'], $_POST['source'], $_POST['tags']);
     }
-}
-
-if (!empty($_POST) || $_GET['action'] === "delete") {
     parser::clearCache();
 }
+
+/*if (!empty($_POST) || $_GET['action'] === "delete") {
+    parser::clearCache();
+}*/
 
 if ($_GET['action'] === "edit") {
     $editQuote     = $quote->getQuote(array('where' => 'permalink', 'whereOpt' => 'equal,' . $_GET['permalink']));
@@ -110,6 +114,7 @@ if ($_GET['action'] === "edit") {
 }
 if ($_GET['action'] === "delete" && !empty($_GET['permalink'])) {
     $del = $quote->delQuote($_GET['permalink']);
+    parser::clearCache();
 }
 
 timply::setUri($GLOBALS['config']['themeDir']);
