@@ -15,6 +15,9 @@ class quote
     private $text;
     private $author;
     private $source;
+    private $tags;
+    private $date;
+    private $permalink;
 
     function __construct()
     {
