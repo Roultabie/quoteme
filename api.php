@@ -31,11 +31,11 @@ function parseQuote($parser = '', $options = '')
             if (class_exists($class)) {
                 $parser = new $class;
                 if ($parser instanceof parserTemplate) {
-                    $parser::loadHeader();
+                    parser::loadHeader();
                     parser::loadCache();
-                    $quote  = new quoteQueries();
+                    $quote = new quoteQueries();
                     if (is_object($quote)) {
-                        $quote = $quote->getQuote($options);
+                        $quote  = $quote->getQuote($options);
                         $result = $parser->parse($quote);
                     }
                     else {
@@ -81,10 +81,10 @@ if (($get = testGet($_GET['wo'], '/^[\w\d_-]+,{0,}[\w\d_-]{0,}$/'))) $opt['where
 if (($get = testGet($_GET['a'], '/^[\w\d_-]+$/'))) $opt['and'] = $get;
 if (($get = testGet($_GET['ao'], '/^[\w\d_-]+,{0,}[\w\d_-]{0,}$/'))) $opt['andOpt'] = $get;
 
-$currentScript   = str_replace('/', '', $_SERVER['SCRIPT_NAME']);
+$currentScript = str_replace('/', '', $_SERVER['SCRIPT_NAME']);
 
 if ($currentScript !== 'api.php') {
-    $parser = 'php';
+    $parser              = 'php';
     $GLOBALS['quoteObj'] = parseQuote($parser, $opt); // permet de générer une quote en php, retour : la quote et le nb de quotes. Pour utiliser les options, charger $_GET
 }
 else {
@@ -98,7 +98,7 @@ else {
     }
     else {
         timply::setFileName('api.html');
-        $html  = new timply();
+        $html = new timply();
         echo $html->returnHtml();
     }
 }
