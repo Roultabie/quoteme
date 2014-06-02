@@ -31,8 +31,8 @@ function parseQuote($parser = '', $options = '')
             if (class_exists($class)) {
                 $parser = new $class;
                 if ($parser instanceof parserTemplate) {
-                    parser::loadHeader();
-                    parser::loadCache();
+                    $parser::loadHeader();
+                    $parser::loadCache();
                     $quote = new quoteQueries();
                     if (is_object($quote)) {
                         $quote  = $quote->getQuote($options);
@@ -72,7 +72,7 @@ function testGet($var, $pattern)
     }
 }
 // p=json&s=random&l=1,10&w=tag&ow=like,toto&a=id&oa=minus,10
-$parser = testGet($_GET['p'], '/^[\w\d_-]{2,4}$/');
+$parser = testGet($_GET['p'], '/^[\w\d_-]{2,5}$/');
 
 if (($get = testGet($_GET['s'], '/^[\w\d_-]+,asc$|^[\w\d_-]+,desc$|^random$/'))) $opt['sort'] = $get;
 if (($get = testGet($_GET['l'], '/^\d+,{0,}\d{0,}$/'))) $opt['limit'] = $get;
