@@ -15,152 +15,18 @@ class quote
     private $text;
     private $author;
     private $source;
+    private $tags;
+    private $date;
+    private $permalink;
 
-    function __construct()
-    {
-        //$this->setText('');
-        //$this->setAuthor('');
-        //$this->setSource('');
-    }
-
-    /**
-     * Return quote id
-     * @access public
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Return quote text
-     * @access public
-     * @return string
-     */
-    public function getText()
-    {
-        return $this->text;
-    }
-
-    /**
-     * Return author(s) for quote
-     * @access public
-     * @return array
-     */
-    public function getAuthor()
-    {
-        return $this->author;
-    }
-
-    /**
-     * Return source of quote
-     * @access public
-     * @return array
-     */
-    public function getSource()
-    {
-        return $this->source;
-    }
-
-    /**
-     * Return tags of quote
-     * @access public
-     * @return array
-     */
-    public function getTags()
-    {
-        return $this->tags;
-    }
-
-    /**
-     * Return date of quote
-     * @access public
-     * @return array
-     */
-    public function getDate()
-    {
-        return $this->date;
-    }
-
-    /**
-     * Return date of quote
-     * @access public
-     * @return array
-     */
-    public function getPermalink()
-    {
-        return $this->permalink;
-    }
-
-    /**
-     * Add id for quote
-     * @access public
-     * @return void
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * Add new quote
-     * @access public
-     * @return void
-     */
-    public function setText($text)
-    {
-        $this->text = $text;
-    }
-
-    /**
-     * Add author(s) for quote
-     * @access public
-     * @return void
-     */
-    public function setAuthor($author)
-    {
-        $this->author = $author;
-    }
-
-    /**
-     * Add source(s) for quote
-     * @access public
-     * @return void
-     */
-    public function setSource($source)
-    {
-        $this->source = $source;
-    }
-
-    /**
-     * Add tag(s) for quote
-     * @access public
-     * @return void
-     */
-    public function setTags($tags)
-    {
-        $this->tags = $tags;
-    }
-
-    /**
-     * Add date for quote
-     * @access public
-     * @return void
-     */
-    public function setDate($date)
-    {
-        $this->date = $date;
-    }
-
-    /**
-     * Add date for quote
-     * @access public
-     * @return void
-     */
-    public function setPermalink($permalink)
-    {
-        $this->permalink = $permalink;
+    function __call($method, $elements) {
+        $var = strtolower(substr($method, 3));
+        if (!strncasecmp($method, 'get', 3)) {
+            return $this->$var;
+        }
+        if (!strncasecmp($method, 'set', 3)) {
+            $this->$var = $elements[0];
+        }
     }
 }
 
