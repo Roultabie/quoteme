@@ -31,7 +31,7 @@ implements parserTemplate
             $quoteFontSize        = round($this->width * 0.034179688); // 35
             $nextLine             = round($this->width * 0.0390625); // 40
             $permalinkFontSize    = round($this->width * 0.01953125); // 20
-            $permalinkX           = round($this->width * 0.75); // 768
+            $permalinkX           = round($this->width * 0.0390625); // 40 margin right
             $permalinkY           = round($this->width * 0.522460938); // 535
 
             if (file_exists($this->uri . $this->fileName)) {
@@ -58,7 +58,12 @@ implements parserTemplate
             }
             $y = $y + $nextLine;
             imagettftext($content, $authorFontSize, 0, $x, $y, $fontColor, $this->font, '(' . $elements[0]->getAuthor() . ')');
-            imagettftext($content, $permalinkFontSize, 0, $permalinkX, $permalinkY, $fontColor, $this->font,  $this->returnPermalink($elements[0]->getPermalink()));
+            $permalinkBox    = imageftbbox($permalinkFontSize, 0,  $this->font, $this->returnPermalink($elements[0]->getPermalink()));
+            $permalinkWidth  = abs($permalinkBox[0]) + abs($permalinkBox[2]); // distance from left to right
+            $permalinkHeight = abs($permalinkBox[1]) + abs($permalinkBox[5]); // distance from top to bottom
+            $permalinkXStart = $this->width - $permalinkWidth - $permalinkX;
+            $values = $permalinkXStart;
+            imagettftext($content, $permalinkFontSize, 0, $permalinkXStart, $permalinkY, $fontColor, $this->font,  $this->returnPermalink($elements[0]->getPermalink()));
             $functionName = 'image' . self::$type;
             $functionName($content);
             imagedestroy($content);
