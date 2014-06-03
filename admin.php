@@ -119,6 +119,8 @@ timply::addDictionary($GLOBALS['config']['langDir'] . 'en_EN.php');
 timply::addDictionary($GLOBALS['config']['langDir'] . 'fr_FR.php');
 $html = new timply();
 
+$html->setElement('themeDir', $GLOBALS['config']['themeDir']);
+
 /* Update link */
 $html->setElement('updateInfo', $updateInfo);
 
