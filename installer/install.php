@@ -23,18 +23,24 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'] . 'config.php')) {
  * $configTemplate
  * template of config file
  */
-$configTemplate = <<<'EOC'
+
+$comment1 = <<<'EOC'
 /**
  * System options don't modify them
  */
+EOC;
+
 $system['dateFormat']  = 'Y-m-d';
 $system['version']     = '';
 $system['lastUpdate']  = '0000-00-00';
 $system['lastVersion'] = '';
 
+$comment2 = <<<'EOC'
 /**
  * config options, put your informations here
  */
+EOC;
+
 $config['dbHost'] = '';
 $config['dbName'] = '';
 $config['dbUser'] = '';
@@ -44,15 +50,18 @@ $config['lang'] = '';
 $config['themeDir'] = 'themes/simple/';
 $config['langDir'] = 'lang/';
 $config['siteDoc'] = 'http://q.uote.me/api.php';
-$config['email'] = '';
-$config['user'] = '';
-$config['password'] = '';
+$config['users'] = '';
 $config['sessionExpire'] = 1800;
 $config['cacheState'] = TRUE;
 $config['cacheDir'] = 'cache';
-$config['appVers'] = $system['version']; // your app version
-//$config['appVers'] = 'a5e'; // (anonyme) Anonyme stat of client when check update
-//$config['appVers'] = ''; // does not generate stats of client when check update
+$config['appVers'] = ''; // your app version
+
+$comment3 = <<<'EOC'
+/**
+ * When checking updates :
+ * To send anonymous stats of your client change 'appVers' => $system['version']; by 'appVers' => 'a5e';
+ * To send anything change 'appVers' => $system['version']; by 'appVers' => '';
+ */
 EOC;
 
 function dbConnexion($host, $name, $user, $pass)
@@ -127,22 +136,24 @@ function checkScriptRights()
     return is_writable($_SERVER['DOCUMENT_ROOT']);
 }
 
-function writeConfigFile($newOptions)
+function writeConfigFile()
 {
     $fileName = 'config.php';
     $fileUri  = '../';
     
-    $configContent = '<?php' . PHP_EOL . $GLOBALS['configTemplate'] . PHP_EOL . '?>';
-    foreach ($newOptions as $key => $value) {
-        list($type, $option) = explode(">", $key);
-        //$keys = explode(">", $key);
-        if (is_string($value)) {
-            $value = "'" . str_replace("'", "\'", $value) . "'";
-        }
-        $pattern       = '/\$' . $type . '\[\'' . $option . '\'\]\s*=\s*[\'"]{0,1}.*[\'"]{0,1};/i';
-        $replace       = '$' . $type . '[\'' . $option . '\'] = ' .$value . ';';
-        $configContent = preg_replace($pattern, $replace, $configContent);
-    }
+    $configContent  = '<?php' . PHP_EOL;
+    $configContent .= $GLOBALS['comment1'] . PHP_EOL;
+    $configContent .= '$system = ' . var_export($GLOBALS['system'], true) . ';' . PHP_EOL;
+    $configContent .= PHP_EOL;
+    $configContent .= $GLOBALS['comment2'] . PHP_EOL;
+    $configContent .= '$config = ' . var_export($GLOBALS['config'], true) . ';' . PHP_EOL;
+    $configContent .= PHP_EOL;
+    $configContent .= $GLOBALS['comment3'] . PHP_EOL;
+    $configContent .= '?>';
+
+    $configContent = str_replace("  'appVers' => ''", "  'appVers' => \$system['version']", $configContent);
+    $configContent = str_replace('  ', '    ', $configContent);
+
     file_put_contents($fileUri . $fileName, $configContent, LOCK_EX);
 }
 
@@ -215,7 +226,8 @@ function listAvailableLanguages()
 
 function install($resetPassword = FALSE)
 {
-    $password = hash('sha256', $_POST['password']);
+    $password = password_hash($_POST['password'], PASSWORD_BCRYPT, array('cost' => 10));
+
     if ($resetPassword !== TRUE) {
         $table = 'CREATE TABLE IF NOT EXISTS `' . $_SESSION['dbTable'] . '` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -232,15 +244,19 @@ function install($resetPassword = FALSE)
         $stmt     = $instance->prepare($table);
         $stmt->execute();
         if ($stmt !== FALSE) {
-            writeConfigFile(array('config>dbHost' => $_SESSION['dbHost'], 'config>dbName' => $_SESSION['dbName'],
-                'config>dbUser' => $_SESSION['dbUser'], 'config>dbPass' => $_SESSION['dbPass'],
-                'config>dbTable' => $_SESSION['dbTable'], 'config>lang' => $_SESSION['lang'],
-                'config>user' => $_SESSION['user'], 'config>password' => $password, 'config>email' => $_SESSION['email']));
+            $GLOBALS['config']['dbHost']  = $_SESSION['dbHost'];
+            $GLOBALS['config']['dbName']  = $_SESSION['dbName'];
+            $GLOBALS['config']['dbUser']  = $_SESSION['dbUser'];
+            $GLOBALS['config']['dbPass']  = $_SESSION['dbPass'];
+            $GLOBALS['config']['dbTable'] = $_SESSION['dbTable'];
+            $GLOBALS['config']['lang']    = $_SESSION['lang'];
+            $GLOBALS['config']['users']   = array($_SESSION['user'] => array('hash' => $password, 'email' => $_SESSION['email']));
+            writeConfigFile();
             $install = TRUE;
         }
     }
     else {
-        writeConfigFile(array('config>user' => $_SESSION['user'], 'config>password' => $password, 'config>email' => $_SESSION['email']));
+        writeConfigFile(array('config>users>' . $_SESSION['user'] => 'array(\'hash\' => \'' . $password . '\', \'email\' => \'' .$_SESSION['email'] . '\');'));
         $install = TRUE;
     }
     if (!file_exists($_SERVER['DOCUMENT_ROOT'] . 'cache')) {
