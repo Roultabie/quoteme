@@ -11,7 +11,7 @@ implements parserTemplate
         timply::setUri($GLOBALS['config']['themeDir']);
         timply::setFileName('gplus.html');
         $this->timply = new timply();
-        $this->width  = 512;
+        $this->width  = 1024;
     }
 
     public function parse($elements)
