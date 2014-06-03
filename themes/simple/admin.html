@@ -219,7 +219,10 @@ tr:hover .action {
             </tr>
             <!-- start quoteTable -->
             <tr>
-                <td><span class="text">{quoteTableText}<span class="action"><span class="edit"><a href="{edit}" class="icon-pencil" title="[trad::edit]" alt="[trad::edit]"></a></span><span class="delete"><a href="{delete}" class="icon-remove" title="[trad::delete]" alt="[trad::delete]"></a></span></span></span></td><td class="author">{quoteTableAuthor}</td><td>{quoteTableSource}</td><td>{quoteTableTags}</td>
+                <td><span class="text">{quoteTableText}<span class="action"><span class="edit"><a href="{edit}" class="icon-pencil" title="[trad::edit]" alt="[trad::edit]"></a></span>
+                    <span class="delete"><a href="{delete}" class="icon-remove" title="[trad::delete]" alt="[trad::delete]"></a></span>
+                    <span class="share"><a class="googleplus icon-googleplus" href="https://plus.google.com/share?url={apiUrl}?p=gplus&w=permalink&wo=equal,{permalink}" onclick="javascript:window.open(this.href,'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a></span>
+                </span></span></td><td class="author">{quoteTableAuthor}</td><td>{quoteTableSource}</td><td>{quoteTableTags}</td>
             </tr>
             <!-- end quoteTable -->
         </table>
