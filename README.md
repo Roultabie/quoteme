@@ -89,10 +89,15 @@ _2013-06-14 :_
 - Added creation date (in the future maybe changed by quote date),
 - Added tags.
 
-###Bugfixes :
-_2013-06-14 :_
-- Fixed RSS (dates, links other errors like {item} in source,
-- Foreach control for json and csv parser.
+###In the future :
+_1.6b :_
+- Google plus share parser and google plus link in admin
+- Latest login version
+- New admin interface
+ 
+_1.7b :_
+- New syntax for api
+- ...
 
 ##Licence :
 
