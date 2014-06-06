@@ -31,7 +31,7 @@ $comment1 = <<<'EOC'
 EOC;
 
 $system['dateFormat']  = 'Y-m-d';
-$system['version']     = '';
+$system['version']     = 'devel';
 $system['lastUpdate']  = '0000-00-00';
 $system['lastVersion'] = '';
 
