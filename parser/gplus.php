@@ -30,7 +30,7 @@ implements parserTemplate
         $referer   = $_SERVER['HTTP_REFERER'];
         $lang      = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
         $userAgent = $_SERVER['HTTP_USER_AGENT'];
-        if (!empty($referer) || !empty($lang)  || stripos($userAgent, 'google')) {
+        if (!empty($referer) || !empty($lang)  || stripos($userAgent, 'google') === false) {
             header('Location: ' . '//' . $this->returnPermalink($elements[0]->getPermalink()));
         }
         header('Content-Type: text/html; charset=utf-8');
