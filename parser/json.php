@@ -25,7 +25,7 @@ implements parserTemplate
         return $result;
     }
 
-    public static function loadHeader()
+    public function loadHeader($elements = '')
     {
         header('Cache-Control: no-cache, must-revalidate'); // Gestion du cache et optimisations
         header('Expires: Ven, 11 Oct 2011 23:32:00 GMT');   // Limite la durée validité

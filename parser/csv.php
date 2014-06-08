@@ -37,7 +37,7 @@ implements parserTemplate
         exit(trim($result));
     }
 
-    public static function loadHeader()
+    public function loadHeader($elements = '')
     {
         header('Cache-Control: no-cache, must-revalidate');
         header('Expires: Ven, 07 Oct 2011 23:32:00 GMT');

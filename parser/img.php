@@ -72,7 +72,7 @@ implements parserTemplate
         }
     }
 
-    public static function loadHeader()
+    public function loadHeader($elements = '')
     {
         self::setType();
         $contentType = self::returnContentType();
