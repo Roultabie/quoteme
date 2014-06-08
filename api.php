@@ -29,23 +29,26 @@ function parseQuote($parser = '', $options = '')
             require_once $parserUri;
             $class = $parser . 'Parser';
             if (class_exists($class)) {
-                $parser = new $class;
-                if ($parser instanceof parserTemplate) {
-                    $parser::loadHeader();
-                    $parser::loadCache();
-                    $quote = new quoteQueries();
-                    if (is_object($quote)) {
-                        $quote  = $quote->getQuote($options);
-                        $result = $parser->parse($quote);
+                $quote = new quoteQueries();
+                if (is_object($quote)) {
+                    $quotes  = $quote->getQuote($options);
+                    if (is_array($quotes)) {
+                        $parser = new $class;
+                        if ($parser instanceof parserTemplate) {
+                            $parser->loadHeader($quotes);
+                            $parser::loadCache();
+                            $result = $parser->parse($quotes);
+                            return $result;
+                        }
+                        else {
+                            return 'ERROR: class ' . $class . ' not implement parserTemplate !';
+                        }
                     }
                     else {
-                        $result = 'ERROR: No data found !';
+                        return 'ERROR: no data found !';
                     }
-                    return $result;
                 }
-                else {
-                    return 'ERROR: class ' . $class . ' not implement parserTemplate !';
-                }
+                
             }
             else {
                 return 'ERROR: class ' . $class . ' not exist !';
