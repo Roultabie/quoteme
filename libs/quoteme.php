@@ -296,6 +296,46 @@ class quoteQueries
         }
     }
 
+    private function addTag()
+    {
+        #
+    }
+
+    public function getTag()
+    {
+        #
+    }
+
+    private function editTag()
+    {
+        #
+    }
+
+    private function delTag()
+    {
+        #
+    }
+
+    private function addAuthor()
+    {
+        #
+    }
+
+    public function getAuthor()
+    {
+        #
+    }
+
+    private function editAuthor()
+    {
+        #
+    }
+
+    private function delAuthor()
+    {
+        #
+    }
+
     /**
      * Return WHERE of AND sql structure
      * @param  string  $field    sql field
