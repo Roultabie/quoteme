@@ -76,7 +76,7 @@ function getUpdate()
     
     if ($GLOBALS['system']['lastUpdate'] < $currentDate) {
         $update = file_get_contents('http://q.uote.me/checkupdate.php?cliv=' . $GLOBALS['config']['appVers']);
-        writeConfigFile(array('system>lastVersion' => $update, 'system>lastUpdate' => $currentDate));
+        //writeConfigFile(array('system>lastVersion' => $update, 'system>lastUpdate' => $currentDate));
     }
     
 }
@@ -84,7 +84,7 @@ function getUpdate()
 getUpdate();
 
 if ($GLOBALS['system']['version'] !== $GLOBALS['system']['lastVersion']) {
-    $updateInfo = 'https://github.com/Roultabie/quoteme/releases">[trad::new_update_available] : ' . $GLOBALS['system']['lastVersion'] . '</a>';
+    $updateInfo = '<a href="https://github.com/Roultabie/quoteme/releases">[trad::new_update_available] : ' . $GLOBALS['system']['lastVersion'] . '</a>';
 }
 
 $quote = new quoteQueries();
