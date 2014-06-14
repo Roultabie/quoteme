@@ -35,7 +35,7 @@ a, a:link, a:hover, a:active, a:visited {
     margin: 30px auto;
     font-size: 1em;
     font-family: "Palatino Linotype", Palatino, Palladio, "URW Palladio L", "Book Antiqua", Baskerville, "Bookman Old Style", "Bitstream Charter", "Nimbus Roman No9 L", Garamond, "Apple Garamond", "ITC Garamond Narrow", "New Century Schoolbook", "Century Schoolbook", "Century Schoolbook L", Georgia, serif;
-    line-height: 1.3em;
+    line-height: 1.8em;
     text-shadow: #fff 0 0 1px;
 }
 #text {
@@ -78,7 +78,7 @@ footer {
     padding: 12px 0 0 0;
     width: 100%;
     bottom: 0;
-    height: 50px;
+    height: 65px;
     /*background-color: red;*/
     text-align: center;
     font-size: 0.8em;
@@ -89,9 +89,12 @@ footer a, footer a:link, footer a:hover, footer a:active, footer a:visited {
     color: #888888;
     text-decoration: none;
 }
-footer > span:first-child::after, footer > span:nth-child(2)::after, footer > span:nth-child(3)::after {
+footer > div > span::after {
     content: "-";
     margin: 5px;
+}
+footer > div > span:last-child::after {
+    content: "";
 }
 footer div {
     font-style: italic;

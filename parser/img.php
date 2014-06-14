@@ -29,7 +29,7 @@ implements parserTemplate
             $authorFontSize       = round($this->width * 0.024414063); // 25
             $permalinkBlockHeight = round($this->width * 0.048828125); // 50
             $quoteFontSize        = round($this->width * 0.034179688); // 35
-            $nextLine             = round($this->width * 0.0390625); // 40
+            $nextLine             = round($this->width * 0.048828125); // 50
             $permalinkFontSize    = round($this->width * 0.01953125); // 20
             $permalinkX           = round($this->width * 0.0390625); // 40 margin right
             $permalinkY           = round($this->width * 0.522460938); // 535
