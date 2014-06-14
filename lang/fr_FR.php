@@ -48,4 +48,7 @@ $lang['empty_if_like_db_password'] = 'laisser vide si idem passe db';
 $lang['hosted_on_a'] = 'hébergé sur un';
 $lang['fork_me_on'] = 'forkez moi sur';
 $lang['get_new_quote'] = 'nouvelle citation';
+$lang['on'] = 'sur';
+$lang['latest-quotes'] = 'dernières citations';
+$lang['rss-feed'] = 'flux RSS';
 ?>
