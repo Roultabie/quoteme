@@ -62,6 +62,11 @@ h1 {
     display: inline-block;
     float: right;
 }
+section:after {
+    content: "";
+    display: block;
+    height: 70px;
+}
 footer:before
 {
    content: "";
