@@ -215,7 +215,7 @@ class quoteQueries
                 $sort = ' ORDER BY ' . $field . ' ' .$order;
             }
         }
-        $query = 'SELECT id, quote, author, source, tags, permalink, date FROM ' . self::$tblPrefix . 'quotes' . $rand . $where . $sort . $limit . ';';
+        $query = 'SELECT id, quote, author, source, tags, permalink, date FROM ' . self::$tblPrefix . 'quotes ' . $rand . $where . $sort . $limit . ';';
         $stmt  = dbConnexion::getInstance()->prepare($query);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -245,7 +245,8 @@ class quoteQueries
      */
     private function delElements($elements) // $ids = quotes to del (array)
     {
-        $stmt = dbConnexion::getInstance()->prepare('DELETE FROM ' . self::$tblPrefix . 'quotes' .' WHERE permalink = :permalink;');
+        $stmt = dbConnexion::getInstance()->prepare('DELETE FROM ' . self::$tblPrefix . 'quotes' .
+                                                    ' WHERE permalink = :permalink;');
         if (is_array($elements)) {
             foreach ($elements as $datas) {
                 $stmt->bindValue(':permalink', $datas, PDO::PARAM_INT);
@@ -261,11 +262,36 @@ class quoteQueries
      */
     private function addElements($elements) // array = quotes to add (array key[] = array key = fields, value = values)
     {
-        $stmt = dbConnexion::getInstance()->prepare('INSERT INTO ' . self::$tblPrefix . 'quotes' . ' (quote, author, source, tags, permalink, date) VALUES (:quote, :author, :source, :tags, :permalink, NOW());');
         if (is_array($elements)) {
             foreach ($elements as $datas) {
+                // Insert or update tag table if tag exist
+                if (!empty($datas['tags'])) {
+                    $tags = explode(',', $datas['tags']);
+                    if (is_array($tags)) {
+                        foreach ($tags as $value) {
+                            $tQuery = "INSERT INTO " . self::$tblPrefix . "tags(tag)
+                                        VALUES (:tag)
+                                        ON DUPLICATE KEY UPDATE hits = hits+1;";
+                            $tStmt = dbConnexion::getInstance()->prepare($tQuery);
+                            $tStmt->bindValue(':tag', trim($value), PDO::PARAM_STR);
+                            $tStmt->execute();
+                        }
+                    }
+                }
+                // Insert or update author
+                if (!empty($datas['author'])) {
+                    $aQuery = "INSERT INTO " . self::$tblPrefix . "authors(author)
+                                VALUES (:author)
+                                ON DUPLICATE KEY UPDATE hits = hits+1;";
+                    $aStmt = dbConnexion::getInstance()->prepare($aQuery);
+                    $aStmt->bindValue(':author', trim($datas['author']), PDO::PARAM_STR);
+                    $aStmt->execute();
+                }
+                // And finally insert quote
+                $stmt = dbConnexion::getInstance()->prepare('INSERT INTO ' . self::$tblPrefix . 'quotes' . ' (quote, author, source, tags, permalink, date)
+                                                            VALUES (:quote, :author, :source, :tags, :permalink, NOW());');
                 $stmt->bindValue(':quote', $datas['quote'], PDO::PARAM_STR);
-                $stmt->bindValue(':author', $datas['author'], PDO::PARAM_STR);
+                $stmt->bindValue(':author',$datas['author'], PDO::PARAM_STR);
                 $stmt->bindValue(':source', $datas['source'], PDO::PARAM_STR);
                 $stmt->bindValue(':tags', $datas['tags'], PDO::PARAM_STR);
                 $stmt->bindValue(':permalink', $datas['permalink'], PDO::PARAM_STR);
