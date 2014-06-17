@@ -308,9 +308,59 @@ class quoteQueries
      */
     private function editElements($elements)
     {
-        $stmt = dbConnexion::getInstance()->prepare('UPDATE ' . self::$tblPrefix . 'quotes' .' SET quote = :quote, author = :author, source = :source, tags = :tags WHERE permalink = :permalink');
         if (is_array($elements)) {
             foreach ($elements as $permalink => $datas) {
+                $base = $this->selElements(array('where' => 'permalink', 'whereOpt' => 'equal,' . $permalink));
+                // On récupère les anciens et nouveau tags dans deux tableaux
+                $oldTags = explode(',', $base[0]->tags);
+                $oldTags = array_map(trim, $oldTags);
+                $newTags = explode(',', $datas['tags']);
+                $newTags = array_map(trim, $newTags);
+
+                // Et on génère 2 tableaux. 1 avec les éléments à supprimer ou $i--
+                // Et l'autre les éléments à ajouter ou $i+
+                $toDel = array_diff($oldTags, $newTags);
+                $toAdd = array_diff($newTags, $oldTags);
+
+                // Insert or update tag table if tag exist
+                if (count($oldTags) > 0 && count($newTags) > 0) {
+                    if (is_array($toAdd)) {
+                        foreach ($toAdd as $value) {
+                            $tQuery = "INSERT INTO " . self::$tblPrefix . "tags(tag)
+                                        VALUES (:tag)
+                                        ON DUPLICATE KEY UPDATE hits = hits+1;";
+                            $tStmt = dbConnexion::getInstance()->prepare($tQuery);
+                            $tStmt->bindValue(':tag', trim($value), PDO::PARAM_STR);
+                            $tStmt->execute();
+                        }
+                    }
+                    if (is_array($toDel)) {
+                        foreach ($toDel as $value) {
+                            $tQuery = 'UPDATE ' . self::$tblPrefix . 'tags' .'
+                                        SET hits = hits-1 WHERE tag = :tag';
+                            $tStmt = dbConnexion::getInstance()->prepare($tQuery);
+                            $tStmt->bindValue(':tag', trim($value), PDO::PARAM_STR);
+                            $tStmt->execute();
+                        }
+                    }
+                }
+                // Insert or update author
+                if ($base[0]->author !== $datas['author']) {
+                    $aQuery1 = 'UPDATE ' . self::$tblPrefix . 'authors' .'
+                                SET hits = hits-1 WHERE author = :oldAuthor';
+                    $aQuery2 = "INSERT INTO " . self::$tblPrefix . "authors(author)
+                                VALUES (:author)
+                                ON DUPLICATE KEY UPDATE hits = hits+1;";
+                    $aStmt1 = dbConnexion::getInstance()->prepare($aQuery1);
+                    $aStmt2 = dbConnexion::getInstance()->prepare($aQuery2);
+                    $aStmt1->bindValue(':oldAuthor', trim($base[0]->author), PDO::PARAM_STR);
+                    $aStmt2->bindValue(':author', trim($datas['author']), PDO::PARAM_STR);
+                    $aStmt1->execute();
+                    $aStmt2->execute();
+                }
+                $stmt = dbConnexion::getInstance()->prepare('UPDATE ' . self::$tblPrefix . 'quotes' .'
+                                                    SET quote = :quote, author = :author, source = :source, tags = :tags
+                                                    WHERE permalink = :permalink');
                 $stmt->bindValue(':quote', $datas['quote'], PDO::PARAM_STR);
                 $stmt->bindValue(':author', $datas['author'], PDO::PARAM_STR);
                 $stmt->bindValue(':source', $datas['source'], PDO::PARAM_STR);
