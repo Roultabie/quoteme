@@ -81,7 +81,22 @@ function getUpdate()
     
 }
 
-getUpdate();
+/**
+* return tags in json format
+*
+*/
+function jsonTagsByHits($string, $limit = '4', $order = 'DESC')
+{
+    $query   = "SELECT id, tag, hits FROM " . $GLOBALS['config']['tblPrefix'] . "tags WHERE tag LIKE '" . $string . "%' ORDER BY hits " . $order . " LIMIT " . $limit . ';';
+    $stmt    = dbConnexion::getInstance()->prepare($query);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_COLUMN, 1);
+    $stmt->closeCursor();
+    $stmt = NULL;
+    return json_encode($result);
+}
+
+//getUpdate();
 
 if ($GLOBALS['system']['version'] !== $GLOBALS['system']['lastVersion']) {
     $updateInfo = '<a href="https://github.com/Roultabie/quoteme/releases">[trad::new_update_available] : ' . $GLOBALS['system']['lastVersion'] . '</a>';
@@ -97,6 +112,14 @@ if (!empty($_POST)) {
         $add = $quote->addQuote($_POST['text'], $_POST['author'], $_POST['source'], $_POST['tags']);
     }
     parser::clearCache();
+}
+
+if ($_GET['tags'] === "json") {
+    header('Cache-Control: no-cache, must-revalidate');
+    header('Expires: Ven, 11 Oct 2011 23:32:00 GMT');
+    header('Content-type: application/json');
+    echo jsonTagsByHits($_GET['part']);
+    exit;
 }
 
 if ($_GET['action'] === "edit") {
