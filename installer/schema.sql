@@ -16,7 +16,7 @@ CREATE TABLE `qm_quotes` (
    `quote` text not null,
    `author` smallint(6),
    `source` varchar(100) not null,
-   `tags` smallint(6),
+   `tags` varchar(255),
    `permalink` char(6) not null,
    `date` datetime not null,
    PRIMARY KEY (`id`)
