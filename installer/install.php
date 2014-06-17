@@ -282,6 +282,7 @@ if (empty($config['password'])) {
     $html = new timply();
 
     $html->setElement('scriptDir', rtrim($_SERVER['DOCUMENT_ROOT'], '/'));
+    $html->setElement('defaultTblPrefix', rtrim($GLOBALS['config']['tblPrefix'], '_'));
 
     if (!empty($_POST) && implode('', $_POST) !== $lang) {
         if (empty($GLOBALS['config']['dbName'])) {

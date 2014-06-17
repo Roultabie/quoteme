@@ -52,4 +52,5 @@ $lang['on'] = 'sur';
 $lang['latest-quotes'] = 'dernières citations';
 $lang['rss-feed'] = 'flux RSS';
 $lang['tables_prefix'] = 'préfix des tables';
+$lang['leave_empty_for'] = 'laisser vide pour';
 ?>
