@@ -44,15 +44,15 @@ class quoteQueries
     private         $toDelete;
     private         $toEdit;
     private static  $stack;
-    private static  $table;
+    private static  $tblPrefix;
     public  static  $nbQuotes;
 
 
     function __construct()
     {
-        self::$table    = $GLOBALS['config']['dbTable'];
-        $nbQuotes       = $this->countElements();
-        self::$nbQuotes = $nbQuotes[0]->nb;
+        self::$tblPrefix = $GLOBALS['config']['tblPrefix'];
+        $nbQuotes        = $this->countElements();
+        self::$nbQuotes  = $nbQuotes[0]->nb;
     }
 
     /**
@@ -209,13 +209,13 @@ class quoteQueries
             $limit = ' LIMIT ' . rtrim($limitMin . ',' .$limitMax, ',');
         }
         if (!empty($opt['sort'])) {
-            if ($opt['sort'] === 'random') $rand = ' JOIN ( SELECT FLOOR( COUNT( * ) * RAND( ) ) AS ValeurAleatoire FROM ' . self::$table . ' ) AS V ON ' . self::$table . '.id >= V.ValeurAleatoire';
+            if ($opt['sort'] === 'random') $rand = ' JOIN ( SELECT FLOOR( COUNT( * ) * RAND( ) ) AS ValeurAleatoire FROM ' . self::$tblPrefix . 'quotes' . ' ) AS V ON ' . self::$tblPrefix . 'quotes' . '.id >= V.ValeurAleatoire';
             if (strpos($opt['sort'], ',')) {
                 list($field, $order) = explode(',', $opt['sort']);
                 $sort = ' ORDER BY ' . $field . ' ' .$order;
             }
         }
-        $query = 'SELECT id, quote, author, source, tags, permalink, date FROM ' . self::$table . $rand . $where . $sort . $limit . ';';
+        $query = 'SELECT id, quote, author, source, tags, permalink, date FROM ' . self::$tblPrefix . 'quotes' . $rand . $where . $sort . $limit . ';';
         $stmt  = dbConnexion::getInstance()->prepare($query);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -230,7 +230,7 @@ class quoteQueries
      */
     private function countElements()
     {
-        $stmt = dbConnexion::getInstance()->prepare('SELECT COUNT(*) AS nb FROM ' . self::$table .';');
+        $stmt = dbConnexion::getInstance()->prepare('SELECT COUNT(*) AS nb FROM ' . self::$tblPrefix . 'quotes' .';');
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_OBJ);
         $stmt->closeCursor();
@@ -245,7 +245,7 @@ class quoteQueries
      */
     private function delElements($elements) // $ids = quotes to del (array)
     {
-        $stmt = dbConnexion::getInstance()->prepare('DELETE FROM ' . self::$table .' WHERE permalink = :permalink;');
+        $stmt = dbConnexion::getInstance()->prepare('DELETE FROM ' . self::$tblPrefix . 'quotes' .' WHERE permalink = :permalink;');
         if (is_array($elements)) {
             foreach ($elements as $datas) {
                 $stmt->bindValue(':permalink', $datas, PDO::PARAM_INT);
@@ -261,7 +261,7 @@ class quoteQueries
      */
     private function addElements($elements) // array = quotes to add (array key[] = array key = fields, value = values)
     {
-        $stmt = dbConnexion::getInstance()->prepare('INSERT INTO ' . self::$table . ' (quote, author, source, tags, permalink, date) VALUES (:quote, :author, :source, :tags, :permalink, NOW());');
+        $stmt = dbConnexion::getInstance()->prepare('INSERT INTO ' . self::$tblPrefix . 'quotes' . ' (quote, author, source, tags, permalink, date) VALUES (:quote, :author, :source, :tags, :permalink, NOW());');
         if (is_array($elements)) {
             foreach ($elements as $datas) {
                 $stmt->bindValue(':quote', $datas['quote'], PDO::PARAM_STR);
@@ -282,7 +282,7 @@ class quoteQueries
      */
     private function editElements($elements)
     {
-        $stmt = dbConnexion::getInstance()->prepare('UPDATE ' . self::$table .' SET quote = :quote, author = :author, source = :source, tags = :tags WHERE permalink = :permalink');
+        $stmt = dbConnexion::getInstance()->prepare('UPDATE ' . self::$tblPrefix . 'quotes' .' SET quote = :quote, author = :author, source = :source, tags = :tags WHERE permalink = :permalink');
         if (is_array($elements)) {
             foreach ($elements as $permalink => $datas) {
                 $stmt->bindValue(':quote', $datas['quote'], PDO::PARAM_STR);
