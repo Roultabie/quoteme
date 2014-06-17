@@ -3,10 +3,6 @@
 -- Tue, 17 Jun 2014 07:39:49 +0000
 --
 
-CREATE DATABASE `quoteme` DEFAULT CHARSET utf8;
-
-USE `quoteme`;
-
 CREATE TABLE `qm_authors` (
    `id` smallint(6) not null auto_increment,
    `author` varchar(255),
