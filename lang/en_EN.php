@@ -34,8 +34,8 @@ $lang['db_error_20'] = 'username / password wrong';
 $lang['db_error_31'] = 'dbname can\'t be empty';
 $lang['db_error_10'] = 'cannot connect to host';
 $lang['db_infos_correct'] = 'db informations are correct';
-$lang['db_error_40'] = 'table name can\'t be empty';
-$lang['db_error_41'] = 'table already exist';
+$lang['db_error_40'] = 'prefix must contain only alphabetic characters';
+$lang['db_error_41'] = 'this prefix is already used';
 $lang['test_datas'] = 'test datas';
 $lang['config_file'] = 'config file';
 $lang['config_php_must_be_writable'] = 'config.php must be writable';
@@ -51,4 +51,5 @@ $lang['get_new_quote'] = 'get a new quote';
 $lang['on'] = 'on';
 $lang['latest-quotes'] = 'latest quotes';
 $lang['rss-feed'] = 'RSS feed';
+$lang['tables_prefix'] = 'tables prefix';
 ?>
