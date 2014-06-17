@@ -235,7 +235,7 @@ function install($resetPassword = FALSE)
         {
             $schema = file_get_contents('schema.sql');
             if (!empty($_SESSION['tblPrefix'])) {
-                $schema = str_replace('qm_', $_SESSION['tblPrefix'], $schema);
+                $schema = str_replace('qm_', $_SESSION['tblPrefix'] . '_', $schema);
             }
             $instance = dbConnexion($_SESSION['dbHost'], $_SESSION['dbName'], $_SESSION['dbUser'], $_SESSION['dbPass']);
             $stmt     = $instance->prepare($schema);
