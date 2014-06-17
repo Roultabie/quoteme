@@ -235,7 +235,8 @@ function install($resetPassword = FALSE)
         {
             $schema = file_get_contents('schema.sql');
             if (!empty($_SESSION['tblPrefix'])) {
-                $schema = str_replace('qm_', $_SESSION['tblPrefix'] . '_', $schema);
+                $tblPrefix = $_SESSION['tblPrefix'] . '_';
+                $schema = str_replace($GLOBALS['config']['tblPrefix'], $tblPrefix, $schema);
             }
             $instance = dbConnexion($_SESSION['dbHost'], $_SESSION['dbName'], $_SESSION['dbUser'], $_SESSION['dbPass']);
             $stmt     = $instance->prepare($schema);
@@ -245,7 +246,7 @@ function install($resetPassword = FALSE)
                 $GLOBALS['config']['dbName']     = $_SESSION['dbName'];
                 $GLOBALS['config']['dbUser']     = $_SESSION['dbUser'];
                 $GLOBALS['config']['dbPass']     = $_SESSION['dbPass'];
-                $GLOBALS['config']['tblPrefix']  = $_SESSION['tblPrefix'];
+                $GLOBALS['config']['tblPrefix']  = $tblPrefix;
                 $GLOBALS['config']['lang']       = $_SESSION['lang'];
                 $GLOBALS['config']['users']      = array($_SESSION['user'] => array('hash' => $password, 'email' => $_SESSION['email']));
                 writeConfigFile();
@@ -287,6 +288,7 @@ if (empty($config['password'])) {
             if (empty($_POST['dbhost']))    $_POST['dbhost']   = 'localhost';
             if (empty($_POST['user']))      $_POST['user']     = $_POST['dbuser'];
             if (empty($_POST['password']))  $_POST['password'] = $_POST['dbpass'];
+            if (empty($_POST['tblprefix'])) $_POST['tblprefix'] = rtrim($GLOBALS['config']['tblPrefix'], '_');
             $_SESSION['lang']      = $_POST['lang'];
             $_SESSION['dbHost']    = $_POST['dbhost'];
             $_SESSION['dbUser']    = $_POST['dbuser'];
