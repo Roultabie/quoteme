@@ -77,10 +77,10 @@ function dbConnexion($host, $name, $user, $pass)
     return $result;
 }
 
-function checkDbIds($host, $user, $password, $dbName, $tableName = '')
+function checkDbIds($host, $user, $password, $dbName, $tblPrefix)
 {
     $connexion = dbConnexion($host, $dbName, $user, $password);
-    $state     = array('dbHost' => TRUE, 'dbIds' => TRUE, 'dbName' => TRUE, 'tableName' => TRUE);
+    $state     = array('dbHost' => TRUE, 'dbIds' => TRUE, 'dbName' => TRUE, 'tblPrefix' => TRUE);
     $ctrl      = TRUE;
     if (!is_object($connexion)) {
         if ($connexion === 2002) {
@@ -100,25 +100,27 @@ function checkDbIds($host, $user, $password, $dbName, $tableName = '')
         $state['dbName'] = 31;
         $ctrl = FALSE;
     }
-    /*if (empty($tableName)) {
-        $state['tableName'] = 40;
-        $ctrl = FALSE;
-    }*/
-    if ($ctrl === TRUE) {
-        /*if (ifDbTableExist($connexion, $tableName) === FALSE) {
-            $state['tableName'] = 41;
+    if (!empty($tblPrefix)) {
+        if (preg_match('/([^A-Za-z])/', $tblPrefix)) {
+            $state['tblPrefix'] = 40;
+            $ctrl = FALSE;
         }
-        else {*/
+    }
+    if ($ctrl === TRUE) {
+        if (ifDbTableExist($connexion, $tblPrefix) === FALSE) {
+            $state['tblPrefix'] = 41;
+        }
+        else {
             $state = TRUE;
-        //}
+        }
     }
     return $state;
 }
 
-function ifDbTableExist($instance, $table)
+function ifDbTableExist($instance, $tblPrefix)
 {
     if (is_object($instance)) {;
-        $tables = $instance->prepare("SHOW TABLES LIKE '" . $table . "'");
+        $tables = $instance->prepare("SHOW TABLES LIKE '" . $tblPrefix . "%'");
         $tables->execute();
         $result = $tables->fetchAll(PDO::FETCH_OBJ);
         if (count($result) > 0) {
@@ -235,7 +237,6 @@ function install($resetPassword = FALSE)
             if (!empty($_SESSION['tblPrefix'])) {
                 $schema = str_replace('qm_', $_SESSION['tblPrefix'], $schema);
             }
-            print_r($schema);
             $instance = dbConnexion($_SESSION['dbHost'], $_SESSION['dbName'], $_SESSION['dbUser'], $_SESSION['dbPass']);
             $stmt     = $instance->prepare($schema);
             $stmt->execute();
@@ -295,8 +296,7 @@ if (empty($config['password'])) {
             $_SESSION['user']      = $_POST['user'];
             $_SESSION['pass']      = $_POST['password'];
             $_SESSION['email']     = $_POST['email'];
-            //$dbState               = checkDbIds($_SESSION['dbHost'], $_SESSION['dbUser'], $_SESSION['dbPass'], $_SESSION['dbName'], $_SESSION['dbTable']);
-            $dbState               = checkDbIds($_SESSION['dbHost'], $_SESSION['dbUser'], $_SESSION['dbPass'], $_SESSION['dbName']);
+            $dbState               = checkDbIds($_SESSION['dbHost'], $_SESSION['dbUser'], $_SESSION['dbPass'], $_SESSION['dbName'], $_SESSION['tblPrefix']);
         }
         else {
             $_SESSION['lang']      = $GLOBALS['config']['lang'];
