@@ -91,6 +91,23 @@ function jsonTagsByHits($string, $limit = '4', $order = 'DESC')
     $stmt    = dbConnexion::getInstance()->prepare($query);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_COLUMN, 1);
+    array_walk($result, function (&$item, $key) {
+        $item = array('value' => $item);
+    });
+    $stmt->closeCursor();
+    $stmt = NULL;
+    return json_encode($result);
+}
+
+function jsonAuthorsByHits($string, $limit = '4', $order = 'DESC')
+{
+    $query   = "SELECT id, author, hits FROM " . $GLOBALS['config']['tblPrefix'] . "authors WHERE author LIKE '" . $string . "%' ORDER BY hits " . $order . " LIMIT " . $limit . ';';
+    $stmt    = dbConnexion::getInstance()->prepare($query);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_COLUMN, 1);
+    array_walk($result, function (&$item, $key) {
+        $item = array('value' => $item);
+    });
     $stmt->closeCursor();
     $stmt = NULL;
     return json_encode($result);
@@ -114,11 +131,17 @@ if (!empty($_POST)) {
     parser::clearCache();
 }
 
-if ($_GET['tags'] === "json") {
+if (!empty($_GET['tag']) || !empty($_GET['author'])) {
     header('Cache-Control: no-cache, must-revalidate');
     header('Expires: Ven, 11 Oct 2011 23:32:00 GMT');
     header('Content-type: application/json');
-    echo jsonTagsByHits($_GET['part']);
+    if (!empty($_GET['tag'])) {
+        $result = jsonTagsByHits($_GET['tag']);
+    }
+    else {
+        $result = jsonAuthorsByHits($_GET['author']);
+    }
+    echo $result;
     exit;
 }
 
@@ -163,7 +186,7 @@ if (is_array($quotes)) {
         $html->setElement('quoteTableText', SmartyPants($quote->getText(), 'f+:+t+h+H+'), 'quoteTable');
         $html->setElement('quoteTableAuthor', SmartyPants($quote->getAuthor()), 'quoteTable');
         $html->setElement('quoteTableSource', SmartyPants($quote->getSource()), 'quoteTable');
-        $html->setElement('quoteTableTags', SmartyPants($quote->getTags()), 'quoteTable');
+        $html->setElement('quoteTableTags', SmartyPants(str_replace(',', ', ', $quote->getTags())), 'quoteTable');
         $html->setElement('quoteTableDate', SmartyPants($quote->getDate()), 'quoteTable');
         $html->setElement('edit', '?' . http_build_query(array('action' => 'edit', 'permalink' => $quote->getPermalink()), '', '&'), 'quoteTable');
         $html->setElement('delete', '?' . http_build_query(array('action' => 'delete', 'permalink' => $quote->getPermalink()), '', '&'), 'quoteTable');
