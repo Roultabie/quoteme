@@ -3,11 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>[trad::administration] - Q.uote.me</title>
-<script src="themes/simple/js/jquery/1.5.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="themes/simple/js/jquery/1.8.12/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="themes/simple/js/tag-it.min.js" type="text/javascript" charset="utf-8"></script>
-<link rel="stylesheet" type="text/css" href="themes/simple/css/jquery/flick/simple.css">
-<link href="themes/simple/css/jquery.tagit-simple.css" rel="stylesheet" type="text/css">
 <style type="text/css">
 body {
     margin: 0;
@@ -71,11 +66,11 @@ input[type=text]:hover, textarea:hover {
 input[type=text]:focus, textarea:focus {
     box-shadow: 0px 0px 5px green inset;
 }
-input[type=text]#source {
-    height: 1.35em;
-}
 textarea {
     height: 100px;
+}
+textarea, input[type=text] {
+    width: 100%;
 }
 textarea {
     margin: 5px 0;
@@ -208,11 +203,9 @@ tr:hover .action {
     <div id="form">
         <form name="addQuote" method="post">
             <textarea name="text" id="text" placeholder="[trad::type_quote] ...">{formInputText}</textarea>
-            <input type="hidden" name="author" id="author" placeholder="[trad::author]" value="{formInputAuthor}">
-            <ul id='myauthor'></ul>
-            <input type="hidden" name="tags" id="tags" value="{formInputTags}">
-            <ul id='mytags'></ul>
+            <input type="text" name="author" id="author" placeholder="[trad::author]" value="{formInputAuthor}">
             <input type="text" name="source" id="source" placeholder="[trad::source]" value="{formInputSource}">
+            <input type="text" name="tags" id="tags" placeholder="[trad::tag1_tag2_tag3] ..." value="{formInputTags}">
             <!--<input type="date">-->
             <input type="hidden" name="action" value="{formAction}">
             <input type="hidden" name="permalink" value="{formPermalink}">
@@ -237,56 +230,5 @@ tr:hover .action {
     <footer>
 
     </footer>
-    <script type="text/javascript">
-        jQuery(document).ready(function() {
-            jQuery("#mytags").tagit({
-                singleField: true,
-                singleFieldNode: $('#tags'),
-                allowSpaces: true,
-                minLength: 2,
-                removeConfirmation: false,
-                tagSource: function( request, response ) {
-                    //console.log("1");
-                    $.ajax({
-                        url: "admin.php", 
-                        data: { tag:request.term },
-                        dataType: "json",
-                        success: function( data ) {
-                            response( $.map( data, function( item ) {
-                                return {
-                                    label: item.value,
-                                    value: item.value
-                                }
-                            }));
-                        }
-                    });
-                }});
-            });
-        jQuery(document).ready(function() {
-            jQuery("#myauthor").tagit({
-                singleField: true,
-                singleFieldNode: $('#author'),
-                allowSpaces: true,
-                minLength: 2,
-                removeConfirmation: true,
-                tagLimit: 1,
-                tagSource: function( request, response ) {
-                    //console.log("1");
-                    $.ajax({
-                        url: "admin.php", 
-                        data: { author:request.term },
-                        dataType: "json",
-                        success: function( data ) {
-                            response( $.map( data, function( item ) {
-                                return {
-                                    label: item.value,
-                                    value: item.value
-                                }
-                            }));
-                        }
-                    });
-                }});
-            });
-    </script>
 </body>
 </html>
