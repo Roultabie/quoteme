@@ -232,9 +232,9 @@ border-radius: 3px;
     <div id="form">
         <form name="addQuote" method="post">
             <textarea name="text" id="text" placeholder="[trad::type_quote] ...">{formInputText}</textarea>
-            <input type="text" name="author" id="author" placeholder="[trad::author]" value="{formInputAuthor}">
+            <input type="text" name="author" id="author" onkeyup="searchString(this,'author');" placeholder="[trad::author]" value="{formInputAuthor}">
             <input type="text" name="source" id="source" placeholder="[trad::source]" value="{formInputSource}">
-            <input type="text" name="tags" id="tags" onkeyup="searchString(this);" placeholder="[trad::tag1_tag2_tag3] ..." value="{formInputTags}">
+            <input type="text" name="tags" id="tags" onkeyup="searchString(this,'tag');" placeholder="[trad::tag1_tag2_tag3] ..." value="{formInputTags}">
             <!--<input type="date">-->
             <input type="hidden" name="action" value="{formAction}">
             <input type="hidden" name="permalink" value="{formPermalink}">

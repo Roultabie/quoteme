@@ -10,11 +10,11 @@ function createRequestObject()
     return http;
 }
 
-function searchString(obj)
+function searchString(obj, dataType)
 {
     obj.setAttribute("autocomplete", "off");
     var http = createRequestObject();
-    http.open('GET', '/admin.php?tag=' + obj.value, true);
+    http.open('GET', '/admin.php?' + dataType + '=' + obj.value, true);
     http.onreadystatechange = ( function ()
     {
         if (http.readyState === 4) {
