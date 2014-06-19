@@ -15,6 +15,7 @@ function searchString(obj, dataType)
     if (document.getElementById('tempsearchstring') === null) {
         var temp = document.createElement('div');
         temp.id  = 'tempsearchstring';
+        temp.style.display = 'none';
         document.body.appendChild(temp);
         var tempSpan = document.createElement('span');
         tempSpan.id  = 'tempspan1';
@@ -93,7 +94,4 @@ function searchString(obj, dataType)
         };
     } );
     http.send(null);
-    // Comment masquer cette div de test ??????????
-    //var temp = document.getElementById('tempsearchstring');
-    //temp.parentNode.removeChild( temp ); 
 };
