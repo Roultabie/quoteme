@@ -24,9 +24,9 @@ function searchString(obj)
                     if (document.getElementById(obj.id + 'suggest') === null) {
                         var ul            = document.createElement('ul');
                         ul.id             = obj.id + 'suggest';
-                        ul.style.position = 'fixed';
-                        ul.style.top      = eval(obj.offsetTop + obj.offsetHeight);
-                        var parent         = obj.parentNode;
+                        ul.style.position = 'absolute';
+                        ul.style.top      = eval(obj.offsetTop + obj.offsetHeight) + 'px';
+                        var parent        = obj.parentNode;
                         parent.insertBefore(ul, obj);
                     };
                     document.getElementById(obj.id + 'suggest').innerHTML = '';
