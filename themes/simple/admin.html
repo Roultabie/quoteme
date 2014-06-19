@@ -198,21 +198,32 @@ tr:hover .action {
 </style>
 <!-- CSS for js for searchstring -->
 <style type="text/css">
-        #tagssuggest, #tagssuggest li {
-            margin: 0;
-            padding: 0;
-            list-style-type: none;
-        }
-        #tagssuggest {
-            margin-left: 5px;
-        }
-        #tagssuggest li {
-            cursor: pointer;
-        }
-        #tagssuggest li:hover, #tagssuggest li .hover {
-            background: lightgrey;
-        }
-    </style>
+#tagssuggest, #tagssuggest li {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+#tagssuggest {
+    margin-left: 5px;
+    box-shadow: 0px 0px 3px #555;
+    border: 0;
+border-radius: 3px;
+    background: white;
+}
+#tagssuggest li {
+    cursor: pointer;
+    padding: 5px 12px;
+}
+#tagssuggest li:hover, #tagssuggest li .hover {
+    background: lightgrey;
+}
+#tagssuggest a {
+    font-size: 1.2em;
+    font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+    font-weight: bold;
+    color: grey;
+}
+</style>
 </head>
 <body>
     <header>
