@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>[trad::administration] - Q.uote.me</title>
+<script language="javascript" src="libs/searchstring.js"></script>
 <style type="text/css">
 body {
     margin: 0;
@@ -195,6 +196,23 @@ tr:hover .action {
     content: "\e604";
 }
 </style>
+<!-- CSS for js for searchstring -->
+<style type="text/css">
+        #tagssuggest, #tagssuggest li {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+        #tagssuggest {
+            margin-left: 5px;
+        }
+        #tagssuggest li {
+            cursor: pointer;
+        }
+        #tagssuggest li:hover, #tagssuggest li .hover {
+            background: lightgrey;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -205,7 +223,7 @@ tr:hover .action {
             <textarea name="text" id="text" placeholder="[trad::type_quote] ...">{formInputText}</textarea>
             <input type="text" name="author" id="author" placeholder="[trad::author]" value="{formInputAuthor}">
             <input type="text" name="source" id="source" placeholder="[trad::source]" value="{formInputSource}">
-            <input type="text" name="tags" id="tags" placeholder="[trad::tag1_tag2_tag3] ..." value="{formInputTags}">
+            <input type="text" name="tags" id="tags" onkeyup="searchString(this);" placeholder="[trad::tag1_tag2_tag3] ..." value="{formInputTags}">
             <!--<input type="date">-->
             <input type="hidden" name="action" value="{formAction}">
             <input type="hidden" name="permalink" value="{formPermalink}">
