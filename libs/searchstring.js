@@ -12,11 +12,35 @@ function createRequestObject()
 
 function searchString(obj, dataType)
 {
+    if (document.getElementById('tempsearchstring') === null) {
+        var temp = document.createElement('div');
+        temp.id  = 'tempsearchstring';
+        document.body.appendChild(temp);
+        var tempSpan = document.createElement('span');
+        tempSpan.id  = 'tempspan1';
+        tempSpan.style.display = 'inline-block';
+        tempSpan.innerHTML = obj.value;
+        document.body.appendChild(tempSpan);
+        var tempSpanEnd = document.createElement('span');
+        tempSpanEnd.id  = 'tempspan2';
+        document.body.appendChild(tempSpanEnd);
+    }
+    else {
+        var tempSpan = document.getElementById('tempspan1');
+        tempSpan.innerHTML = obj.value;
+    };
     obj.setAttribute("autocomplete", "off");
     var inputContent = obj.value;
     if (inputContent.search(',') > -1) {
         var elements = inputContent.split(',');
         var toSend   = elements.pop().replace(/^\s+/g,'');
+        var tempSpan = document.getElementById('tempspan1');
+        // on recalcule la position de la bulle (a revoir, redéfini à chaque 'pressage')
+        // Plutot détecter que la touche pressée est une virgule et ne recalculer que si c'est cette touche.
+        var tempSpanEnd = document.getElementById('tempspan2');
+        var ulLeftPos = eval(tempSpanEnd.offsetLeft - tempSpan.offsetLeft + obj.offsetLeft);
+        var ul = document.getElementById(obj.id + 'suggest');
+        ul.style.left = ulLeftPos + 'px';
     }
     else {
         var elements = [];
@@ -38,6 +62,7 @@ function searchString(obj, dataType)
                         var parent        = obj.parentNode;
                         parent.insertBefore(ul, obj);
                     };
+                    
                     document.getElementById(obj.id + 'suggest').innerHTML = '';
                     if (result['status'] === 'success') {
                         for(var i= 0; i < result.data.length; i++)
@@ -68,4 +93,7 @@ function searchString(obj, dataType)
         };
     } );
     http.send(null);
-}
+    // Comment masquer cette div de test ??????????
+    //var temp = document.getElementById('tempsearchstring');
+    //temp.parentNode.removeChild( temp ); 
+};
