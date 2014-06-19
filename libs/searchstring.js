@@ -20,7 +20,7 @@ function searchString(obj, dataType)
     }
     else {
         var elements = [];
-        var toSend = inputContent.replace(/^\s+/g,'');;
+        var toSend   = inputContent.replace(/^\s+/g,'');;
     };
     var http = createRequestObject();
     http.open('GET', '/admin.php?' + dataType + '=' + toSend, true);
@@ -45,14 +45,15 @@ function searchString(obj, dataType)
                             var li = document.createElement('li');
                             li.id  = obj.id + 'li' + i;
                             document.getElementById(obj.id + 'suggest').appendChild(li);
-                            var a       = document.createElement('a');
-                            a.innerHTML = result.data[i].value;
-                            a.name      = obj.id + 'a' + i
-                            a.onclick   = function() {
+                            var a           = document.createElement('a');
+                            a.innerHTML     = result.data[i].value;
+                            a.name          = obj.id + 'a' + i
+                            a.style.display = 'block';
+                            a.onclick       = function() {
                                 var parent  = this.parentNode;
                                 // On concat la valeur cliquée au tableau de l'input
                                 elements.push(this.innerHTML);
-                                obj.value   = elements.join(',');
+                                obj.value = elements.join(',');
                                 document.getElementById(obj.id + 'suggest').innerHTML = '';
                             };
                             document.getElementById(obj.id + 'li' + i).appendChild(a);
