@@ -12,6 +12,7 @@ function createRequestObject()
 
 function searchString(obj)
 {
+    obj.setAttribute("autocomplete", "off");
     var http = createRequestObject();
     http.open('GET', '/admin.php?tag=' + obj.value, true);
     http.onreadystatechange = ( function ()
@@ -20,41 +21,39 @@ function searchString(obj)
             if (http.status === 200) {
                 var result = eval( '(' + http.responseText + ')' );
                 if (result !== false) {
-                    if (document.getElementById(obj.id + 'choice') === null) {
-                        var div            = document.createElement('div');
-                        div.id             = obj.id + 'choice';
-                        div.style.position = 'fixed';
-                        div.style.top      = eval(obj.offsetTop + obj.offsetHeight);
+                    if (document.getElementById(obj.id + 'suggest') === null) {
+                        var ul            = document.createElement('ul');
+                        ul.id             = obj.id + 'suggest';
+                        ul.style.position = 'fixed';
+                        ul.style.top      = eval(obj.offsetTop + obj.offsetHeight);
                         var parent         = obj.parentNode;
-                        parent.insertBefore(div, obj);
+                        parent.insertBefore(ul, obj);
                     };
-                    document.getElementById(obj.id + 'choice').innerHTML = '';
+                    document.getElementById(obj.id + 'suggest').innerHTML = '';
                     if (result['status'] === 'success') {
                         for(var i= 0; i < result.data.length; i++)
                         {
-                            var span            = document.createElement('span');
-                            span.innerHTML      = result.data[i].value;
-                            span.dataset.origin = obj.id;
-                            span.onclick        = function() {
-                                setOrigin(span);
+                            var li = document.createElement('li');
+                            li.id  = obj.id + 'li' + i;
+                            document.getElementById(obj.id + 'suggest').appendChild(li);
+                            var a       = document.createElement('a');
+                            a.innerHTML = result.data[i].value;
+                            a.name      = obj.id + 'a' + i
+                            a.onclick   = function() {
+                                var parent  = this.parentNode;
+                                obj.value   = this.innerHTML;
+                                document.getElementById(obj.id + 'suggest').innerHTML = '';
                             };
-                            
-                            document.getElementById(obj.id + 'choice').appendChild(span);
+                            document.getElementById(obj.id + 'li' + i).appendChild(a);
                         };
                         
                     };
+                    /*obj.onkeyup = function(event) {
+                        console.log(event.keyCode);
+                    };*/
                 };
             };
         };
     } );
     http.send(null);
-}
-
-function setOrigin(obj)
-{
-    var origin  = obj.dataset.origin;
-    var input   = document.getElementById(origin);
-    var parent  = obj.parentNode;
-    input.value = obj.innerHTML;
-    document.getElementById(parent.id).innerHTML = '';
 }
