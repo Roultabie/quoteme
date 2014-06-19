@@ -131,8 +131,6 @@ function jsonAuthorsByHits($string, $limit = '4', $order = 'DESC')
     return json_encode($result);
 }
 
-getUpdate();
-
 if ($GLOBALS['system']['version'] !== $GLOBALS['system']['lastVersion']) {
     $updateInfo = '<a href="https://github.com/Roultabie/quoteme/releases">[trad::new_update_available] : ' . $GLOBALS['system']['lastVersion'] . '</a>';
 }
@@ -166,6 +164,8 @@ if (isset($_GET['tag']) || isset($_GET['author'])) {
     echo $result;
     exit;
 }
+
+getUpdate();
 
 if ($_GET['action'] === "edit") {
     $editQuote     = $quote->getQuote(array('where' => 'permalink', 'whereOpt' => 'equal,' . $_GET['permalink']));
