@@ -45,7 +45,7 @@ $config['dbHost'] = '';
 $config['dbName'] = '';
 $config['dbUser'] = '';
 $config['dbPass'] = '';
-$config['dbTable'] = '';
+$config['tblPrefix'] = 'qm_';
 $config['lang'] = '';
 $config['themeDir'] = 'themes/simple/';
 $config['langDir'] = 'lang/';
@@ -77,10 +77,10 @@ function dbConnexion($host, $name, $user, $pass)
     return $result;
 }
 
-function checkDbIds($host, $user, $password, $dbName, $tableName)
+function checkDbIds($host, $user, $password, $dbName, $tblPrefix)
 {
     $connexion = dbConnexion($host, $dbName, $user, $password);
-    $state     = array('dbHost' => TRUE, 'dbIds' => TRUE, 'dbName' => TRUE, 'tableName' => TRUE);
+    $state     = array('dbHost' => TRUE, 'dbIds' => TRUE, 'dbName' => TRUE, 'tblPrefix' => TRUE);
     $ctrl      = TRUE;
     if (!is_object($connexion)) {
         if ($connexion === 2002) {
@@ -100,13 +100,15 @@ function checkDbIds($host, $user, $password, $dbName, $tableName)
         $state['dbName'] = 31;
         $ctrl = FALSE;
     }
-    if (empty($tableName)) {
-        $state['tableName'] = 40;
-        $ctrl = FALSE;
+    if (!empty($tblPrefix)) {
+        if (preg_match('/([^A-Za-z])/', $tblPrefix)) {
+            $state['tblPrefix'] = 40;
+            $ctrl = FALSE;
+        }
     }
     if ($ctrl === TRUE) {
-        if (ifDbTableExist($connexion, $tableName) === FALSE) {
-            $state['tableName'] = 41;
+        if (ifDbTableExist($connexion, $tblPrefix) === FALSE) {
+            $state['tblPrefix'] = 41;
         }
         else {
             $state = TRUE;
@@ -115,10 +117,10 @@ function checkDbIds($host, $user, $password, $dbName, $tableName)
     return $state;
 }
 
-function ifDbTableExist($instance, $table)
+function ifDbTableExist($instance, $tblPrefix)
 {
     if (is_object($instance)) {;
-        $tables = $instance->prepare("SHOW TABLES LIKE '" . $table . "'");
+        $tables = $instance->prepare("SHOW TABLES LIKE '" . $tblPrefix . "%'");
         $tables->execute();
         $result = $tables->fetchAll(PDO::FETCH_OBJ);
         if (count($result) > 0) {
@@ -229,30 +231,27 @@ function install($resetPassword = FALSE)
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT, array('cost' => 10));
 
     if ($resetPassword !== TRUE) {
-        $table = 'CREATE TABLE IF NOT EXISTS `' . $_SESSION['dbTable'] . '` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `quote` text NOT NULL,
-  `author` varchar(100) NOT NULL,
-  `source` varchar(100) NOT NULL,
-  `tags` text NOT NULL,
-  `permalink` char(6) NOT NULL,
-  `date` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;';
-
-        $instance = dbConnexion($_SESSION['dbHost'], $_SESSION['dbName'], $_SESSION['dbUser'], $_SESSION['dbPass']);
-        $stmt     = $instance->prepare($table);
-        $stmt->execute();
-        if ($stmt !== FALSE) {
-            $GLOBALS['config']['dbHost']  = $_SESSION['dbHost'];
-            $GLOBALS['config']['dbName']  = $_SESSION['dbName'];
-            $GLOBALS['config']['dbUser']  = $_SESSION['dbUser'];
-            $GLOBALS['config']['dbPass']  = $_SESSION['dbPass'];
-            $GLOBALS['config']['dbTable'] = $_SESSION['dbTable'];
-            $GLOBALS['config']['lang']    = $_SESSION['lang'];
-            $GLOBALS['config']['users']   = array($_SESSION['user'] => array('hash' => $password, 'email' => $_SESSION['email']));
-            writeConfigFile();
-            $install = TRUE;
+        if (file_exists('schema.sql'))
+        {
+            $schema = file_get_contents('schema.sql');
+            if (!empty($_SESSION['tblPrefix'])) {
+                $tblPrefix = $_SESSION['tblPrefix'] . '_';
+                $schema = str_replace($GLOBALS['config']['tblPrefix'], $tblPrefix, $schema);
+            }
+            $instance = dbConnexion($_SESSION['dbHost'], $_SESSION['dbName'], $_SESSION['dbUser'], $_SESSION['dbPass']);
+            $stmt     = $instance->prepare($schema);
+            $stmt->execute();
+            if ($stmt !== FALSE) {
+                $GLOBALS['config']['dbHost']     = $_SESSION['dbHost'];
+                $GLOBALS['config']['dbName']     = $_SESSION['dbName'];
+                $GLOBALS['config']['dbUser']     = $_SESSION['dbUser'];
+                $GLOBALS['config']['dbPass']     = $_SESSION['dbPass'];
+                $GLOBALS['config']['tblPrefix']  = $tblPrefix;
+                $GLOBALS['config']['lang']       = $_SESSION['lang'];
+                $GLOBALS['config']['users']      = array($_SESSION['user'] => array('hash' => $password, 'email' => $_SESSION['email']));
+                writeConfigFile();
+                $install = TRUE;
+            }
         }
     }
     else {
@@ -283,41 +282,43 @@ if (empty($config['password'])) {
     $html = new timply();
 
     $html->setElement('scriptDir', rtrim($_SERVER['DOCUMENT_ROOT'], '/'));
+    $html->setElement('defaultTblPrefix', rtrim($GLOBALS['config']['tblPrefix'], '_'));
 
     if (!empty($_POST) && implode('', $_POST) !== $lang) {
         if (empty($GLOBALS['config']['dbName'])) {
-            if (empty($_POST['dbhost']))    $_POST['dbhost'] = 'localhost';
-            if (empty($_POST['user']))      $_POST['user']   = $_POST['dbuser'];
-            if (empty($_POST['password']))  $_POST['password']   = $_POST['dbpass'];
-            $_SESSION['lang']    = $_POST['lang'];
-            $_SESSION['dbHost']  = $_POST['dbhost'];
-            $_SESSION['dbUser']  = $_POST['dbuser'];
-            $_SESSION['dbPass']  = $_POST['dbpass'];
-            $_SESSION['dbName']  = $_POST['dbname'];
-            $_SESSION['dbTable'] = $_POST['dbtable'];
-            $_SESSION['user']    = $_POST['user'];
-            $_SESSION['pass']    = $_POST['password'];
-            $_SESSION['email']   = $_POST['email'];
-            $dbState             = checkDbIds($_SESSION['dbHost'], $_SESSION['dbUser'], $_SESSION['dbPass'], $_SESSION['dbName'], $_SESSION['dbTable']);
+            if (empty($_POST['dbhost']))    $_POST['dbhost']   = 'localhost';
+            if (empty($_POST['user']))      $_POST['user']     = $_POST['dbuser'];
+            if (empty($_POST['password']))  $_POST['password'] = $_POST['dbpass'];
+            if (empty($_POST['tblprefix'])) $_POST['tblprefix'] = rtrim($GLOBALS['config']['tblPrefix'], '_');
+            $_SESSION['lang']      = $_POST['lang'];
+            $_SESSION['dbHost']    = $_POST['dbhost'];
+            $_SESSION['dbUser']    = $_POST['dbuser'];
+            $_SESSION['dbPass']    = $_POST['dbpass'];
+            $_SESSION['dbName']    = $_POST['dbname'];
+            $_SESSION['tblPrefix'] = $_POST['tblprefix'];
+            $_SESSION['user']      = $_POST['user'];
+            $_SESSION['pass']      = $_POST['password'];
+            $_SESSION['email']     = $_POST['email'];
+            $dbState               = checkDbIds($_SESSION['dbHost'], $_SESSION['dbUser'], $_SESSION['dbPass'], $_SESSION['dbName'], $_SESSION['tblPrefix']);
         }
         else {
-            $_SESSION['lang']    = $GLOBALS['config']['lang'];
-            $_SESSION['dbHost']  = $GLOBALS['config']['dbHost'];
-            $_SESSION['dbUser']  = $GLOBALS['config']['dbUser'];
-            $_SESSION['dbPass']  = $GLOBALS['config']['dbPass'];
-            $_SESSION['dbName']  = $GLOBALS['config']['dbName'];
-            $_SESSION['dbTable'] = $GLOBALS['config']['dbTable'];
-            $_SESSION['user']    = $GLOBALS['config']['user'];
-            $_SESSION['email']   = $GLOBALS['config']['email'];
-            $_SESSION['pass']    = $_POST['password'];
-            $dbState             = TRUE;
-            $resetPassword       = TRUE;
+            $_SESSION['lang']      = $GLOBALS['config']['lang'];
+            $_SESSION['dbHost']    = $GLOBALS['config']['dbHost'];
+            $_SESSION['dbUser']    = $GLOBALS['config']['dbUser'];
+            $_SESSION['dbPass']    = $GLOBALS['config']['dbPass'];
+            $_SESSION['dbName']    = $GLOBALS['config']['dbName'];
+            $_SESSION['tblPrefix'] = $GLOBALS['config']['tblPrefix'];
+            $_SESSION['user']      = $GLOBALS['config']['user'];
+            $_SESSION['email']     = $GLOBALS['config']['email'];
+            $_SESSION['pass']      = $_POST['password'];
+            $dbState               = TRUE;
+            $resetPassword         = TRUE;
         }
         $html->setElement('postDbHost', $_SESSION['dbHost']);
         $html->setElement('postDbUser', $_SESSION['dbUser']);
         $html->setElement('postDbPass', $_SESSION['dbPass']);
         $html->setElement('postDbName', $_SESSION['dbName']);
-        $html->setElement('postDbTable', $_SESSION['dbTable']);
+        $html->setElement('postTblPrefix', $_SESSION['tblPrefix']);
         $html->setElement('postUser', $_SESSION['user']);
         $html->setElement('postPass', $_SESSION['pass']);
         $html->setElement('postEmail', $_SESSION['email']);

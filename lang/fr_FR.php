@@ -34,8 +34,8 @@ $lang['db_error_20'] = 'utilisateur et / ou mot de passe incorrect';
 $lang['db_error_31'] = 'vous devez indiquer un nom pour votre base de données';
 $lang['db_error_10'] = 'impossible de se connecter à cet hôte';
 $lang['db_infos_correct'] = 'informations correctes';
-$lang['db_error_40'] = 'vous devez donner un nom de table';
-$lang['db_error_41'] = 'cette table existe déjà';
+$lang['db_error_40'] = 'le préfix ne doit contenir que des caractères aplhabétiques';
+$lang['db_error_41'] = 'ce préfix de table est déjà utilisé';
 $lang['test_datas'] = 'tester les informations';
 $lang['config_file'] = 'fichier de configuration';
 $lang['config_php_must_be_writable'] = 'config.php avec les droits en écriture';
@@ -51,4 +51,6 @@ $lang['get_new_quote'] = 'nouvelle citation';
 $lang['on'] = 'sur';
 $lang['latest-quotes'] = 'dernières citations';
 $lang['rss-feed'] = 'flux RSS';
+$lang['tables_prefix'] = 'préfix des tables';
+$lang['leave_empty_for'] = 'laisser vide pour';
 ?>
