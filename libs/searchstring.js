@@ -13,8 +13,17 @@ function createRequestObject()
 function searchString(obj, dataType)
 {
     obj.setAttribute("autocomplete", "off");
+    var inputContent = obj.value;
+    if (inputContent.search(',') > -1) {
+        var elements = inputContent.split(',');
+        var toSend   = elements.pop().replace(/^\s+/g,'');
+    }
+    else {
+        var elements = [];
+        var toSend = inputContent.replace(/^\s+/g,'');;
+    };
     var http = createRequestObject();
-    http.open('GET', '/admin.php?' + dataType + '=' + obj.value, true);
+    http.open('GET', '/admin.php?' + dataType + '=' + toSend, true);
     http.onreadystatechange = ( function ()
     {
         if (http.readyState === 4) {
@@ -41,7 +50,9 @@ function searchString(obj, dataType)
                             a.name      = obj.id + 'a' + i
                             a.onclick   = function() {
                                 var parent  = this.parentNode;
-                                obj.value   = this.innerHTML;
+                                // On concat la valeur cliquée au tableau de l'input
+                                elements.push(this.innerHTML);
+                                obj.value   = elements.join(',');
                                 document.getElementById(obj.id + 'suggest').innerHTML = '';
                             };
                             document.getElementById(obj.id + 'li' + i).appendChild(a);
