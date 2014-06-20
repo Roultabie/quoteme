@@ -12,86 +12,111 @@ function createRequestObject()
 
 function searchString(obj, dataType)
 {
-    if (document.getElementById('tempsearchstring') === null) {
-        var temp = document.createElement('div');
-        temp.id  = 'tempsearchstring';
-        temp.style.display = 'none';
-        document.body.appendChild(temp);
-        var tempSpan = document.createElement('span');
-        tempSpan.id  = 'tempspan1';
-        tempSpan.style.display = 'inline-block';
-        tempSpan.innerHTML = obj.value;
-        document.body.appendChild(tempSpan);
-        var tempSpanEnd = document.createElement('span');
-        tempSpanEnd.id  = 'tempspan2';
-        document.body.appendChild(tempSpanEnd);
-    }
-    else {
-        var tempSpan = document.getElementById('tempspan1');
-        tempSpan.innerHTML = obj.value;
-    };
-    obj.setAttribute("autocomplete", "off");
-    var inputContent = obj.value;
-    if (inputContent.search(',') > -1) {
-        var elements = inputContent.split(',');
-        var toSend   = elements.pop().replace(/^\s+/g,'');
-        var tempSpan = document.getElementById('tempspan1');
-        // on recalcule la position de la bulle (a revoir, redéfini à chaque 'pressage')
-        // Plutot détecter que la touche pressée est une virgule et ne recalculer que si c'est cette touche.
-        var tempSpanEnd = document.getElementById('tempspan2');
-        var ulLeftPos = eval(tempSpanEnd.offsetLeft - tempSpan.offsetLeft + obj.offsetLeft);
-        var ul = document.getElementById(obj.id + 'suggest');
-        ul.style.left = ulLeftPos + 'px';
-    }
-    else {
-        var elements = [];
-        var toSend   = inputContent.replace(/^\s+/g,'');;
-    };
-    var http = createRequestObject();
-    http.open('GET', '/admin.php?' + dataType + '=' + toSend, true);
-    http.onreadystatechange = ( function ()
-    {
-        if (http.readyState === 4) {
-            if (http.status === 200) {
-                var result = eval( '(' + http.responseText + ')' );
-                if (result !== false) {
-                    if (document.getElementById(obj.id + 'suggest') === null) {
-                        var ul            = document.createElement('ul');
-                        ul.id             = obj.id + 'suggest';
-                        ul.style.position = 'absolute';
-                        ul.style.top      = eval(obj.offsetTop + obj.offsetHeight) + 'px';
-                        var parent        = obj.parentNode;
-                        parent.insertBefore(ul, obj);
-                    };
-                    
-                    document.getElementById(obj.id + 'suggest').innerHTML = '';
-                    if (result['status'] === 'success') {
-                        for(var i= 0; i < result.data.length; i++)
-                        {
-                            var li = document.createElement('li');
-                            li.id  = obj.id + 'li' + i;
-                            document.getElementById(obj.id + 'suggest').appendChild(li);
-                            var a           = document.createElement('a');
-                            a.innerHTML     = result.data[i].value;
-                            a.name          = obj.id + 'a' + i
-                            a.style.display = 'block';
-                            a.onclick       = function() {
-                                var parent  = this.parentNode;
-                                // On concat la valeur cliquée au tableau de l'input
-                                elements.push(this.innerHTML);
-                                obj.value = elements.join(',');
-                                document.getElementById(obj.id + 'suggest').innerHTML = '';
-                            };
-                            document.getElementById(obj.id + 'li' + i).appendChild(a);
-                        };
-                        
-                    };
-                    /*obj.onkeyup = function(event) {
-                        console.log(event.keyCode);
-                    };*/
+    obj.onkeyup = function(event) {
+        //console.log(event.keyCode);
+        var currentKey = event.keyCode;
+        obj.setAttribute("autocomplete", "off");
+        var inputContent = obj.value;
+        //console.log(inputContent.search(/,$/g));
+        if (inputContent.search(',') !== -1) {
+            var elements = inputContent.split(',');
+            var toSend   = elements.pop().replace(/^\s+/g,'');
+            // Si on a une , c'est qu'on a un nouveau tag, donc on calcul la position des suggestions
+            if (currentKey === 188 || currentKey === 8 && inputContent.search(/,$/g) != -1) {
+                if (currentKey === 188) {
+                    calculateBubblePosition(obj, 0);
+                }
+                else {
+                    calculateBubblePosition(obj,1);
                 };
             };
+        }
+        else {
+            var elements = [];
+            var toSend   = inputContent.replace(/^\s+/g,'');
         };
-    } );
-    http.send(null);
+        var http = createRequestObject();
+        http.open('GET', '/admin.php?' + dataType + '=' + toSend, true);
+        http.onreadystatechange = ( function ()
+        {
+            if (http.readyState === 4) {
+                if (http.status === 200) {
+                    var result = eval( '(' + http.responseText + ')' );
+                    if (result !== false) {
+                        if (document.getElementById(obj.id + 'suggest') === null) {
+                            var ul            = document.createElement('ul');
+                            ul.id             = obj.id + 'suggest';
+                            ul.style.position = 'absolute';
+                            ul.style.top      = eval(obj.offsetTop + obj.offsetHeight) + 'px';
+                            var parent        = obj.parentNode;
+                            parent.insertBefore(ul, obj);
+                        };
+                        
+                        document.getElementById(obj.id + 'suggest').innerHTML = '';
+                        if (result['status'] === 'success') {
+                            for(var i= 0; i < result.data.length; i++)
+                            {
+                                var li = document.createElement('li');
+                                li.id  = obj.id + 'li' + i;
+                                document.getElementById(obj.id + 'suggest').appendChild(li);
+                                var a           = document.createElement('a');
+                                a.innerHTML     = result.data[i].value;
+                                a.name          = obj.id + 'a' + i
+                                a.style.display = 'block';
+                                a.onclick       = function() {
+                                    var parent  = this.parentNode;
+                                    // On concat la valeur cliquée au tableau de l'input
+                                    elements.push(this.innerHTML);
+                                    obj.value = elements.join(',');
+                                    document.getElementById(obj.id + 'suggest').innerHTML = '';
+                                };
+                                document.getElementById(obj.id + 'li' + i).appendChild(a);
+                            };
+                            
+                        };
+                    };
+                };
+            };
+        } );
+        http.send(null);
+    };            
+};
+
+function calculateBubblePosition(obj, remove)
+{
+    var string = obj.value;
+    if (remove === 1) {
+        //console.log(string);
+        var elements = string.replace(/,$/g,'').split(',');
+        var toRemove = elements.pop();
+        console.log(elements.length);
+        if (elements.length > 0) {
+            string = elements.join(',') + ',';
+        }
+        else {
+            string = elements.join(',');
+        };
+    };
+    // On crée une DIV temporaire
+    var temp = document.createElement('div');
+    temp.id  = 'tempsearchstring';
+    temp.style.display = 'none';
+    document.body.appendChild(temp);
+    // On y insère un span avec les données de l'input dedans
+    var tempSpan = document.createElement('span');
+    tempSpan.id  = 'tempspan1';
+    tempSpan.style.display = 'inline-block';
+    tempSpan.innerHTML = string;
+    document.body.appendChild(tempSpan);
+    // On crée un span après ce premier
+    var tempSpanEnd = document.createElement('span');
+    tempSpanEnd.id  = 'tempspan2';
+    document.body.appendChild(tempSpanEnd);
+    // Enfin, on calcule la longueur entre les deux, on lui ajoute la position de l'input
+    var ulLeftPos = eval(tempSpanEnd.offsetLeft - tempSpan.offsetLeft + obj.offsetLeft);
+    var ul = document.getElementById(obj.id + 'suggest');
+    // Puis on applique le résultat à la bulle de suggestion
+    ul.style.left = ulLeftPos + 'px';
+    // Pour finir on détruit la div et ce qu'elle contient.
+    temp.parentNode.removeChild(temp); 
 };
