@@ -67,6 +67,7 @@ function searchString(obj, dataType, event)
                                 elements.push(this.innerHTML);
                                 obj.value = elements.join(',');
                                 document.getElementById(obj.id + 'suggest').innerHTML = '';
+                                obj.focus();
                             };
                             document.getElementById(obj.id + 'li' + i).appendChild(a);
                         };
