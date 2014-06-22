@@ -65,7 +65,7 @@ function searchString(obj, dataType, event)
                                 var parent  = this.parentNode;
                                 // On concat la valeur cliquée au tableau de l'input
                                 elements.push(this.innerHTML);
-                                obj.value = elements.join(',');
+                                obj.value = elements.join(',') + ',';
                                 document.getElementById(obj.id + 'suggest').innerHTML = '';
                                 obj.focus();
                             };
