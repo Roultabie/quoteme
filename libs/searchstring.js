@@ -19,8 +19,12 @@ function searchString(obj, dataType, event)
     if (inputContent.search(',') !== -1) {
         var elements = inputContent.split(',');
         var toSend   = elements.pop().replace(/^\s+/g,'');
-        // Si on a une , c'est qu'on a un nouveau tag, donc on calcul la position des suggestions
-        if (currentKey === 188 || currentKey === 8 && inputContent.search(/,$/g) != -1) {
+        // On surveille si on tape ou si la chaine se termine par une virgule 
+        if (currentKey === 188 || inputContent.substring(inputContent.length - 1 === ',')) {
+            var comma = true;
+        };
+        // Si c'est le cas c'est qu'on a un nouveau tag, donc on calcule la position des suggestions
+        if (comma || currentKey === 8 && inputContent.search(/,$/g) != -1) {
             if (currentKey === 188) {
                 calculateBubblePosition(obj, 0);
             }
