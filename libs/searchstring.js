@@ -17,6 +17,12 @@ function searchString(obj, dataType, event)
     var inputContent = obj.value;
     //console.log(inputContent.search(/,$/g));
     if (inputContent.search(',') !== -1) {
+        // Si on trouve au moins deux fois une virgule, on la remplace par une seule
+        if (inputContent.search('/,{2,}/g')) {
+            inputContent = inputContent.replace(/,{2,}/g, ',');
+            console.log(inputContent);
+            obj.value    = inputContent;
+        };
         var elements = inputContent.split(',');
         var toSend   = elements.pop().replace(/^\s+/g,'');
         // On surveille si on tape ou si la chaine se termine par une virgule 
