@@ -42,10 +42,10 @@ function searchString(obj, dataType, event)
         var elements = [];
         var toSend   = inputContent.replace(/^\s+/g,'');
     };
-    if (currentKey === 38 || currentKey === 40) {
+    /*if (currentKey === 38 || currentKey === 40) {
         setFocus(obj, currentKey, event);
         return false;
-    };
+    };*/
     var http = createRequestObject();
     http.open('GET', '/admin.php?' + dataType + '=' + toSend, true);
     http.onreadystatechange = ( function ()
@@ -132,7 +132,7 @@ function calculateBubblePosition(obj, remove)
     temp.parentNode.removeChild(temp); 
 };
 
-function setFocus(obj, currentKey, event)
+/*function setFocus(obj, currentKey, e)
 {
     move = (function(to) {
         console.log('on entre dans la fonction move');
@@ -149,14 +149,16 @@ function setFocus(obj, currentKey, event)
                 console.log('valeur : ' + eval(children - 1))
                 for (var i = 0; i < children; i++)
                 {
+                    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ' + currentFocus);
                     a = document.getElementsByName(obj.id + 'a');
-                    if (a[i].id == currentFocus) {
-                        console.log(a[i].id + 'a le focus');
+                    if (a[i].id === currentFocus) {
+                        console.log(a[i].id + ' a le focus');
                         focused = a.id.substring(obj.id.length);
                     };
                 }
                 if (focused !== false) {
                     console.log('focus détecté');
+                    return false;
                 }
                 else {
                     console.log('pas de focus détecté');
@@ -167,16 +169,18 @@ function setFocus(obj, currentKey, event)
                         firstDefault.parentNode.id = firstDefault.parentNode.id + ' focus';
                         firstDefault.focus();
                         console.log(firstDefault);
+                        firstDefault.onkeydown(setFocus(obj, 40, this.event));
+                        return false;
                     }
                     else {
                         lastDefault.parentNode.id = lastDefault.parentNode.id + ' focus';
                         lastDefault.focus();
                         console.log(lastDefault);
+                        return false;
                     };
                 };
             };
         };
     });
-
     (currentKey === 40) ? move('down') : move('up');
-}
+}*/
