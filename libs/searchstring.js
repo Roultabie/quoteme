@@ -15,12 +15,10 @@ function searchString(obj, dataType, event)
     var currentKey = event.keyCode;
     obj.setAttribute("autocomplete", "off");
     var inputContent = obj.value;
-    //console.log(inputContent.search(/,$/g));
     if (inputContent.search(',') !== -1) {
         // Si on trouve au moins deux fois une virgule, on la remplace par une seule
         if (inputContent.search('/,{2,}/g')) {
             inputContent = inputContent.replace(/,{2,}/g, ',');
-            console.log(inputContent);
             obj.value    = inputContent;
         };
         var elements = inputContent.split(',');
@@ -37,7 +35,7 @@ function searchString(obj, dataType, event)
             else {
                 calculateBubblePosition(obj, 1);
             };
-        };
+        }
     }
     else {
         var elements = [];
@@ -94,10 +92,8 @@ function calculateBubblePosition(obj, remove)
 {
     var string = obj.value;
     if (remove === 1) {
-        //console.log(string);
         var elements = string.replace(/,$/g,'').split(',');
         var toRemove = elements.pop();
-        console.log(elements.length);
         if (elements.length > 0) {
             string = elements.join(',') + ',';
         }
