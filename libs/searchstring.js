@@ -13,6 +13,7 @@ function createRequestObject()
 function searchString(obj, dataType, event)
 {
     var currentKey = event.keyCode;
+    console.log(currentKey);
     obj.setAttribute("autocomplete", "off");
     var inputContent = obj.value;
     if (inputContent.search(',') !== -1) {
@@ -41,6 +42,10 @@ function searchString(obj, dataType, event)
         var elements = [];
         var toSend   = inputContent.replace(/^\s+/g,'');
     };
+    if (currentKey === 38 || currentKey === 40) {
+        setFocus(obj, currentKey, event);
+        return false;
+    };
     var http = createRequestObject();
     http.open('GET', '/admin.php?' + dataType + '=' + toSend, true);
     http.onreadystatechange = ( function ()
@@ -67,8 +72,10 @@ function searchString(obj, dataType, event)
                             document.getElementById(obj.id + 'suggest').appendChild(li);
                             var a           = document.createElement('a');
                             a.innerHTML     = result.data[i].value;
-                            a.name          = obj.id + 'a' + i
+                            a.id            = obj.id + 'a' + i;
+                            a.name          = obj.id + 'a'
                             a.style.display = 'block';
+                            a.href          = '#';
                             a.onclick       = function() {
                                 var parent  = this.parentNode;
                                 // On concat la valeur cliquée au tableau de l'input
@@ -124,3 +131,52 @@ function calculateBubblePosition(obj, remove)
     // Pour finir on détruit la div et ce qu'elle contient.
     temp.parentNode.removeChild(temp); 
 };
+
+function setFocus(obj, currentKey, event)
+{
+    move = (function(to) {
+        console.log('on entre dans la fonction move');
+        ul = document.getElementById(obj.id + 'suggest');
+        if (ul) {
+            console.log('ul existe bien');
+            if (ul.hasChildNodes) {
+                console.log('ul a bien enfanté');
+                var children     = ul.childNodes.length;
+                var currentFocus = document.activeElement.id;
+                var focused      = false;
+                var firstDefault = document.getElementById(obj.id + 'a0');
+                var lastDefault  = document.getElementById(obj.id + 'a' + eval(children - 1));
+                console.log('valeur : ' + eval(children - 1))
+                for (var i = 0; i < children; i++)
+                {
+                    a = document.getElementsByName(obj.id + 'a');
+                    if (a[i].id == currentFocus) {
+                        console.log(a[i].id + 'a le focus');
+                        focused = a.id.substring(obj.id.length);
+                    };
+                }
+                if (focused !== false) {
+                    console.log('focus détecté');
+                }
+                else {
+                    console.log('pas de focus détecté');
+                    console.log(to);
+                    //(to === 'down') ? firstDefault.focus() : lastDefault.focus();
+                    if (to === 'down') {
+                        console.log('exécution de down');
+                        firstDefault.parentNode.id = firstDefault.parentNode.id + ' focus';
+                        firstDefault.focus();
+                        console.log(firstDefault);
+                    }
+                    else {
+                        lastDefault.parentNode.id = lastDefault.parentNode.id + ' focus';
+                        lastDefault.focus();
+                        console.log(lastDefault);
+                    };
+                };
+            };
+        };
+    });
+
+    (currentKey === 40) ? move('down') : move('up');
+}
