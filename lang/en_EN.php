@@ -53,4 +53,6 @@ $lang['latest-quotes'] = 'latest quotes';
 $lang['rss-feed'] = 'RSS feed';
 $lang['tables_prefix'] = 'tables prefix';
 $lang['leave_empty_for'] = 'leave empty for';
+$lang['search-by'] = 'search by';
+$lang['search-result-by'] = 'search result by';
 ?>

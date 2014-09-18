@@ -53,4 +53,6 @@ $lang['latest-quotes'] = 'dernières citations';
 $lang['rss-feed'] = 'flux RSS';
 $lang['tables_prefix'] = 'préfix des tables';
 $lang['leave_empty_for'] = 'laisser vide pour';
+$lang['search-by'] = 'rechercher par';
+$lang['search-result-by'] = 'résultat de la recherche par';
 ?>
