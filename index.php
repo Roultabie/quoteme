@@ -28,6 +28,7 @@ $html  = new timply();
 $quote = $GLOBALS['quoteObj']['obj'][0];
 if (is_object($quote)) {
     $html->setElement('imglink', '//' .$_SERVER['HTTP_HOST'] . '/api.php?p=img&wi=1024&w=permalink&wo=equal,' . $quote->getPermalink());
+    $this->timply->setElement('imgWidth', 1024);
     $html->setElement('text', SmartyPants($quote->getText(), 'f+:+t+h+H+'));
     $html->setElement('author', SmartyPants($quote->getAuthor()));
     $html->setElement('searchByAuthor', '//' .$_SERVER['HTTP_HOST'] . '/api.php?p=html&w=author&wo=equal,' . $quote->getAuthor());
