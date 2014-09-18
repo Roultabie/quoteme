@@ -147,6 +147,7 @@ if (is_array($quotes)) {
         $html->setElement('permalink', $quote->getPermalink(), 'quoteTable');
         $html->setElement('googleShareLink', 'https://plus.google.com/share?url=http://' . $_SERVER['HTTP_HOST'] . '/?' . $quote->getPermalink(), 'quoteTable');
         $html->setElement('facebookShareLink', 'http://facebook.com/sharer.php?u=http://' . $_SERVER['HTTP_HOST'] . '/?' . $quote->getPermalink(), 'quoteTable');
+        $html->setElement('twitterShareLink', 'http://twitter.com/intent/tweet?url=http://' . $_SERVER['HTTP_HOST'] . '/?' . $quote->getPermalink() . '&text=' . $quote->getAuthor() . ' said:', 'quoteTable');
     }
 }
 echo $html->returnHtml();
