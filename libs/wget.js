@@ -20,11 +20,9 @@ function changeQuote()
             if (http.status == 200) {
                 var quote = eval( '(' + http.responseText + ')' );
                 if (quote !== false) {
-                    var oldTitle                                  = document.title;
                     var oldAuthor                                 = document.getElementById('author').innerHTML;
                     var oldAuthorSearchLink                       = document.getElementById('author').href;
-                    var titleParts                                = oldTitle.split('-');
-                    document.title                                = quote.data[0]['author'] + ' -' + titleParts.pop();
+                    document.title                                = document.title.replace(oldAuthor, quote.data[0]['author']);
                     document.getElementById('textLink').innerHTML = quote.data[0]['text'];
                     document.getElementById('author').innerHTML   = quote.data[0]['author'];
                     document.getElementById('author').href        = oldAuthorSearchLink.replace(encodeURI(oldAuthor), quote.data[0]['author']);
