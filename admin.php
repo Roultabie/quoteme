@@ -145,7 +145,7 @@ if (is_array($quotes)) {
         $html->setElement('edit', '?' . http_build_query(array('action' => 'edit', 'permalink' => $quote->getPermalink()), '', '&'), 'quoteTable');
         $html->setElement('delete', '?' . http_build_query(array('action' => 'delete', 'permalink' => $quote->getPermalink()), '', '&'), 'quoteTable');
         $html->setElement('permalink', $quote->getPermalink(), 'quoteTable');
-        $html->setElement('googleShareLink', 'https://plus.google.com/share?url=http://' . $_SERVER['HTTP_HOST'] . '/api.php?' . urlencode('p=gplus&w=permalink&wo=equal,' . $quote->getPermalink()), 'quoteTable');
+        $html->setElement('googleShareLink', 'https://plus.google.com/share?url=http://' . $_SERVER['HTTP_HOST'] . '/?' . $quote->getPermalink(), 'quoteTable');
     }
 }
 echo $html->returnHtml();
