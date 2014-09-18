@@ -18,7 +18,7 @@ require_once 'parser/parser.php';
 require_once 'parser/template.php';
 
 timply::setUri($GLOBALS['config']['themeDir']);
-parser::$cacheState = TRUE;
+parser::$cacheState = $GLOBALS['config']['cacheState'];
 parser::$cacheDir   = $GLOBALS['config']['cacheDir'];
 
 function parseQuote($parser = '', $options = '')
@@ -36,7 +36,7 @@ function parseQuote($parser = '', $options = '')
                         $parser = new $class;
                         if ($parser instanceof parserTemplate) {
                             $parser->loadHeader($quotes);
-                            $parser::loadCache();
+                            $parser::startCache();
                             $result = $parser->parse($quotes);
                             return $result;
                         }
@@ -74,6 +74,7 @@ function testGet($var, $pattern)
         return FALSE;
     }
 }
+
 // p=json&s=random&l=1,10&w=tag&ow=like,toto&a=id&oa=minus,10
 $parser = testGet($_GET['p'], '/^[\w\d_-]{2,5}$/');
 
@@ -107,9 +108,7 @@ else {
 }
 if (is_array($opt)) {
     if ($opt['sort'] !== 'random' && $parser !== 'php') {
-        parser::addCache();
-        ob_end_clean();
-        parser::loadCache();
+        parser::endCache();
     }
 }
 ?>
