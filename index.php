@@ -27,6 +27,7 @@ timply::addDictionary($GLOBALS['config']['langDir'] . $GLOBALS['config']['lang']
 $html  = new timply();
 $quote = $GLOBALS['quoteObj']['obj'][0];
 if (is_object($quote)) {
+    $html->setElement('imglink', '//' .$_SERVER['HTTP_HOST'] . '/api.php?p=img&wi=1024&w=permalink&wo=equal,' . $quote->getPermalink());
     $html->setElement('text', SmartyPants($quote->getText(), 'f+:+t+h+H+'));
     $html->setElement('author', SmartyPants($quote->getAuthor()));
     $html->setElement('source', SmartyPants($quote->getSource()));
