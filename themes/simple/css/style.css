@@ -28,6 +28,7 @@ section {
 
 }
 a, a:link, a:hover, a:active, a:visited {
+    color: #555555;
     text-decoration: none;
 }
 #quote {
@@ -71,6 +72,12 @@ a, a:link, a:hover, a:active, a:visited {
 #author, #source {
     display: inline-block;
     float: right;
+}
+#author:before {
+    content: "(";
+}
+#author:after {
+    content: ")";
 }
 footer {
     position: absolute;
