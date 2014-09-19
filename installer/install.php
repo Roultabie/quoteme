@@ -269,7 +269,7 @@ function install($resetPassword = FALSE)
     return $install;
 }
 
-if (empty($config['password'])) {
+if (!file_exists('../config.php')) {
     session_start();
     $lang = $_SESSION['lang'];
     if (empty($_POST['lang']) && empty($lang)) {
@@ -371,5 +371,10 @@ if (empty($config['password'])) {
     $html->setElement('test', '<input type="submit" name="test" value="[trad::test_datas]">');
     $html->setElement('langSelect', arrayToSelect(listAvailableLanguages(), $lang));
     echo $html->returnHtml();
+}
+else {
+    header('Status: 301 Moved Permanently', false, 301);
+    header('Location: /');
+    exit();
 }
 ?>
