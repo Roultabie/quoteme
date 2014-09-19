@@ -28,6 +28,9 @@ $comment1 = <<<'EOC'
 /**
  * System options don't modify them
  */
+
+date_default_timezone_set('UTC');
+
 EOC;
 
 $system['dateFormat']  = 'Y-m-d';
