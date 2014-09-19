@@ -77,9 +77,11 @@ function getUpdate()
 {
     $currentDate = date($GLOBALS['system']['dateFormat']);
     
-    if ($GLOBALS['system']['lastUpdate'] < $currentDate) {
-        $update = file_get_contents('http://q.uote.me/checkupdate.php?cliv=' . $GLOBALS['config']['appVers']);
-        //writeConfigFile(array('system>lastVersion' => $update, 'system>lastUpdate' => $currentDate));
+    if ($GLOBALS['config']['appVers'] !== 'devel') {
+        if ($GLOBALS['system']['lastUpdate'] < $currentDate) {
+            $update = file_get_contents('http://q.uote.me/checkupdate.php?cliv=' . $GLOBALS['config']['appVers']);
+            //writeConfigFile(array('system>lastVersion' => $update, 'system>lastUpdate' => $currentDate));
+        }
     }
     
 }
