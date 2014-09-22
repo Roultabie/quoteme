@@ -13,6 +13,7 @@ function createRequestObject()
 function searchString(obj, dataType, event)
 {
     var currentKey = event.keyCode;
+    //alert(currentKey);
     console.log(currentKey);
     obj.setAttribute("autocomplete", "off");
     var inputContent = obj.value;
@@ -41,6 +42,11 @@ function searchString(obj, dataType, event)
     else {
         var elements = [];
         var toSend   = inputContent.replace(/^\s+/g,'');
+        // Si on efface tout via sélection complète de l'input, on réinitialise la suggestion
+        if (document.getElementById(obj.id + 'suggest') !== null) {
+            calculateBubblePosition(obj, "all");
+        };
+        
     };
     /*if (currentKey === 38 || currentKey === 40) {
         setFocus(obj, currentKey, event);
@@ -127,7 +133,12 @@ function calculateBubblePosition(obj, remove)
     var ulLeftPos = eval(tempSpanEnd.offsetLeft - tempSpan.offsetLeft + obj.offsetLeft);
     var ul = document.getElementById(obj.id + 'suggest');
     // Puis on applique le résultat à la bulle de suggestion
-    ul.style.left = ulLeftPos + 'px';
+    if (remove === "all") {
+        ul.style.left = obj.offsetLeft + 'px';
+    }
+    else {
+        ul.style.left = ulLeftPos + 'px';
+    };
     // Pour finir on détruit la div et ce qu'elle contient.
     temp.parentNode.removeChild(temp); 
 };
