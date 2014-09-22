@@ -6,6 +6,18 @@
 <script language="javascript" src="libs/wget.js"></script>
 <link rel="stylesheet" href="themes/simple/css/style.css" />
 <link rel="stylesheet" href="themes/simple/css/gh-fork-ribbon.css" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="{author} on quoteme" />
+<meta property="og:site_name" content="Quoteme">
+<meta property="og:description" content="« {text} » - {author}" />
+<meta property="og:url" content="{permalink}" />
+<meta property="og:image" content="{imgLink}" />
+<meta property="og:image:width" content="{imgWidth}" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:article:tag" content="quoteme">
+<meta property="og:article:tag" content="q.uote.me">
+<meta property="og:article:tag" content="citation">
+<meta property="og:article:tag" content="{author}">
 <!--[if IE]>
     <link rel="stylesheet" href="themes/simple/css/gh-fork-ribbon.ie.css" />
 <![endif]-->
@@ -15,7 +27,7 @@
     </header>
     <section>
         <div id="quote">
-            <span id="text"><a href="{permalink}" alt="permalink" title="permalink" id="textLink">{text}</a></span><span id="author">({author})</span>
+            <span id="text"><a href="{permalink}" alt="permalink" title="permalink" id="textLink">{text}</a></span><a href="{searchByAuthor}" alt="[trad::search_by] [trad::author]" title="[trad::search_by] [trad::author]" id="author">{author}</a>
             <span id="reload"><a href="#" onclick="changeQuote(); return false;" alt="[trad::get_new_quote]" title="[trad::get_new_quote]">&#10227;</a></span>
         </div>
     </section>

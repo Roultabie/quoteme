@@ -16,7 +16,9 @@ implements parserTemplate
 
     public function parse($elements)
     {
-        $this->timply->setElement('title', 'Q.uote.me');
+        $title = (!empty($GLOBALS['opt']['where'])) ? '[trad::search-result-by::F] [trad::' . $GLOBALS['opt']['where'] . ']' : '[trad::latest-quotes::F]';
+        $this->timply->setElement('title', $title);
+        $this->timply->setElement('nbQuotes', quoteQueries::$nbQuotes);
         if (is_array($elements)) {
             foreach ($elements as $value) {
                 $this->timply->setElement('text', $value->getText(), 'Quote');

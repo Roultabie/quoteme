@@ -48,18 +48,7 @@ abstract class parser
         }
     }
 
-    public static function addCache()
-    {
-        if (self::$cacheState) {
-            if (is_dir(self::$cacheDir) && is_writable(self::$cacheDir)) {
-                $file = self::$cacheDir . '/' . hash('sha1', serialize($_GET));
-                if (!file_exists($file)) {
-                    file_put_contents($file, ob_get_contents());
-                }
-            }
-        }
-    }
-    public static function loadCache()
+    public static function startCache()
     {
         if (self::$cacheState) {
             $file = self::$cacheDir . '/' . hash('sha1', serialize($_GET));
@@ -70,6 +59,20 @@ abstract class parser
             else {
                 ob_start();
             }
+        }
+    }
+
+    public static function endCache()
+    {
+        if (self::$cacheState) {
+            if (is_dir(self::$cacheDir) && is_writable(self::$cacheDir)) {
+                $file = self::$cacheDir . '/' . hash('sha1', serialize($_GET));
+                if (!file_exists($file)) {
+                    file_put_contents($file, ob_get_contents());
+                }
+            }
+            ob_flush();
+            ob_end_clean();
         }
     }
 }

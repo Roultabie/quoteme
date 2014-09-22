@@ -17,6 +17,9 @@ require_once 'parser/parser.php';
 parser::$cacheState = TRUE;
 parser::$cacheDir   = $GLOBALS['config']['cacheDir'];
 
+$userDatas  = unserialize($_SESSION['userDatas']);
+$userConfig = $userDatas->getConfig();
+
 function writeConfigFile($newOptions)
 {
     $fileName = 'config.php';
@@ -74,9 +77,11 @@ function getUpdate()
 {
     $currentDate = date($GLOBALS['system']['dateFormat']);
     
-    if ($GLOBALS['system']['lastUpdate'] < $currentDate) {
-        $update = file_get_contents('http://q.uote.me/checkupdate.php?cliv=' . $GLOBALS['config']['appVers']);
-        //writeConfigFile(array('system>lastVersion' => $update, 'system>lastUpdate' => $currentDate));
+    if ($GLOBALS['config']['appVers'] !== 'devel') {
+        if ($GLOBALS['system']['lastUpdate'] < $currentDate) {
+            $update = file_get_contents('http://q.uote.me/checkupdate.php?cliv=' . $GLOBALS['config']['appVers']);
+            //writeConfigFile(array('system>lastVersion' => $update, 'system>lastUpdate' => $currentDate));
+        }
     }
     
 }
@@ -203,6 +208,7 @@ $html->setElement('formAction', $formAction);
 /* Quotes list */
 $quotes = new quoteQueries();
 $quotes = $quotes->getQuote(array('sort' => 'id,desc'));
+
 if (is_array($quotes)) {
     foreach ($quotes as $quote) {
         $html->setElement('quoteTableText', SmartyPants($quote->getText(), 'f+:+t+h+H+'), 'quoteTable');
@@ -213,7 +219,13 @@ if (is_array($quotes)) {
         $html->setElement('edit', '?' . http_build_query(array('action' => 'edit', 'permalink' => $quote->getPermalink()), '', '&'), 'quoteTable');
         $html->setElement('delete', '?' . http_build_query(array('action' => 'delete', 'permalink' => $quote->getPermalink()), '', '&'), 'quoteTable');
         $html->setElement('permalink', $quote->getPermalink(), 'quoteTable');
-        $html->setElement('googleShareLink', 'https://plus.google.com/share?url=http://' . $_SERVER['HTTP_HOST'] . '/api.php?' . urlencode('p=gplus&w=permalink&wo=equal,' . $quote->getPermalink()), 'quoteTable');
+        $html->setElement('googleShareLink', 'https://plus.google.com/share?url=http://' . $_SERVER['HTTP_HOST'] . '/?' . $quote->getPermalink(), 'quoteTable');
+        $html->setElement('facebookShareLink', 'http://facebook.com/sharer.php?u=http://' . $_SERVER['HTTP_HOST'] . '/?' . $quote->getPermalink(), 'quoteTable');
+        $html->setElement('twitterShareLink', 'http://twitter.com/intent/tweet?url=http://' . $_SERVER['HTTP_HOST'] . '/?' . $quote->getPermalink() . '&text=' . $quote->getAuthor() . ' said:', 'quoteTable');
+        if (!empty($userConfig['shaarli'])) {
+            $html->setElement('shaarli', '<a class="icon-shaarli" href="' . rtrim($userConfig['shaarli'], '/') . '/?post=http://' . $_SERVER['HTTP_HOST'] . '/?' . $quote->getPermalink() . '" onclick="javascript:window.open(this.href,\'\',\'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600\');return false;">Shaarli</a>', 'quoteTable');
+        }
+        
     }
 }
 echo $html->returnHtml();
