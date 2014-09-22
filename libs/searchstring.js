@@ -117,18 +117,17 @@ function calculateBubblePosition(obj, remove)
     // On crée une DIV temporaire
     var temp = document.createElement('div');
     temp.id  = 'tempsearchstring';
-    temp.style.display = 'none';
     document.body.appendChild(temp);
     // On y insère un span avec les données de l'input dedans
     var tempSpan = document.createElement('span');
     tempSpan.id  = 'tempspan1';
     tempSpan.style.display = 'inline-block';
     tempSpan.innerHTML = string;
-    document.body.appendChild(tempSpan);
+    temp.appendChild(tempSpan);
     // On crée un span après ce premier
     var tempSpanEnd = document.createElement('span');
     tempSpanEnd.id  = 'tempspan2';
-    document.body.appendChild(tempSpanEnd);
+    temp.appendChild(tempSpanEnd);
     // Enfin, on calcule la longueur entre les deux, on lui ajoute la position de l'input
     var ulLeftPos = eval(tempSpanEnd.offsetLeft - tempSpan.offsetLeft + obj.offsetLeft);
     var ul = document.getElementById(obj.id + 'suggest');
@@ -140,7 +139,7 @@ function calculateBubblePosition(obj, remove)
         ul.style.left = ulLeftPos + 'px';
     };
     // Pour finir on détruit la div et ce qu'elle contient.
-    temp.parentNode.removeChild(temp); 
+    document.body.removeChild(temp); 
 };
 
 /*function setFocus(obj, currentKey, e)
