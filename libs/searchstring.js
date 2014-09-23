@@ -87,6 +87,10 @@ function searchString(obj, dataType, event)
                             a.name          = obj.id + 'a'
                             a.style.display = 'block';
                             a.href          = '#';
+                            a.onmouseover   = function() {
+                                var focused = document.getElementsByClassName(obj.id + '-suggest-focus')[0];
+                                focused.className = '';
+                            };
                             a.onclick       = function() {
                                 var parent  = this.parentNode;
                                 // On concat la valeur cliquée au tableau de l'input
