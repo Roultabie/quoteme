@@ -178,3 +178,16 @@ function moveFocus(obj, key)
         toFocus.className = 'focus';
     };
 }
+
+function disableEnter(event)
+{
+    if (event.keyCode === 13) {
+        if (event.preventDefault) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            event.returnValue = false;
+            event.cancelBubble = true;
+        };
+    };
+}
