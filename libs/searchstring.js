@@ -52,7 +52,7 @@ function searchString(obj, dataType, event)
     };
     // Si on tape sur la touche entrée on ajoute le tag en "focus"
     if (currentKey === 13) {
-        var focused = document.getElementsByClassName('tags-suggest-focus')[0].childNodes[0];
+        var focused = document.getElementsByClassName(obj.id + '-suggest-focus')[0].childNodes[0];
         elements.push(focused.innerHTML);
         obj.value = elements.join(',') + ',';
         toSend = '';
