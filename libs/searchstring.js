@@ -200,3 +200,12 @@ function disableEnter(event)
         };
     };
 }
+
+function removeBubble(obj, event)
+{
+    if (document.getElementById(obj.id + 'suggest') !== null) {
+        var form   = document.getElementById(obj.id + 'suggest').parentNode;
+        var bubble = document.getElementById(obj.id + 'suggest');
+        form.removeChild(bubble);
+    };
+}
