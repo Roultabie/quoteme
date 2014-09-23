@@ -13,9 +13,8 @@ function createRequestObject()
 function searchString(obj, dataType, event)
 {
     var currentKey = event.keyCode;
-    //alert(currentKey);
-    console.log(currentKey);
     obj.setAttribute("autocomplete", "off");
+    console.log(currentKey);
     var inputContent = obj.value;
     if (inputContent.search(',') !== -1) {
         // Si on trouve au moins deux fois une virgule, on la remplace par une seule
@@ -48,10 +47,10 @@ function searchString(obj, dataType, event)
         };
         
     };
-    /*if (currentKey === 38 || currentKey === 40) {
-        setFocus(obj, currentKey, event);
+    if (currentKey === 38 || currentKey === 40) {
+        moveFocus(obj, currentKey);
         return false;
-    };*/
+    };
     var http = createRequestObject();
     http.open('GET', '/admin.php?' + dataType + '=' + toSend, true);
     http.onreadystatechange = ( function ()
@@ -142,55 +141,40 @@ function calculateBubblePosition(obj, remove)
     document.body.removeChild(temp); 
 };
 
-/*function setFocus(obj, currentKey, e)
+function moveFocus(obj, key)
 {
-    move = (function(to) {
-        console.log('on entre dans la fonction move');
-        ul = document.getElementById(obj.id + 'suggest');
-        if (ul) {
-            console.log('ul existe bien');
-            if (ul.hasChildNodes) {
-                console.log('ul a bien enfanté');
-                var children     = ul.childNodes.length;
-                var currentFocus = document.activeElement.id;
-                var focused      = false;
-                var firstDefault = document.getElementById(obj.id + 'a0');
-                var lastDefault  = document.getElementById(obj.id + 'a' + eval(children - 1));
-                console.log('valeur : ' + eval(children - 1))
-                for (var i = 0; i < children; i++)
-                {
-                    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ' + currentFocus);
-                    a = document.getElementsByName(obj.id + 'a');
-                    if (a[i].id === currentFocus) {
-                        console.log(a[i].id + ' a le focus');
-                        focused = a.id.substring(obj.id.length);
-                    };
-                }
-                if (focused !== false) {
-                    console.log('focus détecté');
-                    return false;
-                }
-                else {
-                    console.log('pas de focus détecté');
-                    console.log(to);
-                    //(to === 'down') ? firstDefault.focus() : lastDefault.focus();
-                    if (to === 'down') {
-                        console.log('exécution de down');
-                        firstDefault.parentNode.id = firstDefault.parentNode.id + ' focus';
-                        firstDefault.focus();
-                        console.log(firstDefault);
-                        firstDefault.onkeydown(setFocus(obj, 40, this.event));
-                        return false;
-                    }
-                    else {
-                        lastDefault.parentNode.id = lastDefault.parentNode.id + ' focus';
-                        lastDefault.focus();
-                        console.log(lastDefault);
-                        return false;
-                    };
+    if (document.getElementById(obj.id + 'suggest') !== null) {
+        var ul = document.getElementById(obj.id + 'suggest');
+        var li = ul.childNodes;
+        for (var i = 0; i < li.length; ++i) {
+            var currentClass = li[i].className;
+            if (currentClass === "focus") {
+                if (key === 38) {
+                    var nextLi = i - 1;
+                };
+                if (key === 40) {
+                    var nextLi = i + 1;
+                };
+                li[i].className = '';
+                break;
+            }
+            else {
+                if (key === 38) {
+                    var nextLi = li.length - 1;
+                };
+                if (key === 40) {
+                    var nextLi = 0;
                 };
             };
         };
-    });
-    (currentKey === 40) ? move('down') : move('up');
-}*/
+        if (nextLi > li.length - 1) {
+            nextLi = 0;
+        };
+        if (nextLi < 0) {
+            nextLi = li.length - 1;
+        };
+        var nextLiId = obj.id + 'li' + nextLi;
+        var toFocus = document.getElementById(nextLiId);
+        toFocus.className = 'focus';
+    };
+}
