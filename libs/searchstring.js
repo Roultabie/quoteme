@@ -14,7 +14,6 @@ function searchString(obj, dataType, event)
 {
     var currentKey = event.keyCode;
     obj.setAttribute("autocomplete", "off");
-    console.log(currentKey);
     var inputContent = obj.value;
     if (inputContent.search(',') !== -1) {
         // Si on trouve au moins deux fois une virgule, on la remplace par une seule
@@ -50,6 +49,13 @@ function searchString(obj, dataType, event)
     if (currentKey === 38 || currentKey === 40) {
         moveFocus(obj, currentKey);
         return false;
+    };
+    // Si on tape sur la touche entrée on ajoute le tag en "focus"
+    if (currentKey === 13) {
+        var focused = document.getElementsByClassName('tags-suggest-focus')[0].childNodes[0];
+        elements.push(focused.innerHTML);
+        obj.value = elements.join(',') + ',';
+        toSend = '';
     };
     var http = createRequestObject();
     http.open('GET', '/admin.php?' + dataType + '=' + toSend, true);
@@ -91,7 +97,6 @@ function searchString(obj, dataType, event)
                             };
                             document.getElementById(obj.id + 'li' + i).appendChild(a);
                         };
-                        
                     };
                 };
             };
@@ -148,7 +153,7 @@ function moveFocus(obj, key)
         var li = ul.childNodes;
         for (var i = 0; i < li.length; ++i) {
             var currentClass = li[i].className;
-            if (currentClass === "focus") {
+            if (currentClass === obj.id + '-suggest-focus') {
                 if (key === 38) {
                     var nextLi = i - 1;
                 };
@@ -175,7 +180,7 @@ function moveFocus(obj, key)
         };
         var nextLiId = obj.id + 'li' + nextLi;
         var toFocus = document.getElementById(nextLiId);
-        toFocus.className = 'focus';
+        toFocus.className = obj.id + '-suggest-focus';
     };
 }
 

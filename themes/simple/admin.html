@@ -223,7 +223,7 @@ border-radius: 3px;
 }
 #authorsuggest li:hover, #authorsuggest li .hover, 
 #tagssuggest li:hover, #tagssuggest li .hover, #tagssuggest li :focus, #tagssuggest li #focus, 
-#tagssuggest li.focus {
+#tagssuggest .tags-suggest-focus {
     background: lightgrey !important;
 }
 #authorsuggest a, #tagssuggest a, #tempspan1 {
@@ -244,7 +244,7 @@ border-radius: 3px;
             <textarea name="text" id="text" placeholder="[trad::type_quote] ...">{formInputText}</textarea>
             <input type="text" name="author" id="author" onkeyup="searchString(this,'author');" placeholder="[trad::author]" value="{formInputAuthor}">
             <input type="text" name="source" id="source" placeholder="[trad::source]" value="{formInputSource}">
-            <input type="text" name="tags" id="tags" onkeydown="disableEnter(event);" onkeyup="searchString(this,'tag', event);" placeholder="[trad::tag1_tag2_tag3] ..." value="{formInputTags}">
+            <input type="text" name="tags" id="tags" onkeypress="disableEnter(event);" onkeyup="searchString(this,'tag', event);" placeholder="[trad::tag1_tag2_tag3] ..." value="{formInputTags}">
             <!--<input type="date">-->
             <input type="hidden" name="action" value="{formAction}">
             <input type="hidden" name="permalink" value="{formPermalink}">
