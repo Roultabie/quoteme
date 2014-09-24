@@ -164,6 +164,15 @@ function calculateBubblePosition(obj, remove)
     temp.appendChild(tempSpanEnd);
     // Enfin, on calcule la longueur entre les deux, on lui ajoute la position de l'input
     var ulLeftPos = eval(tempSpanEnd.offsetLeft - tempSpan.offsetLeft + obj.offsetLeft);
+    // Si la bulle ne s'est pas créée, on le fait.
+    if (document.getElementById(obj.id + 'suggest') === null) {
+        var ul            = document.createElement('ul');
+        ul.id             = obj.id + 'suggest';
+        ul.style.position = 'absolute';
+        ul.style.top      = eval(obj.offsetTop + obj.offsetHeight) + 'px';
+        var parent        = obj.parentNode;
+        parent.insertBefore(ul, obj);
+    };
     if (document.getElementById(obj.id + 'suggest') !== null) {
         var ul = document.getElementById(obj.id + 'suggest');
         // Puis on applique le résultat à la bulle de suggestion
