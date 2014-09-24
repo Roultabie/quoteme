@@ -10,28 +10,42 @@ function createRequestObject()
     return http;
 }
 
-function searchString(obj, dataType, event)
+function searchString(obj, dataType, event, maxKeywords = 'n')
 {
     obj.onblur = function() {
         removeBubble(this);
     };
     var currentKey = event.keyCode;
     obj.setAttribute("autocomplete", "off");
+    var comma = ',';
     var inputContent = obj.value;
-    if (inputContent.search(',') !== -1) {
+    var elements     = inputContent.split(',');
+    // nombre de mot complets (si pas de virgule le mot n'est potentiellement pas terminé)
+    var nbElements   = elements.length - 1;
+    if (inputContent === '') {
+        nbElements   = 0;
+    };
+    // Si il y a autant de mots clés que la limite, on bloque l'ajout
+    if (maxKeywords === nbElements) {
+        removeBubble(obj);
+        obj.value = inputContent.replace(/,{1,}/g, '');
+        obj.maxLength = obj.value.length;
+        return false;
+    }
+    obj.removeAttribute('maxLength');
+    if (nbElements > 0) {
         // Si on trouve au moins deux fois une virgule, on la remplace par une seule
         if (inputContent.search('/,{2,}/g')) {
             inputContent = inputContent.replace(/,{2,}/g, ',');
             obj.value    = inputContent;
         };
-        var elements = inputContent.split(',');
         var toSend   = elements.pop().replace(/^\s+/g,'');
         // On surveille si on tape ou si la chaine se termine par une virgule 
         if (currentKey === 188 || inputContent.substring(inputContent.length - 1 === ',')) {
-            var comma = true;
+            var isComma = true;
         };
         // Si c'est le cas c'est qu'on a un nouveau tag, donc on calcule la position des suggestions
-        if (comma || currentKey === 8 && inputContent.search(/,$/g) != -1) {
+        if (isComma || currentKey === 8 && inputContent.search(/,$/g) != -1) {
             if (currentKey === 188) {
                 calculateBubblePosition(obj, 0);
             }
@@ -57,7 +71,11 @@ function searchString(obj, dataType, event)
     if (currentKey === 13) {
         var focused = document.getElementsByClassName(obj.id + '-suggest-focus')[0].childNodes[0];
         elements.push(focused.innerHTML);
-        obj.value = elements.join(',') + ',';
+        nbElements = nbElements +1;
+        if (maxKeywords === nbElements) {
+            comma = '';
+        };
+        obj.value = elements.join(',') + comma;
         toSend = '';
     };
     var http = createRequestObject();
@@ -105,7 +123,11 @@ function searchString(obj, dataType, event)
                                 var parent  = this.parentNode;
                                 // On concat la valeur cliquée au tableau de l'input
                                 elements.push(this.innerHTML);
-                                obj.value = elements.join(',') + ',';
+                                nbElements = nbElements +1;
+                                if (maxKeywords === nbElements) {
+                                    comma = '';
+                                };
+                                obj.value = elements.join(',') + comma;
                                 document.getElementById(obj.id + 'suggest').innerHTML = '';
                                 obj.focus();
                             };
