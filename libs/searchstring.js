@@ -25,18 +25,16 @@ function searchString(obj, dataType, event, maxKeywords = 'n')
     if (inputContent === '') {
         nbElements   = 0;
     };
-    // Si il y a autant de mots clés que la limite, on bloque l'ajout
+    // Si il y a autant de mots clés que la limite, on bloque l'ajout de la virgule
     if (maxKeywords === nbElements) {
-        removeBubble(obj);
-        obj.value     = inputContent.replace(/,{1,}/g, '');
-        obj.maxLength = obj.value.length;
+        obj.value = inputContent.replace(/,{1,}/g, '');
         return false
     }
     obj.removeAttribute('maxLength');
     if (nbElements > 0) {
         // Si on trouve au moins deux fois une virgule, on la remplace par une seule
         if (inputContent.search('/,{2,}/g')) {
-            obj.value    = inputContent.replace(/,{2,}/g, ',');
+            obj.value = inputContent.replace(/,{2,}/g, ',');
         };
         var toSend = elements.pop().replace(/^\s+/g,'');
         // On surveille si on tape une virgule
@@ -64,10 +62,7 @@ function searchString(obj, dataType, event, maxKeywords = 'n')
     if (currentKey === 9 || currentKey === 13) {
         var focused = document.getElementsByClassName(obj.id + '-suggest-focus')[0].childNodes[0];
         elements.push(focused.innerHTML);
-        if (maxKeywords === nbElements + 1) {
-            comma = '';
-        };
-        obj.value = elements.join(',') + comma;
+        obj.value = elements.join(',');
         toSend = '';
     };
     var http = createRequestObject();
@@ -113,10 +108,7 @@ function searchString(obj, dataType, event, maxKeywords = 'n')
                             a.onclick        = function() {
                                 // On concat la valeur cliquée au tableau de l'input
                                 elements.push(this.innerHTML);
-                                if (maxKeywords === nbElements + 1) {
-                                    comma = '';
-                                };
-                                obj.value = elements.join(',') + comma;
+                                obj.value = elements.join(',');
                                 document.getElementById(obj.id + 'suggest').innerHTML = '';
                                 obj.focus();
                             };
