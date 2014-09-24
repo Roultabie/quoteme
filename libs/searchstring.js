@@ -12,6 +12,9 @@ function createRequestObject()
 
 function searchString(obj, dataType, event)
 {
+    obj.onblur = function() {
+        removeBubble(this);
+    };
     var currentKey = event.keyCode;
     obj.setAttribute("autocomplete", "off");
     var inputContent = obj.value;
@@ -80,6 +83,12 @@ function searchString(obj, dataType, event)
                         {
                             var li = document.createElement('li');
                             li.id  = obj.id + 'li' + i;
+                            li.onmouseover  = function() {
+                                document.getElementsByClassName(obj.id + '-suggest-focus')[0].className = '';
+                            };
+                            li.onmouseout  = function() {
+                                this.className = obj.id + '-suggest-focus';
+                            };
                             document.getElementById(obj.id + 'suggest').appendChild(li);
                             var a           = document.createElement('a');
                             a.innerHTML     = result.data[i].value;
@@ -87,10 +96,11 @@ function searchString(obj, dataType, event)
                             a.name          = obj.id + 'a'
                             a.style.display = 'block';
                             a.href          = '#';
-                            a.onmouseover   = function() {
-                                var focused = document.getElementsByClassName(obj.id + '-suggest-focus')[0];
-                                focused.className = '';
-                            };
+                            // Quand on détecte que le clic, on désactive le removeBubble sinon le clic n'est pas pris en compte
+                            a.onmousedown = function() {
+                                obj.onblur = '';
+                            }
+                            // Puis une fois cliqué on ajoute le mot à l'input
                             a.onclick       = function() {
                                 var parent  = this.parentNode;
                                 // On concat la valeur cliquée au tableau de l'input
