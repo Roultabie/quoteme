@@ -223,15 +223,13 @@ function moveFocus(obj, key)
 function bypassNavigation(obj, event)
 {
     if (event.keyCode === 9 || event.keyCode === 13) {
-        if (document.getElementById(obj.id + 'suggest') !== null) {
-            if (document.getElementById(obj.id + 'suggest').innerHTML !== '') {
-                if (event.preventDefault) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                } else {
-                    event.returnValue = false;
-                    event.cancelBubble = true;
-                };
+        if (document.getElementById(obj.id + 'suggest') !== null && document.getElementById(obj.id + 'suggest').innerHTML !== '') {
+            if (event.preventDefault) {
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                event.returnValue = false;
+                event.cancelBubble = true;
             };
         };
     };
