@@ -15,9 +15,9 @@ function searchString(obj, dataType, event, maxKeywords = 'n')
     obj.onblur = function() {
         removeBubble(this);
     };
-    var currentKey = event.keyCode;
     obj.setAttribute("autocomplete", "off");
-    var comma = ',';
+    var currentKey   = event.keyCode;
+    var comma        = ',';
     var inputContent = obj.value;
     var elements     = inputContent.split(',');
     // nombre de mot complets (si pas de virgule le mot n'est potentiellement pas terminé)
@@ -28,7 +28,7 @@ function searchString(obj, dataType, event, maxKeywords = 'n')
     // Si il y a autant de mots clés que la limite, on bloque l'ajout
     if (maxKeywords === nbElements) {
         removeBubble(obj);
-        obj.value = inputContent.replace(/,{1,}/g, '');
+        obj.value     = inputContent.replace(/,{1,}/g, '');
         obj.maxLength = obj.value.length;
         return false;
     }
@@ -39,7 +39,7 @@ function searchString(obj, dataType, event, maxKeywords = 'n')
             inputContent = inputContent.replace(/,{2,}/g, ',');
             obj.value    = inputContent;
         };
-        var toSend   = elements.pop().replace(/^\s+/g,'');
+        var toSend = elements.pop().replace(/^\s+/g,'');
         // On surveille si on tape une virgule
         if (currentKey === 188) {
             calculateBubblePosition(obj, 0);
@@ -93,12 +93,12 @@ function searchString(obj, dataType, event, maxKeywords = 'n')
                     if (result['status'] === 'success') {
                         for(var i= 0; i < result.data.length; i++)
                         {
-                            var li = document.createElement('li');
-                            li.id  = obj.id + 'li' + i;
+                            var li          = document.createElement('li');
+                            li.id           = obj.id + 'li' + i;
                             li.onmouseover  = function() {
                                 document.getElementsByClassName(obj.id + '-suggest-focus')[0].className = '';
                             };
-                            li.onmouseout  = function() {
+                            li.onmouseout   = function() {
                                 this.className = obj.id + '-suggest-focus';
                             };
                             document.getElementById(obj.id + 'suggest').appendChild(li);
@@ -109,12 +109,12 @@ function searchString(obj, dataType, event, maxKeywords = 'n')
                             a.style.display = 'block';
                             a.href          = '#';
                             // Quand on détecte que le clic, on désactive le removeBubble sinon le clic n'est pas pris en compte
-                            a.onmousedown = function() {
-                                obj.onblur = '';
+                            a.onmousedown   = function() {
+                                obj.onblur  = '';
                             }
                             // Puis une fois cliqué on ajoute le mot à l'input
-                            a.onclick       = function() {
-                                var parent  = this.parentNode;
+                            a.onclick        = function() {
+                                var parent   = this.parentNode;
                                 // On concat la valeur cliquée au tableau de l'input
                                 elements.push(this.innerHTML);
                                 nbElements = nbElements +1;
@@ -153,10 +153,10 @@ function calculateBubblePosition(obj, remove)
     temp.id  = 'tempsearchstring';
     document.body.appendChild(temp);
     // On y insère un span avec les données de l'input dedans
-    var tempSpan = document.createElement('span');
-    tempSpan.id  = 'tempspan1';
+    var tempSpan           = document.createElement('span');
+    tempSpan.id            = 'tempspan1';
     tempSpan.style.display = 'inline-block';
-    tempSpan.innerHTML = string;
+    tempSpan.innerHTML     = string;
     temp.appendChild(tempSpan);
     // On crée un span après ce premier
     var tempSpanEnd = document.createElement('span');
