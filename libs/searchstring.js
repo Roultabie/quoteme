@@ -65,7 +65,7 @@ function searchString(obj, dataType, event, maxKeywords = 'n')
         var focused = document.getElementsByClassName(obj.id + '-suggest-focus')[0].childNodes[0];
         elements.push(focused.innerHTML);
         if (maxKeywords === nbElements + 1) {
-            var comma = '';
+            comma = '';
         };
         obj.value = elements.join(',') + comma;
         toSend = '';
@@ -226,7 +226,7 @@ function bypassNavigation(obj, event)
                 event.preventDefault();
                 event.stopPropagation();
             } else {
-                event.returnValue = false;
+                event.returnValue  = false;
                 event.cancelBubble = true;
             };
         };
