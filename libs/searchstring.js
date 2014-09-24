@@ -30,14 +30,13 @@ function searchString(obj, dataType, event, maxKeywords = 'n')
         removeBubble(obj);
         obj.value     = inputContent.replace(/,{1,}/g, '');
         obj.maxLength = obj.value.length;
-        return false;
+        return false
     }
     obj.removeAttribute('maxLength');
     if (nbElements > 0) {
         // Si on trouve au moins deux fois une virgule, on la remplace par une seule
         if (inputContent.search('/,{2,}/g')) {
-            inputContent = inputContent.replace(/,{2,}/g, ',');
-            obj.value    = inputContent;
+            obj.value    = inputContent.replace(/,{2,}/g, ',');
         };
         var toSend = elements.pop().replace(/^\s+/g,'');
         // On surveille si on tape une virgule
@@ -65,9 +64,8 @@ function searchString(obj, dataType, event, maxKeywords = 'n')
     if (currentKey === 9 || currentKey === 13) {
         var focused = document.getElementsByClassName(obj.id + '-suggest-focus')[0].childNodes[0];
         elements.push(focused.innerHTML);
-        nbElements = nbElements +1;
-        if (maxKeywords === nbElements) {
-            comma = '';
+        if (maxKeywords === nbElements + 1) {
+            var comma = '';
         };
         obj.value = elements.join(',') + comma;
         toSend = '';
@@ -85,8 +83,7 @@ function searchString(obj, dataType, event, maxKeywords = 'n')
                         ul.id             = obj.id + 'suggest';
                         ul.style.position = 'absolute';
                         ul.style.top      = eval(obj.offsetTop + obj.offsetHeight) + 'px';
-                        var parent        = obj.parentNode;
-                        parent.insertBefore(ul, obj);
+                        obj.parentNode.insertBefore(ul, obj);
                     };
                     
                     document.getElementById(obj.id + 'suggest').innerHTML = '';
@@ -114,11 +111,9 @@ function searchString(obj, dataType, event, maxKeywords = 'n')
                             }
                             // Puis une fois cliqué on ajoute le mot à l'input
                             a.onclick        = function() {
-                                var parent   = this.parentNode;
                                 // On concat la valeur cliquée au tableau de l'input
                                 elements.push(this.innerHTML);
-                                nbElements = nbElements +1;
-                                if (maxKeywords === nbElements) {
+                                if (maxKeywords === nbElements + 1) {
                                     comma = '';
                                 };
                                 obj.value = elements.join(',') + comma;
@@ -170,12 +165,11 @@ function calculateBubblePosition(obj, remove)
         ul.id             = obj.id + 'suggest';
         ul.style.position = 'absolute';
         ul.style.top      = eval(obj.offsetTop + obj.offsetHeight) + 'px';
-        var parent        = obj.parentNode;
-        parent.insertBefore(ul, obj);
+        obj.parentNode.insertBefore(ul, obj);
     };
+    // Puis on applique le résultat à la bulle de suggestion
     if (document.getElementById(obj.id + 'suggest') !== null) {
         var ul = document.getElementById(obj.id + 'suggest');
-        // Puis on applique le résultat à la bulle de suggestion
         if (remove === "all") {
             ul.style.left = obj.offsetLeft + 'px';
         }
@@ -220,8 +214,7 @@ function moveFocus(obj, key)
             nextLi = li.length - 1;
         };
         var nextLiId = obj.id + 'li' + nextLi;
-        var toFocus = document.getElementById(nextLiId);
-        toFocus.className = obj.id + '-suggest-focus';
+        document.getElementById(nextLiId).className = obj.id + '-suggest-focus';
     };
 }
 
@@ -243,8 +236,6 @@ function bypassNavigation(obj, event)
 function removeBubble(obj, event)
 {
     if (document.getElementById(obj.id + 'suggest') !== null) {
-        var form   = document.getElementById(obj.id + 'suggest').parentNode;
-        var bubble = document.getElementById(obj.id + 'suggest');
-        form.removeChild(bubble);
+        document.getElementById(obj.id + 'suggest').parentNode.removeChild(document.getElementById(obj.id + 'suggest'));
     };
 }
