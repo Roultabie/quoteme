@@ -68,7 +68,7 @@ function searchString(obj, dataType, event, maxKeywords = 'n')
         return false;
     };
     // Si on tape sur la touche entrée on ajoute le tag en "focus"
-    if (currentKey === 13) {
+    if (currentKey === 9 || currentKey === 13) {
         var focused = document.getElementsByClassName(obj.id + '-suggest-focus')[0].childNodes[0];
         elements.push(focused.innerHTML);
         nbElements = nbElements +1;
@@ -220,15 +220,21 @@ function moveFocus(obj, key)
     };
 }
 
-function disableEnter(event)
+function bypassNavigation(obj, event)
 {
-    if (event.keyCode === 13) {
-        if (event.preventDefault) {
-            event.preventDefault();
-            event.stopPropagation();
-        } else {
-            event.returnValue = false;
-            event.cancelBubble = true;
+    if (event.keyCode === 9 || event.keyCode === 13) {
+        if (document.getElementById(obj.id + 'suggest') !== null) {
+            var ul = document.getElementById(obj.id + 'suggest');
+            var li = ul.childNodes;
+            if (li.length > 0) {
+                if (event.preventDefault) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                } else {
+                    event.returnValue = false;
+                    event.cancelBubble = true;
+                };
+            };
         };
     };
 }
