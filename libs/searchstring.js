@@ -224,9 +224,7 @@ function bypassNavigation(obj, event)
 {
     if (event.keyCode === 9 || event.keyCode === 13) {
         if (document.getElementById(obj.id + 'suggest') !== null) {
-            var ul = document.getElementById(obj.id + 'suggest');
-            var li = ul.childNodes;
-            if (li.length > 0) {
+            if (document.getElementById(obj.id + 'suggest').innerHTML !== '') {
                 if (event.preventDefault) {
                     event.preventDefault();
                     event.stopPropagation();
