@@ -40,19 +40,13 @@ function searchString(obj, dataType, event, maxKeywords = 'n')
             obj.value    = inputContent;
         };
         var toSend   = elements.pop().replace(/^\s+/g,'');
-        // On surveille si on tape ou si la chaine se termine par une virgule 
-        if (currentKey === 188 || inputContent.substring(inputContent.length - 1 === ',')) {
-            var isComma = true;
-        };
-        // Si c'est le cas c'est qu'on a un nouveau tag, donc on calcule la position des suggestions
-        if (isComma || currentKey === 8 && inputContent.search(/,$/g) != -1) {
-            if (currentKey === 188) {
-                calculateBubblePosition(obj, 0);
-            }
-            else {
-                calculateBubblePosition(obj, 1);
-            };
+        // On surveille si on tape une virgule
+        if (currentKey === 188) {
+            calculateBubblePosition(obj, 0);
         }
+        else {
+            calculateBubblePosition(obj, 1);
+        };
     }
     else {
         var elements = [];
@@ -170,13 +164,15 @@ function calculateBubblePosition(obj, remove)
     temp.appendChild(tempSpanEnd);
     // Enfin, on calcule la longueur entre les deux, on lui ajoute la position de l'input
     var ulLeftPos = eval(tempSpanEnd.offsetLeft - tempSpan.offsetLeft + obj.offsetLeft);
-    var ul = document.getElementById(obj.id + 'suggest');
-    // Puis on applique le résultat à la bulle de suggestion
-    if (remove === "all") {
-        ul.style.left = obj.offsetLeft + 'px';
-    }
-    else {
-        ul.style.left = ulLeftPos + 'px';
+    if (document.getElementById(obj.id + 'suggest') !== null) {
+        var ul = document.getElementById(obj.id + 'suggest');
+        // Puis on applique le résultat à la bulle de suggestion
+        if (remove === "all") {
+            ul.style.left = obj.offsetLeft + 'px';
+        }
+        else {
+            ul.style.left = ulLeftPos + 'px';
+        };
     };
     // Pour finir on détruit la div et ce qu'elle contient.
     document.body.removeChild(temp); 
