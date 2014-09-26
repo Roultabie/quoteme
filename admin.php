@@ -92,10 +92,10 @@ function getUpdate()
 */
 function jsonTagsByHits($string, $limit = '4', $order = 'DESC')
 {
-    $query   = "SELECT id, tag, hits FROM " . $GLOBALS['config']['tblPrefix'] . "tags WHERE tag LIKE '" . $string . "%' ORDER BY hits " . $order . " LIMIT " . $limit . ';';
+    $query   = "SELECT tag, hits FROM " . $GLOBALS['config']['tblPrefix'] . "tags WHERE tag LIKE '" . $string . "%' ORDER BY hits " . $order . " LIMIT " . $limit . ';';
     $stmt    = dbConnexion::getInstance()->prepare($query);
     $stmt->execute();
-    $datas = $stmt->fetchAll(PDO::FETCH_COLUMN, 1);
+    $datas = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
     if (count($datas) > 0) {
         array_walk($datas, function (&$item, $key) {
             $item = array('value' => $item);
@@ -117,10 +117,10 @@ function jsonTagsByHits($string, $limit = '4', $order = 'DESC')
 */
 function jsonAuthorsByHits($string, $limit = '4', $order = 'DESC')
 {
-    $query   = "SELECT id, author, hits FROM " . $GLOBALS['config']['tblPrefix'] . "authors WHERE author LIKE '" . $string . "%' ORDER BY hits " . $order . " LIMIT " . $limit . ';';
+    $query   = "SELECT author, hits FROM " . $GLOBALS['config']['tblPrefix'] . "authors WHERE author LIKE '" . $string . "%' ORDER BY hits " . $order . " LIMIT " . $limit . ';';
     $stmt    = dbConnexion::getInstance()->prepare($query);
     $stmt->execute();
-    $datas = $stmt->fetchAll(PDO::FETCH_COLUMN, 1);
+    $datas = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
     if (count($datas) > 0) {
         array_walk($datas, function (&$item, $key) {
             $item = array('value' => $item);
