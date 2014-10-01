@@ -366,6 +366,16 @@ if (!file_exists('../config.php')) {
         }
         if (isset($_POST['install']) && $canInstall) {
             $install = install($resetPassword);
+            if ($install === true) {
+                echo '<h2>Installation OK</h2>';
+                echo '<p><a href="/admin.php">Click here to add your first quote :-)</a></p>';
+                exit();
+            }
+            else {
+                echo '<h2>Installation FAIL</h2>';
+                echo '<p>Please, remove your config file and retry</p>';
+                exit();
+            }
         }
     }
     $html->setElement('test', '<input type="submit" name="test" value="[trad::test_datas]">');
