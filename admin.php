@@ -12,6 +12,18 @@ require_once 'libs/mysql.php';
 require_once 'libs/quoteme.php';
 require_once 'libs/timply.php';
 require_once 'libs/smartypants.php';
+if (!function_exists('password_hash')) {
+    $hash = '$2y$04$usesomesillystringfore7hnbRJHxXVLeakoG8K30oukPsA.ztMG';
+    $test = crypt("password", $hash);
+    $pass = $test == $hash;
+    if ($pass) {
+        require '../libs/password.php';
+    }
+    else {
+        echo '<h3>You need passowrd_compat support to continue</h3>';
+        exit();
+    }
+}
 require_once 'parser/parser.php';
 
 parser::$cacheState = TRUE;
