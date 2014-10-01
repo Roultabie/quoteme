@@ -122,7 +122,7 @@ function checkDbIds($host, $user, $password, $dbName, $tblPrefix)
 
 function ifDbTableExist($instance, $tblPrefix)
 {
-    if (is_object($instance)) {;
+    if (is_object($instance)) {
         $tables = $instance->prepare("SHOW TABLES LIKE '" . $tblPrefix . "%'");
         $tables->execute();
         $result = $tables->fetchAll(PDO::FETCH_OBJ);
