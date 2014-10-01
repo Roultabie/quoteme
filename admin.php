@@ -12,7 +12,7 @@ if (!function_exists('password_hash')) {
     $test = crypt("password", $hash);
     $pass = $test == $hash;
     if ($pass) {
-        require '../libs/password.php';
+        require 'libs/password.php';
     }
     else {
         echo '<h3>You need passowrd_compat support to continue</h3>';
