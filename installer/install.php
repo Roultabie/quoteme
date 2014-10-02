@@ -243,7 +243,7 @@ function listAvailableLanguages()
 
 function install($resetPassword = FALSE)
 {
-    $password = password_hash($_POST['password'], PASSWORD_BCRYPT, array('cost' => 10));
+    $password = password_hash($_SESSION['pass'], PASSWORD_BCRYPT, array('cost' => 10));
 
     if ($resetPassword !== TRUE) {
         if (file_exists('schema.sql'))
