@@ -41,21 +41,21 @@ function parseQuote($parser = '', $options = '')
                             return $result;
                         }
                         else {
-                            return 'ERROR: class ' . $class . ' not implement parserTemplate !';
+                            return 'ERROR: class ' . $class . ' does not implement parserTemplate!';
                         }
                     }
                     else {
-                        return 'ERROR: no data found !';
+                        return 'ERROR: no data found!';
                     }
                 }
                 
             }
             else {
-                return 'ERROR: class ' . $class . ' not exist !';
+                return 'ERROR: class ' . $class . ' not found!';
             }
         }
         else {
-            return 'ERROR: ' . $parserUri . ' not found !';
+            return 'ERROR: ' . $parserUri . ' not found!';
         }
     }
     else {
@@ -97,7 +97,7 @@ else {
             echo parseQuote($parser, $opt);
         }
         else {
-            echo 'ERROR: parser is not valid !';
+            echo 'ERROR: parser is not valid!';
         }
     }
     else {
