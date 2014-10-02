@@ -22,7 +22,7 @@ implements parserTemplate
         if (is_array($elements)) {
             foreach ($elements as $value) {
                 $this->timply->setElement('text', $value->getText(), 'Quote');
-                $this->timply->setElement('permalink', '/?' . $value->getPermalink(), 'Quote');
+                $this->timply->setElement('permalink', $this->returnPermalink($value->getPermalink()), 'Quote');
                 $this->timply->setElement('description', $value->getText(), 'Quote');
                 $this->timply->setElement('author', $value->getAuthor(), 'Quote');
             }
