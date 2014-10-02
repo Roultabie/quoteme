@@ -32,7 +32,10 @@ abstract class parser
 
     final protected function returnPermalink($permalink)
     {
-        return $_SERVER['HTTP_HOST'] . '/?' . $permalink;
+        //site base end before api.php, we remove it
+        $baseUri = substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?') + 1);
+        $baseUri = str_replace('api.php', '', $baseUri);
+        return $baseUri . $permalink;
     }
 
     public static function clearCache()
