@@ -61,6 +61,18 @@ Permalink format example : http://q.uote.me?xHlefA (thank to [sebsauvage](https:
 
 ###Updates :
 
+_2014-10-03 (1.6b)_
+- Added authors and tags suggest in admin (ajax),
+- Updated db format (added authors and tags tables),
+- Added html parser,
+- Added html search results,
+- Added last quotes link,
+- Added support for >= php 5.3,
+- Updated to latest login version,
+- Now quoteme is multi users,
+- Added sharelinks for google+ facebook, twitter and shaarli in admin,
+- Added feed link on footer.
+
 _2013-08-06 (1.5b)_
 - Added cache for non radom requests,
 - Added ajax update on the index,
@@ -90,14 +102,10 @@ _2013-06-14 :_
 - Added tags.
 
 ###In the future :
-_1.6b :_
-- Google plus share parser and google plus link in admin
-- Latest login version
-- New admin interface
- 
+
 _1.7b :_
-- New syntax for api
-- ...
+- New syntax for api,
+- Multi users field in quotes table.
 
 ##Licence :
 
