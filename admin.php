@@ -109,7 +109,7 @@ function jsonAuthorsByHits($string, $limit = '4', $order = 'DESC')
     return json_encode($result);
 }
 
-if ($GLOBALS['system']['version'] !== $GLOBALS['system']['lastVersion']) {
+if ($GLOBALS['system']['version'] !== 'devel' && $GLOBALS['system']['version'] !== $GLOBALS['system']['lastVersion']) {
     $updateInfo = '<a href="https://github.com/Roultabie/quoteme/releases">[trad::new_update_available] : ' . $GLOBALS['system']['lastVersion'] . '</a>';
 }
 
