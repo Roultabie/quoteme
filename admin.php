@@ -32,21 +32,16 @@ parser::$cacheDir   = $GLOBALS['config']['cacheDir'];
 $userDatas  = unserialize($_SESSION['userDatas']);
 $userConfig = $userDatas->getConfig();
 
-function writeConfigFile($newOptions)
+function writeConfigFile()
 {
     $fileName = 'config.php';
     $fileUri  = '';
-    $configContent = file_get_contents($fileUri . $fileName);
-    foreach ($newOptions as $key => $value) {
-        list($type, $option) = explode(">", $key);
-        if (is_string($value)) {
-            $value = "'" . str_replace("'", "\'", $value) . "'";
-        }
-        $pattern       = '/\$' . $type . '\[\'' . $option . '\'\]\s*=\s*[\'"]{0,1}.*[\'"]{0,1};/i';
-        $replace       = '$' . $type . '[\'' . $option . '\'] = ' .$value . ';';
-        $configContent = preg_replace($pattern, $replace, $configContent);
-    }
-    file_put_contents($fileUri . $fileName, $configContent, LOCK_EX);
+    $config = file_get_contents($fileUri . $fileName);
+    $pattern = '/\$(?:system|config) = (array \([^\);]*)/u';
+    preg_match_all($pattern, $config, $toReplace);
+    // Changing system options
+    $newConfig = str_replace($toReplace[1][0], rtrim(var_export($GLOBALS['system'], true), ')'), $config);
+    file_put_contents($fileUri . $fileName, $newConfig, LOCK_EX);
 }
 
 function editConfig($newConfig)
