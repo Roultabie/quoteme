@@ -47,14 +47,16 @@ function writeConfigFile()
 function getUpdate()
 {
     $currentDate = date($GLOBALS['system']['dateFormat']);
-    
     if ($GLOBALS['config']['appVers'] !== 'devel') {
         if ($GLOBALS['system']['lastUpdate'] < $currentDate) {
-            $update = file_get_contents('http://q.uote.me/checkupdate.php?cliv=' . $GLOBALS['config']['appVers']);
-            //writeConfigFile(array('system>lastVersion' => $update, 'system>lastUpdate' => $currentDate));
+            //$update = file_get_contents('http://q.uote.me/checkupdate.php?cliv=' . $GLOBALS['config']['appVers']);
+            $update = file_get_contents('https://github.com/Roultabie/quoteme/releases/latest');
+            preg_match('/<title>Release\s(\d\.{0,1}\d*\w*)\s/u', $update, $latestVersion);
+            $GLOBALS['system']['lastUpdate']  = $currentDate;
+            $GLOBALS['system']['lastVersion'] = $latestVersion[1];
+            writeConfigFile();
         }
     }
-    
 }
 
 /**
