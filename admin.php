@@ -44,42 +44,6 @@ function writeConfigFile()
     file_put_contents($fileUri . $fileName, $newConfig, LOCK_EX);
 }
 
-function editConfig($newConfig)
-{
-    //on récupere config.php dans un tableau
-    $config = file('config.php');
-    //on crée un tableau avec comme clé les clés de $configommOrder
-    // Sauf pour les balise et commentaire ou l'on garde la clé chiffrée
-    foreach($config as $key => $val) {
-        $elements = explode('=', $val);
-        if ($val[0] === "$") {
-            $key  = substr(trim($elements[0]), strpos(trim($elements[0]), "'")+1, -2);
-        }
-        $tmpConfig[$key] = $val;
-    }
-    // Ensuite on remplace les éléments du tableau temporaire avec les valeurs correspondantes aux clés
-    // En ajoutant la variable $config ou autre
-    foreach($newConfig as $key => $val) {
-        $elements = explode('=', $tmpConfig[$key]);
-        $var   = trim($elements[0]);
-        $value = trim($elements[1]);
-        if ($value[0] === "'") {
-            $value = "'" . $val . "';";
-        }
-        else {
-            $value = $val . ';';
-        }
-        $tmpConfig[$key] = $var . ' = ' . $value . PHP_EOL;
-    }
-    // Puis on réécrit config.php
-    if (!$fd = fopen('config.php',"w+")) {
-    echo "Echec de l'ouverture du fichier";
-    }
-    foreach($tmpConfig as $val) {
-        fwrite($fd, $val);
-    }
-}
-
 function getUpdate()
 {
     $currentDate = date($GLOBALS['system']['dateFormat']);
