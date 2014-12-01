@@ -180,7 +180,7 @@ $html->setElement('formAction', $formAction);
 
 /* Quotes list */
 $quotes = new quoteQueries();
-$quotes = $quotes->getQuote(array('sort' => 'id,desc'));
+$quotes = $quotes->getQuote(array('contributor' => 'equal,' . $userDatas->getUsername(), 'sort' => 'id,desc'));
 
 if (is_array($quotes)) {
     foreach ($quotes as $quote) {
