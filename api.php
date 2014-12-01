@@ -101,8 +101,7 @@ else {
         }
     }
     else {
-        timply::setFileName('api.html');
-        $html = new timply();
+        $html = new timply('api.html');
         echo $html->returnHtml();
     }
 }
