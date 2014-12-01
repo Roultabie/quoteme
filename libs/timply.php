@@ -5,22 +5,24 @@
  * Genarate webpage from html sources
  *
  * @package     Timply
- * @author      Daniel Douat <daniel.douat@aelys-info.fr>
- * @link        http://www.aelys-info.fr
+ * @author      Daniel Douat <daniel@gorgones.net>
+ * @link        http://daniel.douat.fr
  */
 class timply
 {
     private static $themeDir;
-    private static $fileName;
     private static $dictionary;
     private $blockList;
     private $file;
     private $firstElement;
     public  $block;
+    public  $fileName;
 
-    function __construct()
+    function __construct($fileName)
     {
+        $this->setFileName($fileName);
         $this->setFile();
+        $this->includeFiles();
         $this->setBlockList();
     }
 
@@ -32,24 +34,10 @@ class timply
     public static function setUri($uri)
     {
         if (!empty($uri)) {
-            $length    = strlen($url);
-            $lastSlash = strpos($url, '/') + 1;
-            if ($lenght !== $lastSlash) {
-                $uri = $uri . '/';
-            }
+            rtrim($uri, '/');
+            $uri = $uri . '/';
         }
         self::$themeDir = $uri;
-    }
-
-    /**
-     * Load file of them
-     * @param string $fileName filename
-     */
-    public static function setFileName($fileName)
-    {
-        if (!empty($fileName)) {
-            self::$fileName = $fileName;
-        }
     }
 
     /**
@@ -62,11 +50,23 @@ class timply
      */
     public function setElement($element, $data, $block = "")
     {
-        if (!empty($block)) {
-            $this->setBlock($element, $data, $block);
-        }
-        else {
-            $this->element[$element] = $data;
+        (!empty($block)) ? $this->setBlock($element, $data, $block) : $this->element[$element] = $data;
+    }
+
+    /**
+     * For elements in a loop. Give him an array and it works for you
+     * @access   public
+     * @param    array $data  $array[] = array('elementName' => 'elementValue');
+     * @param    string $block block name of elements
+     */
+    public function setElements($datas, $block)
+    {
+        if (is_array($datas) && !empty($block)) {
+            foreach ($datas as $elements) {
+                foreach ($elements as $element => $data) {
+                    $this->setElement($element, $data, $block);
+                }
+            }
         }
     }
 
@@ -79,13 +79,15 @@ class timply
     {
         $this->addBlock();
         $this->addElement();
-        if (is_array(self::$dictionary)) {
-            $this->traduct();
-        }
+        $this->traduct();
         $this->cleanFile();
         return $this->getFile();
     }
 
+    /**
+     * Load new dictionary
+     * @param string $file php file of dictionary, format like $lang['word'] = mot
+     */
     public static function addDictionary($file)
     {
         if (file_exists($file)) {
@@ -162,6 +164,10 @@ class timply
         return $this->blockList[$blockName];
     }
 
+    /**
+     * Return current content state of data file
+     * @return   string current data state
+     */
     private function getFile()
     {
         return $this->file;
@@ -176,13 +182,48 @@ class timply
     private function setFile($datas = "")
     {
         if (empty($datas)) {
-            if (file_exists(self::$themeDir . self::$fileName)) {
-                $this->file = file_get_contents(self::$themeDir . self::$fileName);
+            if (file_exists(self::$themeDir . $this->fileName)) {
+                $this->file = file_get_contents(self::$themeDir . $this->fileName);
             }
         }
         else {
             $this->file = $datas;
         }
+    }
+
+    /**
+     * Load file of them
+     * @param string $fileName filename
+     */
+    private function setFileName($fileName)
+    {
+        if (!empty($fileName)) {
+            $this->fileName = $fileName;
+        }
+    }
+
+    /**
+     * Add content of external files tagged like <!-- Include myfile.ext -->
+     * @access   private
+     * @return   void
+     */
+    private function includeFiles()
+    {
+        $file    = $this->getFile();
+        $pattern = "|(<!-- Include (?P<include>[\w\d]+\.[\w\d]+) -->)|iU";
+        preg_match_all($pattern, $file, $matches);
+        if (is_array($matches['include'])) {
+            foreach ($matches['include'] as $key => $toInclude) {
+                if (file_exists(self::$themeDir . $toInclude)) {
+                    $content = file_get_contents(self::$themeDir . $toInclude);
+                    $file    = str_replace($matches[0][$key], $content, $file);
+                }
+                else {
+                    $file = str_replace($matches[0][$key], '', $file);
+                }
+            }
+        }
+        $this->setFile($file);
     }
 
     /**
@@ -202,6 +243,10 @@ class timply
         }
     }
 
+    /**
+     * Remove working tags from content
+     * @return   void
+     */
     private function cleanFile()
     {
         $file     = $this->getFile();
@@ -216,34 +261,38 @@ class timply
      */
     private function traduct()
     {
-        mb_internal_encoding('UTF-8');
-        $file    = $this->getFile();
-        $pattern = '/\[trad::([\d\w\-_]+):{0,2}(F|AF|A){0,1}\]/';
-        preg_match_all($pattern, $file, $matches);
-        $count   = count($matches[0]);
-        for ($i = 0; $i < $count; $i++) {
-            $string = self::$dictionary[$matches[1][$i]];
-            if (!empty($string)) {
-                if ($matches[2][$i] === 'F') {
-                    // Not using ucfirst to preserve locales
-                    $traduction = mb_strtoupper(mb_substr($string, 0, 1), 'UTF-8') . mb_substr($string, 1);
-                }
-                elseif ($matches[2][$i] === 'AF') {
-                    $traduction = mb_convert_case($string, MB_CASE_TITLE, 'UTF-8');
-                }
-                elseif ($matches[2][$i] === 'A') {
-                    $traduction = mb_convert_case($string, MB_CASE_UPPER, 'UTF-8');
+        if (is_array(self::$dictionary)) {
+            mb_internal_encoding('UTF-8');
+            $file    = $this->getFile();
+            $pattern = '/\[trad::([\d\w\-_]+):{0,2}(F|AF|A){0,1}\]/';
+            preg_match_all($pattern, $file, $matches);
+            $count   = count($matches[0]);
+            for ($i = 0; $i < $count; $i++) {
+                $string = self::$dictionary[$matches[1][$i]];
+                if (!empty($string)) {
+                    switch ($matches[2][$i]) {
+                        case 'F':
+                            // Not using ucfirst to preserve locales
+                            $traduction = mb_strtoupper(mb_substr($string, 0, 1), 'UTF-8') . mb_substr($string, 1);
+                            break;
+                        case 'AF':
+                            $traduction = mb_convert_case($string, MB_CASE_TITLE, 'UTF-8');
+                            break;
+                        case 'A':
+                            $traduction = mb_convert_case($string, MB_CASE_UPPER, 'UTF-8');
+                            break;
+                        default:
+                            $traduction = $string;
+                            break;
+                    }
                 }
                 else {
-                    $traduction = $string;
+                    $traduction = str_replace('_', ' ', $matches[1][$i]);
                 }
+                $file = str_replace($matches[0][$i], $traduction, $file);
             }
-            else {
-                $traduction = str_replace('_', ' ', $matches[1][$i]);
-            }
-            $file = str_replace($matches[0][$i], $traduction, $file);
+            $this->setFile($file);
         }
-        $this->setFile($file);
     }
 }
 ?>
