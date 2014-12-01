@@ -1,14 +1,24 @@
 --
--- MySQL 5.5.37
--- Tue, 26 Sep 2014 12:00:00 +0000
+-- MySQL 5.5.5
+-- Mon, 01 Dec 2014 21:40:57 +0000
 --
 
 CREATE TABLE `qm_authors` (
+   `id` mediumint(9) not null auto_increment,
    `author` varchar(255) not null,
    `hits` smallint(6) default '1',
    PRIMARY KEY (`author`),
-   KEY `author` (`author`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+   UNIQUE KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+
+CREATE TABLE `qm_contributors` (
+   `id` tinyint(255) not null auto_increment,
+   `name` varchar(255) not null,
+   `level` tinyint(5) not null default '1',
+   PRIMARY KEY (`id`),
+   UNIQUE KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 
 CREATE TABLE `qm_quotes` (
@@ -19,13 +29,15 @@ CREATE TABLE `qm_quotes` (
    `tags` text not null,
    `permalink` char(6) not null,
    `date` datetime not null,
+   `contributor` tinyint(255),
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 
 CREATE TABLE `qm_tags` (
+   `id` smallint(6) not null auto_increment,
    `tag` varchar(255) not null,
    `hits` mediumint(9) default '1',
    PRIMARY KEY (`tag`),
-   KEY `tag` (`tag`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+   UNIQUE KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
