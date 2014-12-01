@@ -1,52 +1,6 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8" />
-<title>{author} - Q.uote.me</title>
-<script language="javascript" src="libs/wget.js"></script>
-<link rel="stylesheet" href="themes/simple/css/style.css" />
-<link rel="stylesheet" href="themes/simple/css/gh-fork-ribbon.css" />
-<meta property="og:type" content="article" />
-<meta property="og:title" content="{author} on quoteme" />
-<meta property="og:site_name" content="Quoteme">
-<meta property="og:description" content="« {text} » - {author}" />
-<meta property="og:url" content="{permalink}" />
-<meta property="og:image" content="{imgLink}" />
-<meta property="og:image:width" content="{imgWidth}" />
-<meta property="og:image:type" content="image/png" />
-<meta property="og:article:tag" content="quoteme">
-<meta property="og:article:tag" content="q.uote.me">
-<meta property="og:article:tag" content="citation">
-<meta property="og:article:tag" content="{author}">
-<!--[if IE]>
-    <link rel="stylesheet" href="themes/simple/css/gh-fork-ribbon.ie.css" />
-<![endif]-->
-</head>
-<body>
-    <header>
-    </header>
     <section>
         <div id="quote">
             <span id="text"><a href="{permalink}" alt="permalink" title="permalink" id="textLink">{text}</a></span><a href="{searchByAuthor}" alt="[trad::search_by] [trad::author]" title="[trad::search_by] [trad::author]" id="author">{author}</a>
             <span id="reload"><a href="#" onclick="changeQuote(); return false;" alt="[trad::get_new_quote]" title="[trad::get_new_quote]">&#10227;</a></span>
         </div>
     </section>
-    <footer>
-        <div>
-            <span><a href="api.php?p=html&s=date,desc&l=15">[trad::latest-quotes::F]</a></span><span><a href="api.php?p=rss2&s=date,desc&l=10">[trad::rss-feed::F]</a> </span>
-        </div>
-        <div>
-            <span>{nbQuotes} [trad::quotes]</span>
-            <span>[trad::about::F]</span><span><a href="api.php">[trad::api::A]</a></span><span><a href="https://github.com/Roultabie/quoteme">[trad::source_code::F]</a></span>
-        </div>
-        <div>
-            q.uote.me [trad::by] <a href="http://daniel.gorgones.net">Daniel Douat</a>
-        <div>
-        <div class="github-fork-ribbon-wrapper right-bottom">
-            <div class="github-fork-ribbon">
-                <a href="https://github.com/Roultabie/quoteme">[trad::fork_me_on::F] GitHub</a>
-            </div>
-        </div>
-    </footer>
-</body>
-</html>

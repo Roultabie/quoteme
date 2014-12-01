@@ -21,10 +21,9 @@ require_once 'api.php';
  */
 require_once 'libs/smartypants.php';
 
-timply::setFileName('index.html');
 timply::addDictionary($GLOBALS['config']['langDir'] . $GLOBALS['config']['lang'] . '.php');
 
-$html  = new timply();
+$html  = new timply('index.html');
 $quote = $GLOBALS['quoteObj']['obj'][0];
 if (is_object($quote)) {
     $html->setElement('imgLink', 'http://' .$_SERVER['HTTP_HOST'] . '/api.php?p=img&wi=1024&w=permalink&wo=equal,' . $quote->getPermalink());
