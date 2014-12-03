@@ -79,6 +79,11 @@ a, a:link, a:hover, a:active, a:visited {
 #author:after {
     content: ")";
 }
+#myCanvasContainer {
+    width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
 footer {
     position: absolute;
     margin: 0;

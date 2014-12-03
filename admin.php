@@ -25,7 +25,7 @@ if (!function_exists('password_hash')) {
  * Init $config['users']
  */
 if (!empty($_POST['login']) && !empty($_POST['pass'])) {
-    $query = "SELECT name, hash, level, email, shaarli FROM " . $GLOBALS['config']['tblPrefix'] . "contributors WHERE name = '" . $_POST['login'] . "' LIMIT 1";
+    $query = "SELECT id, name, hash, level, email, shaarli FROM " . $GLOBALS['config']['tblPrefix'] . "contributors WHERE name = '" . $_POST['login'] . "' LIMIT 1";
     $stmt    = dbConnexion::getInstance()->prepare($query);
     $stmt->execute();
     $user = $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -35,6 +35,7 @@ if (!empty($_POST['login']) && !empty($_POST['pass'])) {
         $config['users'] = array (
                                 $user[0]->name =>
                                 array (
+                                    'id' => $user[0]->id,
                                     'hash' => $user[0]->hash,
                                     'level' => $user[0]->level,
                                     'email' => $user[0]->email,
@@ -210,7 +211,9 @@ $html->setElement('formAction', $formAction);
 
 /* Quotes list */
 $quotes = new quoteQueries();
-$quotes = $quotes->getQuote(array('contributor' => 'equal,' . $userDatas->getUsername(), 'sort' => 'id,desc'));
+$options = array('sort' => 'id,desc');
+if (!isset($_GET['all'])) $options = array('where' => 'contributor', 'whereOpt' => 'equal,' . $userConfig['id'], 'sort' => 'id,desc');
+$quotes = $quotes->getQuote($options);
 
 if (is_array($quotes)) {
     foreach ($quotes as $quote) {
