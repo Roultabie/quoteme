@@ -15,7 +15,10 @@ CREATE TABLE `qm_authors` (
 CREATE TABLE `qm_contributors` (
    `id` tinyint(255) not null auto_increment,
    `name` varchar(255) not null,
+   `hash` varchar(255) not null,
    `level` tinyint(5) not null default '1',
+   `email` varchar(255) not null,
+   `shaarli` varchar(255) not null,
    PRIMARY KEY (`id`),
    UNIQUE KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;

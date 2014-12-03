@@ -3,6 +3,7 @@
  * Loading configuration
  */
 require_once 'config.php';
+require_once 'libs/mysql.php';
 
 /**
  * Loading libs
@@ -19,8 +20,37 @@ if (!function_exists('password_hash')) {
         exit();
     }
 }
+
+/**
+ * Init $config['users']
+ */
+if (!empty($_POST['login']) && !empty($_POST['pass'])) {
+    $query = "SELECT name, hash, level, email, shaarli FROM " . $GLOBALS['config']['tblPrefix'] . "contributors WHERE name = '" . $_POST['login'] . "' LIMIT 1";
+    $stmt    = dbConnexion::getInstance()->prepare($query);
+    $stmt->execute();
+    $user = $stmt->fetchAll(PDO::FETCH_OBJ);
+    $stmt->closeCursor();
+    $stmt = NULL;
+    if (is_array($user)) {
+        $config['users'] = array (
+                                $user[0]->name =>
+                                array (
+                                    'hash' => $user[0]->hash,
+                                    'level' => $user[0]->level,
+                                    'email' => $user[0]->email,
+                                    'shaarli' => $user[0]->shaarli,
+                                    ),
+                                );
+    }
+    else {
+        $config['users'] = array();
+    }
+}
+else {
+    $config['users'] = array();
+}
+
 require_once 'libs/login.php';
-require_once 'libs/mysql.php';
 require_once 'libs/quoteme.php';
 require_once 'libs/timply.php';
 require_once 'libs/smartypants.php';
