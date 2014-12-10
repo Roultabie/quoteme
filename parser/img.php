@@ -62,7 +62,7 @@ implements parserTemplate
             $permalinkWidth  = abs($permalinkBox[0]) + abs($permalinkBox[2]); // distance from left to right
             $permalinkHeight = abs($permalinkBox[1]) + abs($permalinkBox[5]); // distance from top to bottom
             $permalinkXStart = $this->width - $permalinkWidth - $permalinkX;
-            imagettftext($content, $permalinkFontSize, 0, $permalinkXStart, $permalinkY, $fontColor, $this->font,  $this->returnPermalink($elements[0]->getPermalink()));
+            imagettftext($content, $permalinkFontSize, 0, $permalinkXStart, $permalinkY, $fontColor, $this->font, rtrim($this->returnSiteBase(), '/') . $this->returnPermalink($elements[0]->getPermalink()));
             $functionName = 'image' . self::$type;
             $functionName($content);
             imagedestroy($content);

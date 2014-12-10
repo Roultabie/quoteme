@@ -21,8 +21,12 @@ abstract class parser
 
     final protected function returnUri()
     {
-        return $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        return (isset($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . PHP_EOL : $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+    }
 
+    final protected function returnSiteBase()
+    {
+        return substr($this->returnUri(), 0, strpos($this->returnUri(), 'api.php'));
     }
 
     final protected function returnScriptUri()
