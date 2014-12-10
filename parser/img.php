@@ -58,7 +58,7 @@ implements parserTemplate
             }
             $y = $y + $nextLine;
             imagettftext($content, $authorFontSize, 0, $x, $y, $fontColor, $this->font, '(' . $elements[0]->getAuthor() . ')');
-            $permalinkBox    = imageftbbox($permalinkFontSize, 0,  $this->font, $this->returnPermalink($elements[0]->getPermalink()));
+            $permalinkBox    = imageftbbox($permalinkFontSize, 0,  $this->font, rtrim($this->returnSiteBase(), '/') . $this->returnPermalink($elements[0]->getPermalink()));
             $permalinkWidth  = abs($permalinkBox[0]) + abs($permalinkBox[2]); // distance from left to right
             $permalinkHeight = abs($permalinkBox[1]) + abs($permalinkBox[5]); // distance from top to bottom
             $permalinkXStart = $this->width - $permalinkWidth - $permalinkX;
