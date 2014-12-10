@@ -34,14 +34,9 @@ implements parserTemplate
             $permalinkX           = round($this->width * 0.0390625); // 40 margin right
             $permalinkY           = round($this->width * 0.522460938); // 535
 
-            if (file_exists($this->uri . $this->fileName)) {
-                $content = imagecreatefrom . self::$type;
-            }
-            else {
-                $content = imagecreate($this->width, $height);
-            }
-            $backgroundColor = imagecolorallocate($content, $this->bgRed, $this->bgGreen, $this->bgBlue);
-            $fontColor       = imagecolorallocate($content, $this->fontRed, $this->fontGreen, $this->fontBlue);
+            /**
+             * Text Work
+             */
             // Text to be placed as a paragraph
             $text                  = '« ' . $elements[0]->getText() . ' »';
             // Break it up into pieces 125 characters long
@@ -50,8 +45,24 @@ implements parserTemplate
 
             // Keep quote vertical align : middle
             $txtHeight             = $nbLines * $y + $y + $authorFontSize;
+            $maxBlockHeight        = $height - $permalinkBlockHeight - ($y * 2);
             $txtBlockHeight        = $height - $permalinkBlockHeight;
+            if ($txtHeight > $maxBlockHeight) {
+                $height = ($txtHeight - $maxBlockHeight) + $height;
+                $txtBlockHeight = $height - $permalinkBlockHeight;
+            }
             $y                     = $txtBlockHeight / 2 - $txtHeight / 2;
+            /**
+             * Image work
+             */
+            if (file_exists($this->uri . $this->fileName)) {
+                $content = imagecreatefrom . self::$type;
+            }
+            else {
+                $content = imagecreate($this->width, $height);
+            }
+            $backgroundColor = imagecolorallocate($content, $this->bgRed, $this->bgGreen, $this->bgBlue);
+            $fontColor       = imagecolorallocate($content, $this->fontRed, $this->fontGreen, $this->fontBlue);
             foreach ($lines as $line) {
                 imagettftext($content, $quoteFontSize, 0, $x, $y, $fontColor, $this->font, $line);
                 $y += $nextLine; // Increment Y so the next line is below the previous line
@@ -62,7 +73,8 @@ implements parserTemplate
             $permalinkWidth  = abs($permalinkBox[0]) + abs($permalinkBox[2]); // distance from left to right
             $permalinkHeight = abs($permalinkBox[1]) + abs($permalinkBox[5]); // distance from top to bottom
             $permalinkXStart = $this->width - $permalinkWidth - $permalinkX;
-            imagettftext($content, $permalinkFontSize, 0, $permalinkXStart, $permalinkY, $fontColor, $this->font, rtrim($this->returnSiteBase(), '/') . $this->returnPermalink($elements[0]->getPermalink()));
+            $permalinkYStart = $height - $permalinkHeight - $margin;
+            imagettftext($content, $permalinkFontSize, 0, $permalinkXStart, $permalinkYStart, $fontColor, $this->font, rtrim($this->returnSiteBase(), '/') . $this->returnPermalink($elements[0]->getPermalink()));
             $functionName = 'image' . self::$type;
             $functionName($content);
             imagedestroy($content);
