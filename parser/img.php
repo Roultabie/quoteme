@@ -83,7 +83,6 @@ implements parserTemplate
         else {
             exit('Bad content type');
         }
-        
     }
 
     private static function setType()
