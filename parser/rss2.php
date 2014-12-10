@@ -9,8 +9,7 @@ implements parserTemplate
     function __construct()
     {
         timply::setUri($GLOBALS['config']['themeDir']);
-        timply::setFileName('rss2.rss');
-        $this->timply = new timply();
+        $this->timply = new timply('rss2.rss');
     }
 
     public function parse($elements)

@@ -160,10 +160,9 @@ if ($_GET['action'] === "delete" && !empty($_GET['permalink'])) {
 }
 
 timply::setUri($GLOBALS['config']['themeDir']);
-timply::setFileName('admin.html');
 timply::addDictionary($GLOBALS['config']['langDir'] . 'en_EN.php');
 timply::addDictionary($GLOBALS['config']['langDir'] . 'fr_FR.php');
-$html = new timply();
+$html = new timply('admin.html');
 
 $html->setElement('themeDir', $GLOBALS['config']['themeDir']);
 

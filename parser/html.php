@@ -9,9 +9,8 @@ implements parserTemplate
     function __construct()
     {
         timply::setUri($GLOBALS['config']['themeDir']);
-        timply::setFileName('html.html');
         timply::addDictionary($GLOBALS['config']['langDir'] . $GLOBALS['config']['lang'] . '.php');
-        $this->timply = new timply();
+        $this->timply = new timply('html.html');
     }
 
     public function parse($elements)
