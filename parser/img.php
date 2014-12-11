@@ -29,17 +29,11 @@ implements parserTemplate
             $quoteFontSize        = round($this->width * 0.034179688); // 35
             $quoteLineHeight      = round($this->width * 0.048828125); // 50
             $permalinkFontSize    = round($this->width * 0.01953125); // 20
-
-            // Break quote into pieces 50 characters long
-            $lines   = explode('|', wordwrap($elements[0]->getText(), 50, '|'));
-            $nbLines = count($lines);
-
-            // Add quotes (after, to avoid single quote line)
-            $lines[0] = '« ' . $lines[0];
-            $lines[$nbLines -1] = $lines[$nbLines -1] . ' »';
+            $quote                = wordwrap(trim($elements[0]->getText()), 50, PHP_EOL);
 
             // Get quote block size
-            $quoteHeight = $nbLines * $quoteLineHeight;
+            $quoteBox    = imageftbbox($quoteFontSize, 0, $this->font, $quote);
+            $quoteHeight = abs($quoteBox[5] - $quoteBox[1]); // distance from top to bottom
 
             // Get author box size
             $authorBox    = imageftbbox($authorFontSize, 0, $this->font, '(' . $elements[0]->getAuthor() . ')');
@@ -73,13 +67,10 @@ implements parserTemplate
             $nextLine        = $quoteFontSize + abs($quoteLineHeight - $quoteFontSize);
 
             // Adding quote
-            foreach ($lines as $line) {
-                imagettftext($content, $quoteFontSize, 0, $margin, $y, $fontColor, $this->font, $line);
-                $y += $nextLine; // Increment Y so the next line is below the previous line
-            }
+            imagettftext($content, $quoteFontSize, 0, $margin, $y, $fontColor, $this->font, $quote);
 
             // Adding author
-            imagettftext($content, $authorFontSize, 0, $margin, $y + $margin, $fontColor, $this->font, '(' . $elements[0]->getAuthor() . ')');
+            imagettftext($content, $authorFontSize, 0, $margin, $y + $quoteHeight + $margin, $fontColor, $this->font, '(' . $elements[0]->getAuthor() . ')');
 
             // Adding permalink
             imagettftext($content, $permalinkFontSize, 0, imagesx($content) - $permalinkWidth - $margin, imagesy($content) - $margin,
