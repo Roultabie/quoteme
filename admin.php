@@ -63,9 +63,11 @@ function getUpdate()
 * return tags in json format
 *
 */
-function jsonTagsByHits($string, $limit = '4', $order = 'DESC')
+function jsonTagsByHits($string, $not, $limit = '4', $order = 'DESC')
 {
-    $query   = "SELECT tag, hits FROM " . $GLOBALS['config']['tblPrefix'] . "tags WHERE tag LIKE '" . $string . "%' ORDER BY hits " . $order . " LIMIT " . $limit . ';';
+    $not = (!empty($not)) ? " AND tag NOT REGEXP '" . str_replace(',', '|', $not) . "'" : ' ';
+    $query   = "SELECT tag, hits FROM " . $GLOBALS['config']['tblPrefix'] . 
+               "tags WHERE tag LIKE '" . $string . "%'" . $not . " ORDER BY hits " . $order . " LIMIT " . $limit . ';';
     $stmt    = dbConnexion::getInstance()->prepare($query);
     $stmt->execute();
     $datas = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
@@ -130,7 +132,7 @@ if (isset($_GET['tag']) || isset($_GET['author'])) {
     header('Expires: Ven, 11 Oct 2011 23:32:00 GMT');
     header('Content-type: application/json');
     if (!empty($_GET['tag'])) {
-        $result = jsonTagsByHits($_GET['tag']);
+        $result = jsonTagsByHits($_GET['tag'], $_GET['not']);
     }
     elseif (!empty($_GET['author'])) {
         $result = jsonAuthorsByHits($_GET['author']);
