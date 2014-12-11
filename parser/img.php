@@ -23,38 +23,45 @@ implements parserTemplate
         if (function_exists(imagecreatefrom . self::$type)) {
             // factor for width = 1024px, in comment value for 1024px
             $height               = round($this->width * 0.5625); // 576
-            $x                    = round($this->width * 0.0390625); // 40
-            $y                    = round($this->width * 0.048828125); // 50
-            $margin               = round($this->width * 0.029296875); // 30
+            $margin               = round($this->width * 0.0390625); // 40
             $authorFontSize       = round($this->width * 0.024414063); // 25
             $permalinkBlockHeight = round($this->width * 0.048828125); // 50
             $quoteFontSize        = round($this->width * 0.034179688); // 35
-            $nextLine             = round($this->width * 0.048828125); // 50
+            $quoteLineHeight      = round($this->width * 0.048828125); // 50
             $permalinkFontSize    = round($this->width * 0.01953125); // 20
-            $permalinkX           = round($this->width * 0.0390625); // 40 margin right
-            $permalinkY           = round($this->width * 0.522460938); // 535
 
-            /**
-             * Text Work
-             */
-            // Text to be placed as a paragraph
-            $text                  = '« ' . $elements[0]->getText() . ' »';
-            // Break it up into pieces 125 characters long
-            $lines                 = explode('|', wordwrap($text, 50, '|'));
-            $nbLines               = count($lines);
+            // Break quote into pieces 50 characters long
+            $lines   = explode('|', wordwrap($elements[0]->getText(), 50, '|'));
+            $nbLines = count($lines);
 
-            // Keep quote vertical align : middle
-            $txtHeight             = $nbLines * $y + $y + $authorFontSize;
-            $maxBlockHeight        = $height - $permalinkBlockHeight - ($y * 2);
-            $txtBlockHeight        = $height - $permalinkBlockHeight;
-            if ($txtHeight > $maxBlockHeight) {
-                $height = ($txtHeight - $maxBlockHeight) + $height;
-                $txtBlockHeight = $height - $permalinkBlockHeight;
+            // Add quotes (after, to avoid single quote line)
+            $lines[0] = '« ' . $lines[0];
+            $lines[$nbLines -1] = $lines[$nbLines -1] . ' »';
+
+            // Get quote block size
+            $quoteHeight = $nbLines * $quoteLineHeight;
+
+            // Get author box size
+            $authorBox    = imageftbbox($authorFontSize, 0, $this->font, '(' . $elements[0]->getAuthor() . ')');
+            $authorWidth  = abs($authorBox[4]) - abs($authorBox[0]); // distance from left to right
+            $authorHeight = abs($authorBox[5]) - abs($authorBox[1]);
+
+            // Get permalink box size
+            $permalinkBox    = imageftbbox($permalinkFontSize, 0,  $this->font, rtrim($this->returnSiteBase(), '/') . $this->returnPermalink($elements[0]->getPermalink()));
+            $permalinkWidth  = abs($permalinkBox[4]) - abs($permalinkBox[0]);
+            $permalinkHeight = abs($permalinkBox[5]) - abs($permalinkBox[1]);
+            
+            $blockHeight     = $quoteHeight + $authorHeight + $margin;
+            $maxBlockHeight = $height - $permalinkHeight - ($margin * 4);
+            //Keep quote vertical align : middle
+            $y = ($height - $permalinkHeight) / 2 - $blockHeight / 2;
+            // If quote is higher than block height, changing picture height, $y start a margin top
+            if ($blockHeight > $maxBlockHeight) {
+                $height = ($blockHeight - $maxBlockHeight) + $height;
+                $y = $margin + round($quoteFontSize / 2); // A cause de la ligne de base de la police pour imagettftext
             }
-            $y                     = $txtBlockHeight / 2 - $txtHeight / 2;
-            /**
-             * Image work
-             */
+
+            // Create image
             if (file_exists($this->uri . $this->fileName)) {
                 $content = imagecreatefrom . self::$type;
             }
@@ -63,18 +70,22 @@ implements parserTemplate
             }
             $backgroundColor = imagecolorallocate($content, $this->bgRed, $this->bgGreen, $this->bgBlue);
             $fontColor       = imagecolorallocate($content, $this->fontRed, $this->fontGreen, $this->fontBlue);
+            $nextLine        = $quoteFontSize + abs($quoteLineHeight - $quoteFontSize);
+
+            // Adding quote
             foreach ($lines as $line) {
-                imagettftext($content, $quoteFontSize, 0, $x, $y, $fontColor, $this->font, $line);
+                imagettftext($content, $quoteFontSize, 0, $margin, $y, $fontColor, $this->font, $line);
                 $y += $nextLine; // Increment Y so the next line is below the previous line
             }
-            $y = $y + $nextLine;
-            imagettftext($content, $authorFontSize, 0, $x, $y, $fontColor, $this->font, '(' . $elements[0]->getAuthor() . ')');
-            $permalinkBox    = imageftbbox($permalinkFontSize, 0,  $this->font, rtrim($this->returnSiteBase(), '/') . $this->returnPermalink($elements[0]->getPermalink()));
-            $permalinkWidth  = abs($permalinkBox[0]) + abs($permalinkBox[2]); // distance from left to right
-            $permalinkHeight = abs($permalinkBox[1]) + abs($permalinkBox[5]); // distance from top to bottom
-            $permalinkXStart = $this->width - $permalinkWidth - $permalinkX;
-            $permalinkYStart = $height - $permalinkHeight - $margin;
-            imagettftext($content, $permalinkFontSize, 0, $permalinkXStart, $permalinkYStart, $fontColor, $this->font, rtrim($this->returnSiteBase(), '/') . $this->returnPermalink($elements[0]->getPermalink()));
+
+            // Adding author
+            imagettftext($content, $authorFontSize, 0, $margin, $y + $margin, $fontColor, $this->font, '(' . $elements[0]->getAuthor() . ')');
+
+            // Adding permalink
+            imagettftext($content, $permalinkFontSize, 0, imagesx($content) - $permalinkWidth - $margin, imagesy($content) - $margin,
+                         $fontColor, $this->font, rtrim($this->returnSiteBase(), '/') . $this->returnPermalink($elements[0]->getPermalink()));
+
+            // Render
             $functionName = 'image' . self::$type;
             $functionName($content);
             imagedestroy($content);
