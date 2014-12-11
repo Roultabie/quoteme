@@ -37,13 +37,13 @@ implements parserTemplate
 
             // Get author box size
             $authorBox    = imageftbbox($authorFontSize, 0, $this->font, '(' . $elements[0]->getAuthor() . ')');
-            $authorWidth  = abs($authorBox[4]) - abs($authorBox[0]); // distance from left to right
-            $authorHeight = abs($authorBox[5]) - abs($authorBox[1]);
+            $authorWidth  = abs($authorBox[4] - $authorBox[0]); // distance from left to right
+            $authorHeight = abs($authorBox[5] - $authorBox[1]);
 
             // Get permalink box size
             $permalinkBox    = imageftbbox($permalinkFontSize, 0,  $this->font, rtrim($this->returnSiteBase(), '/') . $this->returnPermalink($elements[0]->getPermalink()));
-            $permalinkWidth  = abs($permalinkBox[4]) - abs($permalinkBox[0]);
-            $permalinkHeight = abs($permalinkBox[5]) - abs($permalinkBox[1]);
+            $permalinkWidth  = abs($permalinkBox[4] - $permalinkBox[0]);
+            $permalinkHeight = abs($permalinkBox[5] - $permalinkBox[1]);
             
             $blockHeight     = $quoteHeight + $authorHeight + $margin;
             $maxBlockHeight = $height - $permalinkHeight - ($margin * 4);
