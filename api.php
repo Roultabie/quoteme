@@ -78,12 +78,12 @@ function testGet($var, $pattern)
 // p=json&s=random&l=1,10&w=tag&ow=like,toto&a=id&oa=minus,10
 $parser = testGet($_GET['p'], '/^[\w\d_-]{2,5}$/');
 
-if (($get = testGet($_GET['s'], '/^[\w\d_-]+,asc$|^[\w\d_-]+,desc$|^random$/'))) $opt['sort'] = $get;
+if (($get = testGet($_GET['s'], '/^.+?[^,],asc$|^.+?[^,],desc$|^random$/'))) $opt['sort'] = $get;
 if (($get = testGet($_GET['l'], '/^\d+,{0,}\d{0,}$/'))) $opt['limit'] = $get;
 if (($get = testGet($_GET['w'], '/^[\w\d_-]+$/'))) $opt['where'] = $get ;
-if (($get = testGet($_GET['wo'], '/^[\w\d_-]+,{0,}[\.\s\w\d_-]{0,}$/'))) $opt['whereOpt'] = $get;
+if (($get = testGet($_GET['wo'], '/^.+?[^,],{0,1}.*?$/'))) $opt['whereOpt'] = $get;
 if (($get = testGet($_GET['a'], '/^[\w\d_-]+$/'))) $opt['and'] = $get;
-if (($get = testGet($_GET['ao'], '/^[\w\d_-]+,{0,}[\.\s\w\d_-]{0,}$/'))) $opt['andOpt'] = $get;
+if (($get = testGet($_GET['ao'], '/^.+?[^,],{0,1}.*?$/'))) $opt['andOpt'] = $get;
 
 $currentScript = str_replace('/', '', $_SERVER['SCRIPT_NAME']);
 
