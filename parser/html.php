@@ -24,6 +24,7 @@ implements parserTemplate
                 $this->timply->setElement('permalink', $this->returnPermalink($value->getPermalink()), 'Quote');
                 $this->timply->setElement('description', $value->getText(), 'Quote');
                 $this->timply->setElement('author', $value->getAuthor(), 'Quote');
+                $this->timply->setElement('searchByAuthor', '//' .$_SERVER['HTTP_HOST'] . '/api.php?p=html&w=author&wo=equal,' . $value->getAuthor(), 'Quote');
             }
         }
         return $this->timply->returnHtml();
