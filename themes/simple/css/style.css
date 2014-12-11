@@ -87,13 +87,13 @@ a, a:link, a:hover, a:active, a:visited {
     content: ")";
 }
 footer {
-    position: absolute;
+    position: fixed;
     margin: 0;
     padding: 12px 0 0 0;
     width: 100%;
     bottom: 0;
     height: 65px;
-    /*background-color: red;*/
+    background-color: white;
     text-align: center;
     font-size: 0.8em;
     color: #888888;
