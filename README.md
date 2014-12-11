@@ -1,6 +1,6 @@
 #Q.uote.me
 
-*PHP script to store and view random quotes. (v1.6b)*
+*PHP script to store and view random quotes. [(v1.6b)](https://github.com/Roultabie/quoteme/releases/latest)*
 
 Q.uote.me is a simple PHP script to manage your quotes.
 
