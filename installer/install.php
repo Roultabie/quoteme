@@ -292,9 +292,8 @@ if (!file_exists('../config.php')) {
     }
 
     timply::setUri('');
-    timply::setFileName('installer.html');
     timply::addDictionary('../lang/' .$lang . '.php');
-    $html = new timply();
+    $html = new timply('installer.html');
 
     $html->setElement('scriptDir', rtrim($_SERVER['DOCUMENT_ROOT'], '/'));
     $html->setElement('defaultTblPrefix', rtrim($GLOBALS['config']['tblPrefix'], '_'));
