@@ -67,7 +67,7 @@ implements parserTemplate
             $nextLine        = $quoteFontSize + abs($quoteLineHeight - $quoteFontSize);
 
             // Adding quote
-            imagettftext($content, $quoteFontSize, 0, $margin, $y, $fontColor, $this->font, $quote);
+            imagettftext($content, $quoteFontSize, 0, $margin, $y, $fontColor, $this->font, '« ' . $quote . "»");
 
             // Adding author
             imagettftext($content, $authorFontSize, 0, $margin, $y + $quoteHeight + $margin, $fontColor, $this->font, '(' . $elements[0]->getAuthor() . ')');
