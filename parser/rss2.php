@@ -23,7 +23,7 @@ implements parserTemplate
             foreach ($elements as $value) {
                 $this->timply->setElement('itemTitle', $value->getAuthor() . ' said', 'Item');
                 $this->timply->setElement('itemLink', $this->returnPermalink($value->getPermalink()), 'Item');
-                $this->timply->setElement('itemDescription', $value->getText(), 'Item');
+                $this->timply->setElement('itemDescription', str_replace(PHP_EOL, '<br>', $value->getText()), 'Item');
                 $this->timply->setElement('itemPubDate', $this->formatDate($value->getDate()), 'Item');
                 $this->timply->setElement('itemGuid', $this->returnPermalink($value->getPermalink()), 'Item');
                 // we take last date for pubdate

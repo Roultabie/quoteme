@@ -183,7 +183,7 @@ $quotes = $quotes->getQuote(array('sort' => 'id,desc'));
 
 if (is_array($quotes)) {
     foreach ($quotes as $quote) {
-        $html->setElement('quoteTableText', SmartyPants($quote->getText(), 'f+:+t+h+H+'), 'quoteTable');
+        $html->setElement('quoteTableText', SmartyPants(str_replace(PHP_EOL, '<br>', $quote->getText()), 'f+:+t+h+H+'), 'quoteTable');
         $html->setElement('quoteTableAuthor', SmartyPants($quote->getAuthor()), 'quoteTable');
         $html->setElement('quoteTableSource', SmartyPants($quote->getSource()), 'quoteTable');
         $html->setElement('quoteTableTags', SmartyPants($quote->getTags()), 'quoteTable');

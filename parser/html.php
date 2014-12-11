@@ -20,7 +20,7 @@ implements parserTemplate
         $this->timply->setElement('nbQuotes', quoteQueries::$nbQuotes);
         if (is_array($elements)) {
             foreach ($elements as $value) {
-                $this->timply->setElement('text', $value->getText(), 'Quote');
+                $this->timply->setElement('text', str_replace(PHP_EOL, '<br>', $value->getText()), 'Quote');
                 $this->timply->setElement('permalink', $this->returnPermalink($value->getPermalink()), 'Quote');
                 $this->timply->setElement('description', $value->getText(), 'Quote');
                 $this->timply->setElement('author', $value->getAuthor(), 'Quote');
