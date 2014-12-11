@@ -34,6 +34,7 @@ if (is_object($quote)) {
     $html->setElement('source', SmartyPants($quote->getSource()));
     $html->setElement('permalink', '?' .$quote->getPermalink());
 }
+$html->setElement('pageType', 'index');
 $html->setElement('nbQuotes', $GLOBALS['quoteObj']['nb']);
 $html->setElement('version', $GLOBALS['system']['version']);
 echo $html->returnHtml();

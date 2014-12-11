@@ -18,8 +18,15 @@ body:before
    box-shadow: 0px 0px 10px rgba(0,0,0,.8);
 }
 
-header {
-    height: 150px;
+@font-face {
+    font-family: 'texgyrepagella-italic';
+    src: url('themes/simple/fonts/texgyrepagella-italic.eot?') format('embedded-opentype'),
+         url('themes/simple/fonts/texgyrepagella-italic.woff') format('woff'),
+         url('themes/simple/fonts/texgyrepagella-italic.ttf') format('truetype');
+}
+
+#index {
+    height: 150px !important;
     /*background-color: green;*/
 }
 section {
@@ -35,7 +42,7 @@ a, a:link, a:hover, a:active, a:visited {
     width: 50%;
     margin: 30px auto;
     font-size: 1em;
-    font-family: "Palatino Linotype", Palatino, Palladio, "URW Palladio L", "Book Antiqua", Baskerville, "Bookman Old Style", "Bitstream Charter", "Nimbus Roman No9 L", Garamond, "Apple Garamond", "ITC Garamond Narrow", "New Century Schoolbook", "Century Schoolbook", "Century Schoolbook L", Georgia, serif;
+    font-family: "texgyrepagella-italic";
     line-height: 1.8em;
     text-shadow: #fff 0 0 1px;
 }
