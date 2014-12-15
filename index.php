@@ -25,7 +25,7 @@ timply::addDictionary($GLOBALS['config']['langDir'] . $GLOBALS['config']['lang']
 
 $html  = new timply('index.html');
 $quote = $GLOBALS['quoteObj']['obj'][0];
-$fullBase = rtrim('//' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], '/');
+$fullBase = rtrim('//' . $_SERVER['HTTP_HOST'] . $_SERVER['PATH_INFO'], '/');
 if (is_object($quote)) {
     $html->setElement('imgLink', $fullBase . '/api.php?p=img&wi=1024&w=permalink&wo=equal,' . $quote->getPermalink());
     $html->setElement('imgWidth', '1024');
