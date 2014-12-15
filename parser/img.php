@@ -41,7 +41,7 @@ implements parserTemplate
             $authorHeight = abs($authorBox[5] - $authorBox[1]);
 
             // Get permalink box size
-            $permalinkBox    = imageftbbox($permalinkFontSize, 0,  $this->font, rtrim($this->returnSiteBase(), '/') . $this->returnPermalink($elements[0]->getPermalink()));
+            $permalinkBox    = imageftbbox($permalinkFontSize, 0,  $this->font, HR_BASE . '/?' . $elements[0]->getPermalink());
             $permalinkWidth  = abs($permalinkBox[4] - $permalinkBox[0]);
             $permalinkHeight = abs($permalinkBox[5] - $permalinkBox[1]);
             
@@ -74,7 +74,7 @@ implements parserTemplate
 
             // Adding permalink
             imagettftext($content, $permalinkFontSize, 0, imagesx($content) - $permalinkWidth - $margin, imagesy($content) - $margin,
-                         $fontColor, $this->font, rtrim($this->returnSiteBase(), '/') . $this->returnPermalink($elements[0]->getPermalink()));
+                         $fontColor, $this->font, HR_BASE . '/?' . $elements[0]->getPermalink());
 
             // Render
             $functionName = 'image' . self::$type;

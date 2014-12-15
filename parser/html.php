@@ -21,10 +21,10 @@ implements parserTemplate
         if (is_array($elements)) {
             foreach ($elements as $value) {
                 $this->timply->setElement('text', str_replace(PHP_EOL, '<br>', $value->getText()), 'Quote');
-                $this->timply->setElement('permalink', $this->returnPermalink($value->getPermalink()), 'Quote');
+                $this->timply->setElement('permalink', FULL_BASE . '/?' . $value->getPermalink(), 'Quote');
                 $this->timply->setElement('description', $value->getText(), 'Quote');
                 $this->timply->setElement('author', $value->getAuthor(), 'Quote');
-                $this->timply->setElement('searchByAuthor', '//' .$_SERVER['HTTP_HOST'] . '/api.php?p=html&w=author&wo=equal,' . $value->getAuthor(), 'Quote');
+                $this->timply->setElement('searchByAuthor', FULL_BASE . '/api.php?p=html&w=author&wo=equal,' . $value->getAuthor(), 'Quote');
             }
         }
         return $this->timply->returnHtml();

@@ -15,17 +15,17 @@ implements parserTemplate
     public function parse($elements)
     {
         $this->timply->setElement('title', 'Q.uote.me RSS feed');
-        $this->timply->setElement('link', $this->returnScriptUri()); // WIP
+        $this->timply->setElement('link', FULL_BASE);
         $this->timply->setElement('description', 'Q.uote.me is a quote random generator');
         $this->timply->setElement('language', $GLOBALS['config']['lang']);
         $this->timply->setElement('docs', $GLOBALS['config']['siteDoc']);
         if (is_array($elements)) {
             foreach ($elements as $value) {
                 $this->timply->setElement('itemTitle', $value->getAuthor() . ' said', 'Item');
-                $this->timply->setElement('itemLink', $this->returnPermalink($value->getPermalink()), 'Item');
+                $this->timply->setElement('itemLink', FULL_BASE . '/?' . $value->getPermalink(), 'Item');
                 $this->timply->setElement('itemDescription', str_replace(PHP_EOL, '<br>', $value->getText()), 'Item');
                 $this->timply->setElement('itemPubDate', $this->formatDate($value->getDate()), 'Item');
-                $this->timply->setElement('itemGuid', $this->returnPermalink($value->getPermalink()), 'Item');
+                $this->timply->setElement('itemGuid', FULL_BASE . '/?' . $value->getPermalink(), 'Item');
                 // we take last date for pubdate
                 $dates[] = $value->getDate();
             }

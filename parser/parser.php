@@ -19,29 +19,6 @@ abstract class parser
         #
     }
 
-    final protected function returnUri()
-    {
-        return (isset($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . PHP_EOL : $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
-    }
-
-    final protected function returnSiteBase()
-    {
-        return substr($this->returnUri(), 0, strpos($this->returnUri(), 'api.php'));
-    }
-
-    final protected function returnScriptUri()
-    {
-        return $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];
-    }
-
-    final protected function returnPermalink($permalink)
-    {
-        //site base end before api.php, we remove it
-        $baseUri = substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?') + 1);
-        $baseUri = str_replace('api.php', '', $baseUri);
-        return $baseUri . $permalink;
-    }
-
     public static function clearCache()
     {
         if (is_dir(self::$cacheDir) && is_writable(self::$cacheDir)) {

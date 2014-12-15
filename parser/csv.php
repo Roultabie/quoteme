@@ -20,18 +20,21 @@ implements parserTemplate
     {
         $col1   = $this->enclose('text');
         $col2   = $this->enclose('author');
-        $col3   = rtrim($this->enclose('source'), ',');
-        $result = $col1 . $col2 . $col3 . PHP_EOL;
+        $col3   = rtrim($this->enclose('source'));
+        $col4   = rtrim($this->enclose('permalink'), ',');
+        $result = $col1 . $col2 . $col3 . $col4 . PHP_EOL;
         if (is_array($elements)) {
             foreach ($elements as $value) {
-                $text   = str_replace('"', '""', $value->getText());
-                $text   = $this->enclose($text);
-                $author = str_replace('"', '""', $value->getAuthor());
-                $author = $this->enclose($author);
-                $source = str_replace('"', '""', $value->getSource());
-                $source = $this->enclose($source);
-                $source = rtrim($source, ',');
-                $result .= $text . $author . $source . PHP_EOL;
+                $text      = str_replace('"', '""', $value->getText());
+                $text      = $this->enclose($text);
+                $author    = str_replace('"', '""', $value->getAuthor());
+                $author    = $this->enclose($author);
+                $source    = str_replace('"', '""', $value->getSource());
+                $source    = $this->enclose($source);
+                $permalink = str_replace('"', '""', FULL_BASE . '/?' . $value->getPermalink());
+                $permalink = $this->enclose($permalink);
+                $permalink = rtrim($permalink, ',');
+                $result .= $text . $author . $source . $permalink . PHP_EOL;
             }
         }
         exit(trim($result));

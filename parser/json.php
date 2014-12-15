@@ -11,7 +11,7 @@ implements parserTemplate
                 $quotes[$i]['text']      = $value->getText();
                 $quotes[$i]['author']    = $value->getAuthor();
                 $quotes[$i]['source']    = $value->getSource();
-                $quotes[$i]['permalink'] = $value->getPermalink();
+                $quotes[$i]['permalink'] = FULL_BASE . '/?' . $value->getPermalink();
                 $i++;
             }
             $datas['status'] = 'success' ;
