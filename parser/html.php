@@ -18,6 +18,7 @@ implements parserTemplate
         $title = (!empty($GLOBALS['opt']['where'])) ? '[trad::search-result-by::F] [trad::' . $GLOBALS['opt']['where'] . ']' : '[trad::latest-quotes::F]';
         $this->timply->setElement('title', $title);
         $this->timply->setElement('nbQuotes', quoteQueries::$nbQuotes);
+        $this->timply->setElement('fullBase', FULL_BASE);
         if (is_array($elements)) {
             foreach ($elements as $value) {
                 $this->timply->setElement('text', str_replace(PHP_EOL, '<br>', $value->getText()), 'Quote');
