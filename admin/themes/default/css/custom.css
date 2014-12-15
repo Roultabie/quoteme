@@ -1,0 +1,205 @@
+/* Palette: http://encycolorpedia.fr/293133 */
+[class^="icon-"], [class*=" icon-"] {
+    font-family: 'icomoon';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.icon-pencil:before {
+    content: "\e605";
+}
+.icon-remove:before {
+    content: "\e606";
+}
+.icon-googleplus:before {
+    content: "\e607";
+}
+.icon-facebook:before {
+    content: "\e608";
+}
+.icon-twitter:before {
+    content: "\e609";
+}
+.icon-pencil2:before {
+    content: "\e600";
+}
+.icon-trash:before {
+    content: "\e601";
+}
+.icon-twitter2:before {
+    content: "\e602";
+}
+.icon-facebook2:before {
+    content: "\e603";
+}
+.icon-googleplus2:before {
+    content: "\e604";
+}
+.icon-shaarli {
+    background: url('themes/simple/images/shaarli-flower.png') no-repeat left;
+    background-size: 19px 18px;
+    font-size: 0 !important;
+    margin-left: -5px;
+}
+body {
+    font-family: "Raleway";
+    font-weight: lighter;
+    color: #3b3b38;
+}
+h1, h2, h3, h4 {
+    color: #372e3e;
+}
+h1, h4 {
+    text-align: center;
+}
+header {
+    position: fixed;
+    display: block;
+    width: 22%;
+    height: 100vh;
+    background-color: #17241e; /* Schéma Krylon */
+    box-shadow: 0 0 8px #17241e;
+}
+nav ul li {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+nav li {
+    width: 100%;
+    border-bottom: 1px solid lightgrey;
+}
+nav a {
+    display: block;
+    width: calc(100% - 20px);
+    padding: 0 10px;
+    color: white;
+    font-size: 1.2em;
+    text-decoration: none;
+    text-transform: uppercase;
+    line-height: 60px;
+    transition-property: color;
+    transition-duration: 400ms;
+}
+nav li:first-child a {
+    font-style: italic;
+    color: darkgrey !important;
+}
+nav .hover a {
+    font-style: italic;
+    border-right: 5px solid #0fa0ce;
+}
+section {
+    box-sizing: border-box;
+    float: right;
+    display: block;
+    width: 78%;
+    padding: 20px;
+}
+footer {
+    position: fixed;
+    display: block;
+    bottom: 0;
+    z-index: 1000;
+    width: 22%;
+    text-align: center;
+    color: darkgrey;
+    font-style: italic;
+}
+.center {
+    text-align: center;
+}
+
+/* Accueil */
+#index h1 {
+    font-style: italic;
+    line-height: 150px;
+}
+
+.summary article {
+    float: left;
+    display: block;
+    width: 50%;
+    margin-top: 20px;
+}
+.index .last-quotes span {
+    display: block;
+    width: 100%;
+}
+.index th:first-child {
+    width: 90%;
+}
+
+/* Nouvelle citation */
+#quote textarea {
+    height: 30vh;
+}
+#quote input[type=submit] {
+    width: 28%;
+    margin-top: 5vh;
+}
+
+/* quotes list */
+#myQuotes td, #newQuotes td {
+    background: #fff;
+}
+#myQuotes .actions, #allQuotes .actions {
+    position: absolute;
+    display: block;
+    width: calc(78% - 40px);
+    margin-top: -25px;
+    opacity: 0;
+    text-align: center;
+    transition-property: length, opacity 500ms;
+    transition-duration: 500ms;
+}
+#myQuotes .actions a, #allQuotes .actions a {
+    color: #000;
+    text-decoration: none;
+    background-color: white;
+}
+#myQuotes td:hover .actions, #allQuotes td:hover .actions {
+    margin-top: 2px;
+    opacity: 1;
+}
+#myQuotes .author, #allQuotes .author {
+    font-style: italic;
+}
+#myQuotes .tags, #allQuotes .tags {
+    display: block;
+    margin-top: 5px;
+}
+#myQuotes .tags span, #allQuotes .tags span {
+    padding: 5px;
+    height: 20px;
+    line-height: 10px;
+    margin-left: 3px;
+    margin-bottom: 0px;
+    cursor: default;
+    transition-property: border;
+    transition-duration: 400ms;
+}
+#myQuotes .tags span:first-child, #allQuotes .tags span:first-child {
+    margin-left: 0;
+}
+
+/* Personnalisation */
+#personalization #user input[type=submit] {
+    width: 28%;
+}
+#personalization #deleteAccount input {
+    background-color: #f00;
+    border-color: #f00;
+}
+
+/* Configuration */
+#configuration th:first-child {
+    width: 90%;
+}

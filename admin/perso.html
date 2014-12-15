@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<head>
+    <title>q.uote.me</title>
+    <link rel="stylesheet" href="themes/default/css/fonts.css">
+    <link rel="stylesheet" href="themes/default/css/normalize.css">
+    <link rel="stylesheet" href="themes/default/css/skeleton.css">
+    <link rel="stylesheet" href="themes/default/css/custom.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">John Doe</a></li>
+                <li><a href="new-quote.html">Nouvelle citation</a></li>
+                <li><a href="my-quotes.html">Mes citations</a></li>
+                <li><a href="all-quotes.html">Toutes les citations</a></li>
+                <li class="hover"><a href="perso.html">Personnalisation</a></li>
+                <li><a href="conf.html">Configuration</a></li>
+                <li><a href="">Maintenance</a></li>
+                <li><a href="">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section id="personalization">
+        <article>
+            <h4>Personnaliser mon compte</h4>
+            <form name="user" id="user">
+                <fieldset>
+                    <label for="username">Votre nom</label><input type="text" name="username" id="username" value="John Doe"  class="u-full-width">
+                </fieldset>
+                <fieldset>
+                    <label for="email">Courriel</label><input type="email" name="email" id="email" value="john@doe.com"  class="u-full-width">
+                    <label for="shaarli">Shaarli</label><input type="text" name="shaarli" id="shaarli" value="http://shaarli.doe.com"  class="u-full-width">
+                </fieldset>
+                <fieldset>
+                    <label for="password">Mot de passe</label><input type="password" name="password" id="password" value="password"  class="u-full-width">
+                    <label for="confirmPassword">Confirmer votre mot de passe (en cas de modification)</label><input type="password" name="confirmPassword" id="confirmPassword" value="password"  class="u-full-width">
+                </fieldset>
+                <fieldset class="center"><input type="submit" value="Enregistrer" class="button-primary"></fieldset>
+            </form>
+            <hr>
+            <h4>Supprimer mon compte</h4>
+            <p>
+                En cliquant sur le bouton suivant, vous êtes conscient que votre compte sera définitvement effacé.<br>Q.uote.me étant un outil collaboratif, les citations que vous avez ajouté resteront dans la base et seront attribuée à l'utilisateur anonyme.<br>Les données personnelles que vous avez fournit sur q.uote.me ne seront pas conservées.
+            </p>
+            <form name="deleteAccount" id="deleteAccount">
+                <fieldset class="center"><input type="submit" value="Je souhaite supprimer définitivement mon compte" class="button-primary"></fieldset>
+            </form>
+        </article>
+    </section>
+    <aside>
+    </aside>
+    <footer>
+        <span>q.uote.me</span>
+    </footer>
+</body>
+</html>
