@@ -17,6 +17,14 @@ require_once 'libs/timply.php';
 require_once 'parser/parser.php';
 require_once 'parser/template.php';
 
+$pattern = '|^((\w+?):(//((.+?)(/.+?){0,1})))/api\.php\?{0,1}(.*?)$|';
+preg_match($pattern, $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], $urlPieces);
+
+define('URL_PIECES', $urlPieces);
+define('FULL_BASE', $urlPieces[3]);
+define('HR_BASE', $urlPieces[4]);
+define('REL_BASE', $urlPieces[6]);
+
 timply::setUri($GLOBALS['config']['themeDir']);
 parser::$cacheState = $GLOBALS['config']['cacheState'];
 parser::$cacheDir   = $GLOBALS['config']['cacheDir'];
