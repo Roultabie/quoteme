@@ -25,18 +25,19 @@ timply::addDictionary($GLOBALS['config']['langDir'] . $GLOBALS['config']['lang']
 
 $html  = new timply('index.html');
 $quote = $GLOBALS['quoteObj']['obj'][0];
+$fullBase = '//' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 if (is_object($quote)) {
-    $html->setElement('imgLink', FULL_BASE . '/api.php?p=img&wi=1024&w=permalink&wo=equal,' . $quote->getPermalink());
+    $html->setElement('imgLink', $fullBase . '/api.php?p=img&wi=1024&w=permalink&wo=equal,' . $quote->getPermalink());
     $html->setElement('imgWidth', '1024');
     $html->setElement('text', SmartyPants(str_replace(PHP_EOL, '<br>', $quote->getText()), 'f+:+t+h+H+'));
     $html->setElement('author', SmartyPants($quote->getAuthor()));
-    $html->setElement('searchByAuthor', FULL_BASE . '/api.php?p=html&w=author&wo=equal,' . $quote->getAuthor());
+    $html->setElement('searchByAuthor', $fullBase . '/api.php?p=html&w=author&wo=equal,' . $quote->getAuthor());
     $html->setElement('source', SmartyPants($quote->getSource()));
-    $html->setElement('permalink', FULL_BASE . '/?' .$quote->getPermalink());
+    $html->setElement('permalink', $fullBase . '/?' .$quote->getPermalink());
 }
 $html->setElement('pageType', 'index');
 $html->setElement('nbQuotes', $GLOBALS['quoteObj']['nb']);
-$html->setElement('fullBase', FULL_BASE);
+$html->setElement('fullBase', $fullBase);
 $html->setElement('version', $GLOBALS['system']['version']);
 echo $html->returnHtml();
 ?>
