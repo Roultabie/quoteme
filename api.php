@@ -17,6 +17,8 @@ require_once 'libs/timply.php';
 require_once 'parser/parser.php';
 require_once 'parser/template.php';
 
+session_start();
+
 $pattern = '|^((.+?)(/.+?){0,1})/api\.php\?{0,1}(.*?)$|';
 preg_match($pattern, $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], $urlPieces);
 

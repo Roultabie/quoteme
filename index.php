@@ -39,5 +39,7 @@ $html->setElement('pageType', 'index');
 $html->setElement('nbQuotes', $GLOBALS['quoteObj']['nb']);
 $html->setElement('fullBase', $fullBase);
 $html->setElement('version', $GLOBALS['system']['version']);
+if (!empty($_SESSION['userDatas'])) $html->setElement('adminLink', $fullBase . '/admin.php', 'AdminLink');
+
 echo $html->returnHtml();
 ?>
