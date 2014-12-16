@@ -20,7 +20,7 @@ require_once 'parser/template.php';
 $pattern = '|^((.+?)(/.+?){0,1})/api\.php\?{0,1}(.*?)$|';
 preg_match($pattern, $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], $urlPieces);
 
-define('FULL_BASE', '//' . $urlPieces[1]);
+define('FULL_BASE', '://' . $urlPieces[1]);
 define('HR_BASE', $urlPieces[1]);
 define('REL_BASE', $urlPieces[3]);
 
