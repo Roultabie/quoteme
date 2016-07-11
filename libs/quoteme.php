@@ -79,6 +79,31 @@ class quoteQueries
         }
     }
 
+    public function getPage($table, $page)
+    {
+        if ($table === 'quotes') {
+            $quotesList = $this->selByPage($table, $page);
+            if (is_array($quotesList)) {
+                $nbElements = count($quotesList);
+                for ($i = 0; $i < $nbElements; $i++) {
+                    $quote[$i] = new quote();
+                    $quote[$i]->setId($quotesList[$i]->id);
+                    $quote[$i]->setText($quotesList[$i]->quote);
+                    $quote[$i]->setAuthor($quotesList[$i]->author);
+                    $quote[$i]->setSource($quotesList[$i]->source);
+                    $quote[$i]->setTags($quotesList[$i]->tags);
+                    $quote[$i]->setDate($quotesList[$i]->date);
+                    $quote[$i]->setPermalink($quotesList[$i]->permalink);
+                }
+                $result = $quote;
+            }
+        }
+        else {
+            $result = selByPage($table, $page);
+        }
+        return $result;
+    }
+
     /**
      * prepare code to add
      * @param  string $text   quote text, can't be empty
@@ -216,6 +241,27 @@ class quoteQueries
             }
         }
         $query = 'SELECT id, quote, author, source, tags, permalink, date FROM ' . self::$tblPrefix . 'quotes ' . $rand . $where . $sort . $limit . ';';
+        $stmt  = dbConnexion::getInstance()->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $stmt->closeCursor();
+        $stmt = NULL;
+        return $result;
+    }
+
+    private function selByPage($table, $page, $like = '')
+    {
+        $perpage = (!empty($GLOBALS['config']['perpage'])) ? $GLOBALS['config']['perpage'] : 10;
+        $offset = ($page - 1) * $perpage;
+        $query = 'SELECT id, quote, author, source, tags, permalink, date
+                  FROM ' . self::$tblPrefix . $table . ' INNER JOIN (
+                       SELECT id
+                       FROM ' . self::$tblPrefix . $table . '
+                       ORDER BY id DESC
+                       LIMIT ' . $perpage . '
+                       OFFSET ' . $offset . '
+                  )
+                  AS result USING(id)';
         $stmt  = dbConnexion::getInstance()->prepare($query);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_OBJ);
