@@ -96,5 +96,5 @@ $html = <<<EOT
 </body>
 </html>
 EOT;
-return $html;
+echo $html;
 ?>
