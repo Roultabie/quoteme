@@ -206,6 +206,9 @@ footer {
     transition-property: border;
     transition-duration: 400ms;
 }
+#myQuotes .tags span a, #allQuotes .tags span a {
+    text-decoration: none;
+}
 #myQuotes .tags span:first-child, #allQuotes .tags span:first-child {
     margin-left: 0;
 }
