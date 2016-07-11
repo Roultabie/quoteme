@@ -26,7 +26,7 @@ function changeQuote()
                     document.getElementById('textLink').innerHTML = quote.data[0]['text'];
                     document.getElementById('author').innerHTML   = quote.data[0]['author'];
                     document.getElementById('author').href        = oldAuthorSearchLink.replace(encodeURI(oldAuthor), quote.data[0]['author']);
-                    document.getElementById('textLink').href      = '?' + quote.data[0]['permalink'];
+                    document.getElementById('textLink').href      = quote.data[0]['permalink'];
                 }
             }
         }

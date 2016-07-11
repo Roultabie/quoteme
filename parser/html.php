@@ -19,7 +19,7 @@ implements parserTemplate
         $this->timply->setElement('title', $title);
         $this->timply->setElement('nbQuotes', quoteQueries::$nbQuotes);
         $this->timply->setElement('fullBase', FULL_BASE);
-        if (!empty($_SESSION['userDatas'])) $this->timply->setElement('adminLink', $fullBase . '/admin.php', 'AdminLink');
+        if (!empty($_SESSION['userDatas'])) $this->timply->setElement('adminLink', $fullBase . '/admin/', 'AdminLink');
         if (is_array($elements)) {
             foreach ($elements as $value) {
                 $this->timply->setElement('text', str_replace(PHP_EOL, '<br>', $value->getText()), 'Quote');
@@ -34,9 +34,9 @@ implements parserTemplate
 
     public function loadHeader($elements = '')
     {
-        header('Cache-Control: no-cache, must-revalidate');
-        header('Expires: Ven, 07 Oct 2011 23:32:00 GMT');
-        header('Content-Type: text/html; charset=utf-8');
+        //header('Cache-Control: no-cache, must-revalidate');
+        //header('Expires: Ven, 07 Oct 2011 23:32:00 GMT');
+        //header('Content-Type: text/html; charset=utf-8');
     }
 
     private function formatDate($sqlDate)
