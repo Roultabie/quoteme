@@ -1,0 +1,17 @@
+@font-face {
+    font-family: 'icomoon';
+    src:url('../fonts/icomoon.eot?-lijjy5');
+    src:url('../fonts/icomoon.eot?#iefix-lijjy5') format('embedded-opentype'),
+        url('../fonts/icomoon.woff?-lijjy5') format('woff'),
+        url('../fonts/icomoon.ttf?-lijjy5') format('truetype'),
+        url('../fonts/icomoon.svg?-lijjy5#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Raleway';
+        src:url('../fonts/Raleway-Light.woff') format('woff'),
+            url('../fonts/Raleway-Light.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}

@@ -1,0 +1,39 @@
+<!-- Include header.html -->
+    <section class="index summary">
+        <h1>Bienvenue</h1>
+        <article class="last-quotes">
+            <h4>Dernières citations</h4>
+            <!-- Start allQuotes -->
+            <span><a href="?p=aq#{permalink}">({author}) {quote}</a></span>
+            <!-- End allQuotes -->
+        </article>
+        <article class="last-quotes">
+            <h4>Vos dernières citations</h4>
+            <span>Coming soon...</span>
+        </article>
+    </section>
+    <section class="index">
+        <article class="u-full-width">
+            <h4>Statistiques</h4>
+            <table class="u-full-width">
+                <thead>
+                    <th>Statistique (au {lastGen})</th><th>Action</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="stat">{nbQuotes}</span> citations</td><td><!--<a href="">Gérer</a>--></td>
+                    </tr>
+                    <tr>
+                        <td><span class="stat">{nbAccess}</span> citations délivrée(s)</td><td><!--<a href="">Gérer</a>--></td>
+                    </tr>
+                    <tr>
+                        <td><span class="stat">{nbContributors}</span> contributeur(s), <span class="stat">{nbEditors}</span> éditeur(s) et <span class="stat">{nbAdministrators}</span> administrateur(s)</td><td><!--<a href="">Gérer</a>--></td>
+                    </tr>
+                    <tr>
+                        <td><span class="stat">{nbParsers}</span> parsers installés,</td><td><!--<a href="">Gérer</a>--></td>
+                    </tr>
+                </tbody>
+            </table>
+        </article>
+    </section>
+<!-- Include footer.html -->
