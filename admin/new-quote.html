@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<head>
+    <title>q.uote.me</title>
+    <link rel="stylesheet" href="themes/default/css/fonts.css">
+    <link rel="stylesheet" href="themes/default/css/normalize.css">
+    <link rel="stylesheet" href="themes/default/css/skeleton.css">
+    <link rel="stylesheet" href="themes/default/css/custom.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">John Doe</a></li>
+                <li class="hover"><a href="new-quote.html">Nouvelle citation</a></li>
+                <li><a href="my-quotes.html">Mes citations</a></li>
+                <li><a href="all-quotes.html">Toutes les citations</a></li>
+                <li><a href="perso.html">Personnalisation</a></li>
+                <li><a href="conf.html">Configuration</a></li>
+                <li><a href="">Maintenance</a></li>
+                <li><a href="">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section id="newQuote">
+        <article>
+            <form id="quote" class="u-full-width">
+                <fieldset>
+                    <label for="text">Citation</label><textarea class="u-full-width" id="text" placeholder="lorem ipsum"></textarea>
+                    <label for="author">Auteur</label><input type="text" class="u-full-width" id="author" placeholder="John Doe">
+                </fieldset>
+                <fieldset>
+                    <label for="source">Source</label><input type="text" class="u-full-width" id="source" placeholder="Anywhere">
+                    <label for="tags">Mots clés</label><input type="text" class="u-full-width" id="tags" placeholder="tag1, tag2, tagX">
+                </fieldset>
+                <fieldset class="center"><input type="submit" value="Ajouter" class="button-primary"></fieldset>
+            </form>
+        </article>
+    </section>
+    <aside>
+    </aside>
+    <footer>
+        <span>q.uote.me</span>
+    </footer>
+</body>
+</html>
