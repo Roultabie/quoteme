@@ -2,7 +2,7 @@
 // Adding new quote
 if (!empty($_POST) && !isset($_POST['edit'])) {
      $quote = new quoteQueries();
-     $add   = $quote->addQuote($_POST['text'], $_POST['author'], $_POST['source'], $_POST['tags']);
+     $add   = $quote->addQuote($_POST['text'], $_POST['author'], $_POST['source'], $_POST['tags'], $userConfig['id']);
      parser::clearCache();
 }
 $html = new timply('newquote.html');

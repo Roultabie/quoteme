@@ -74,6 +74,7 @@ class quoteQueries
                 $quote[$i]->setTags($quotesList[$i]->tags);
                 $quote[$i]->setDate($quotesList[$i]->date);
                 $quote[$i]->setPermalink($quotesList[$i]->permalink);
+                $quote[$i]->setUser($quotesList[$i]->user);
             }
             return $quote;
         }
@@ -94,6 +95,7 @@ class quoteQueries
                     $quote[$i]->setTags($quotesList[$i]->tags);
                     $quote[$i]->setDate($quotesList[$i]->date);
                     $quote[$i]->setPermalink($quotesList[$i]->permalink);
+                    $quote[$i]->setUser($quotesList[$i]->user);
                 }
                 $result = $quote;
             }
@@ -111,11 +113,11 @@ class quoteQueries
      * @param  string $source quote source or empty (ex, book, internet)
      * @return array  $result an array contains all quotes added
      */
-    public function addQuote($text, $author = '', $source = '', $tags = '')
+    public function addQuote($text, $author = '', $source = '', $tags = '', $user = '')
     {
         if (!empty($text)) {
             $permalink = $this->smallHash(date(DATE_RFC822));
-            $result[] = array('quote' => $text, 'author' => $author, 'source' => $source, 'tags' => $tags, 'permalink' => $permalink);
+            $result[] = array('quote' => $text, 'author' => $author, 'source' => $source, 'tags' => $tags, 'permalink' => $permalink, 'user' => $user);
             //self::stack('insert', $result);
             $this->addElements($result);
         }
@@ -240,12 +242,13 @@ class quoteQueries
                 $sort = ' ORDER BY ' . $field . ' ' .$order;
             }
         }
-        $query = 'SELECT id, quote, author, source, tags, permalink, date FROM ' . self::$tblPrefix . 'quotes ' . $rand . $where . $sort . $limit . ';';
+        $query = 'SELECT id, quote, author, source, tags, permalink, date, user FROM ' . self::$tblPrefix . 'quotes ' . $rand . $where . $sort . $limit . ';';
         $stmt  = dbConnexion::getInstance()->prepare($query);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_OBJ);
         $stmt->closeCursor();
         $stmt = NULL;
+	//var_dump($query);
         return $result;
     }
 
@@ -334,13 +337,14 @@ class quoteQueries
                     $aStmt->execute();
                 }
                 // And finally insert quote
-                $stmt = dbConnexion::getInstance()->prepare('INSERT INTO ' . self::$tblPrefix . 'quotes' . ' (quote, author, source, tags, permalink, date)
-                                                            VALUES (:quote, :author, :source, :tags, :permalink, NOW());');
+                $stmt = dbConnexion::getInstance()->prepare('INSERT INTO ' . self::$tblPrefix . 'quotes' . ' (quote, author, source, tags, permalink, date, user)
+                                                            VALUES (:quote, :author, :source, :tags, :permalink, NOW(), :user);');
                 $stmt->bindValue(':quote', $datas['quote'], PDO::PARAM_STR);
                 $stmt->bindValue(':author',$datas['author'], PDO::PARAM_STR);
                 $stmt->bindValue(':source', $datas['source'], PDO::PARAM_STR);
                 $stmt->bindValue(':tags', $datas['tags'], PDO::PARAM_STR);
                 $stmt->bindValue(':permalink', $datas['permalink'], PDO::PARAM_STR);
+                $stmt->bindValue(':user', $datas['user'], PDO::PARAM_STR);
                 //$stmt->bindValue(':date', $datas['date'], PDO::PARAM_STR);
                 $stmt->execute();
             }

@@ -69,8 +69,8 @@ function getStats()
     }
 }
 
-$quotes = new quoteQueries();
-$quotes = $quotes->getQuote(array('sort' => 'id,desc', 'limit'=> '5'));
+$allQuotes = new quoteQueries();
+$quotes = $allQuotes->getQuote(array('sort' => 'id,desc', 'limit'=> '5'));
 
 if (is_array($quotes)) {
     foreach ($quotes as $quote) {
@@ -79,6 +79,17 @@ if (is_array($quotes)) {
         $html->setElement('source', SmartyPants($quote->getSource()), 'allQuotes');
         $html->setElement('tags', $finalTags, 'allQuotes');
         $html->setElement('permalink', $quote->getPermalink(), 'allQuotes');
+    }
+}
+
+$myQuotes = $allQuotes->getQuote(array('sort' => 'id,desc', 'limit'=> '5', 'where' => 'user', 'whereOpt' => 'equal,' . $userConfig['id']));
+if (is_array($myQuotes)) {
+    foreach ($myQuotes as $quote) {
+        $html->setElement('mQuote', SmartyPants($quote->getText(), 'f+:+t+h+H+'), 'userQuotes');
+        $html->setElement('mAuthor', SmartyPants($quote->getAuthor()), 'userQuotes');
+        $html->setElement('mSource', SmartyPants($quote->getSource()), 'userQuotes');
+        $html->setElement('mTags', $finalTags, 'userQuotes');
+        $html->setElement('mPermalink', $quote->getPermalink(), 'userQuotes');
     }
 }
 
