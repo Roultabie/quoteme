@@ -59,6 +59,24 @@ _If you want extract a png image, options are not required_
 Just type address of website to view random quote. Click on the arrow to reload a new quote. Add permalink option in the URL to view a specific quote.  
 Permalink format example : http://q.uote.me?xHlefA (thank to [sebsauvage](https://github.com/sebsauvage/Shaarli) for permalink function)
 
+###Requirements :
+_PHP_  
+  
+- >= 5.3
+- math
+- gd
+- json
+- mbstring
+- pdo
+- pdo_mysql
+- session
+- hash
+  
+_Other_   
+
+- freetype2
+
+
 ###Updates :
 
 _2014-10-03 (1.6b)_
