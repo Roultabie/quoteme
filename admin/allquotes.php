@@ -24,16 +24,17 @@ else {
 }
 if (is_array($datas)) {
     foreach ($datas as $quote) {
+	$taglist = new timply('taglist.html');
         $tags = explode(',', $quote->tags);
         foreach ($tags as $tag) {
             if (!empty($tag)) {
-                $finalTags .= '<span class="button tag">' . $tag . '</span>';
+	        $taglist->setElement('tagName', $tag, 'tagList');
             }
         }
         $html->setElement('quoteText', SmartyPants(str_replace(PHP_EOL, '<br>', $quote->quote), 'f+:+t+h+H+'), 'quote');
         $html->setElement('quoteAuthor', SmartyPants($quote->author), 'quote');
         $html->setElement('quoteSource', SmartyPants($quote->source), 'quote');
-        $html->setElement('quoteTags', $finalTags, 'quote');
+        $html->setElement('quoteTags', $taglist->returnHtml(), 'quote');
         //$html->setElement('quoteDate', SmartyPants($quote->getDate()), 'quote');
         $html->setElement('edit', '?' . http_build_query(array('p' => 'eq', 'o' => $_GET['p'], 'permalink' => $quote->permalink), '', '&'), 'quote');
         $html->setElement('delete', '?' . http_build_query(array('p' => 'dq', 'o' => $_GET['p'], 'permalink' => $quote->permalink, 'anchor' => $parentPermalink), '', '&'), 'quote');
