@@ -68,6 +68,13 @@ class userQueries
         return $this->user;
     }
 
+    public function updateUsername($username, $user)
+    {
+        if (!empty($username)) {
+            $this->updateData('username', $username, $user);
+        }
+    }
+
     public function updateToken($type, $user)
     {
         if ($type === 'private') {
@@ -78,12 +85,22 @@ class userQueries
         }
     }
 
-    public function updatePassword($password, $confirm, $user)
+    public function updatePassword($oldpassword, $password, $confirm, $user)
     {
-        if ($password === $confirm) {
-            $hash = userWriter::returnHash($password);
-            if (!empty($hash)) {
-                updateData('hash', $hash, $user);
+        $query  = 'SELECT hash FROM ' . self::$table .' WHERE id = "' . $user . '"' ;
+        $stmt = dbConnexion::getInstance()->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        $stmt = NULL;
+        if (password_verify($oldpassword, $result[0]['hash'])) {
+            echo 'good';
+            if ($password === $confirm) {
+                echo 'very good';
+                $hash = userWriter::returnHash($password);
+                if (!empty($hash)) {
+                    $this->updateData('hash', $hash, $user);
+                }
             }
         }
     }
@@ -91,18 +108,18 @@ class userQueries
     public function updateLevel($level, $user)
     {
         if (is_int($level)) {
-            updateData('type', $level, $user);
+            $this->updateData('type', $level, $user);
         }
     }
 
     public function updateEmail($email, $user)
     {
-        updateData('email', $email, $user);
+        $this->updateData('email', $email, $user);
     }
 
     public function updateShaarli($shaarli, $user)
     {
-        updateData('shaarli', $shaarli, $user);
+        $this->updateData('shaarli', $shaarli, $user);
     }
 
     private function updateData($field, $data, $userId)
