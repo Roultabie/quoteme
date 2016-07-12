@@ -4,17 +4,34 @@
             <h4>Personnaliser mon compte</h4>
             <form name="user" id="user" method="POST">
                 <fieldset>
+                    <label for="id">Votre identifiant</label><input type="text" name="id" id="id" value="{peid}" class="u-full-width" disabled="disabled">
                     <label for="username">Votre nom</label><input type="text" name="username" id="username" value="{peusername}"  class="u-full-width">
                 </fieldset>
                 <fieldset>
                     <label for="email">Courriel</label><input type="email" name="email" id="email" value="{peemail}"  class="u-full-width">
                     <label for="shaarli">Shaarli</label><input type="text" name="shaarli" id="shaarli" value="{peshaarli}"  class="u-full-width">
                 </fieldset>
-                <!--<fieldset>
-                    <label for="password">Mot de passe</label><input type="password" name="password" id="password" value=""  class="u-full-width" required>
-                    <label for="confirmPassword">Confirmer votre mot de passe (en cas de modification)</label><input type="password" name="confirmPassword" id="confirmPassword" value=""  class="u-full-width">
-                </fieldset>-->
-                <fieldset class="center"><input type="submit" value="Enregistrer" class="button-primary"><br>(les paramètres seront pris en compte à la prochaine connexion)</fieldset>
+                <fieldset class="center"><input type="submit" value="Enregistrer" class="button-primary"></fieldset>
+            </form>
+            <h4>Gestion de mes jetons</h4>
+            <form name="token1" id="token1" method="POST">
+                <fieldset>
+                    <label for="privatetoken">Jeton privé</label><span>Ce jeton vous permet d'utiliser l'API uniquement avec vos citations.<br>Vous pouvez le réinitialiser si vous suspectez un utilisation frauduleuse de celui-ci.</span><input type="text" name="privatetoken" id="privatetoken" value="{peprivatetoken}" class="u-full-width"><input type="submit" value="Générer">
+                </fieldset>
+            </form>
+            <form name="token2" id="token2" method="POST">
+                <fieldset>
+                    <label for="sharetoken">Jeton de partage</label><span>Ce jeton vous permet d'avoir des statistiques des partages que vous faites quand vous êtes connecté.<br>Si vous le réinitialisez, tous les partages précedent ne seront plus comptabilisés dans vous statistiques.</span><input type="text" name="sharetoken" id="sharetoken" value="{pesharetoken}" class="u-full-width"><input type="submit" value="Générer">
+                </fieldset>
+            </form>
+            <h4>Modifier mon mot de passe</h4>
+            <form name="password" id="password" method="POST">
+                <fieldset>
+                    <label for="oldpassword">Ancien mot de passe</label><input type="password" name="oldpassword" id="oldpassword" value=""  class="u-full-width">
+                    <label for="password">Nouveau mot de passe</label><input type="password" name="password" id="password" value=""  class="u-full-width">
+                    <label for="confirmPassword">Confirmez votre mot de passe</label><input type="password" name="confirmPassword" id="confirmPassword" value=""  class="u-full-width">
+                </fieldset>
+                <fieldset class="center"><input type="submit" value="Enregistrer" class="button-primary"></fieldset>
             </form>
             <hr>
             <h4>Supprimer mon compte</h4>
