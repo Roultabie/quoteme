@@ -3,6 +3,7 @@ define('BASE_URL', str_replace('admin/index.php', '', __FILE__));
 
 require_once BASE_URL . 'config.php';
 require_once BASE_URL . 'libs/mysql.php';
+require_once 'libs/user.php';
 
 if (!function_exists('password_hash')) {
     $hash = '$2y$04$usesomesillystringfore7hnbRJHxXVLeakoG8K30oukPsA.ztMG';
@@ -17,16 +18,7 @@ if (!function_exists('password_hash')) {
     }
 }
 
-/* Users generation for login */
-$query = 'SELECT id, hash, username, email, shaarli, type
-          FROM ' . $GLOBALS['config']['tblPrefix'] .'users';
-$stmt  = dbConnexion::getInstance()->prepare($query);
-$stmt->execute();
-$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-foreach ($users as $user) {
-    $GLOBALS['config']['users'][$user['id']] = $user;
-}
-$stmt = NULL;
+userQueries::initLogin();
 
 require_once BASE_URL . 'libs/login.php';
 require_once BASE_URL . 'libs/timply.php';
@@ -39,8 +31,9 @@ require_once 'pagination.php';
 parser::$cacheState = false;
 parser::$cacheDir   = $GLOBALS['config']['cacheDir'];
 
-$userDatas  = unserialize($_SESSION['userDatas']);
-$userConfig = $userDatas->getConfig();
+$user = new userQueries();
+//$userDatas  = unserialize($_SESSION['userDatas']);
+$userConfig = $user->getConfig();
 
 // System declaration
 $navHover = 'hover';
