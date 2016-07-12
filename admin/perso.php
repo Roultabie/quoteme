@@ -7,7 +7,7 @@ if (!empty($_POST)) {
     if (!empty($_POST['level'])) $user->updateLevel($_POST['level'], $user->datas->id);
     if (!empty($_POST['email'])) $user->updateEmail($_POST['email'], $user->datas->id);
     if (!empty($_POST['shaarli'])) $user->updateShaarli($_POST['shaarli'], $user->datas->id);
-    //header("Refresh:0");
+    header("Refresh:0");
 }
 $html = new timply('perso.html');
 
