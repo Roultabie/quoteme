@@ -32,8 +32,7 @@ parser::$cacheState = false;
 parser::$cacheDir   = $GLOBALS['config']['cacheDir'];
 
 $user = new userQueries();
-//$userDatas  = unserialize($_SESSION['userDatas']);
-$userConfig = $user->getConfig();
+$userConfig = $user->config;
 
 // System declaration
 $navHover = 'hover';
@@ -69,6 +68,6 @@ if ($_GET['p'] === 'eq') require 'editquote.php';
 if ($_GET['p'] === 'dq') require 'deletequote.php';
 if ($_GET['p'] === 'pe') require 'perso.php';
 
-$html->setElement('username', $userConfig['username']);
+$html->setElement('username', $user->datas->username);
 
 echo $html->returnHtml();

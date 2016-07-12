@@ -3,19 +3,19 @@
 class userQueries
 {
     private static $table;
-    private static $id;
+    public $config;
     public static $nbResult;
-    protected $user;
+    private $user;
+    public $datas;
 
     function __construct()
     {
         $this->getDatas();
-        //var_dump($this->user);
-        if (empty($this->user['private_token'])) {
-            $this->updateToken('private', $this->user['id']);
+        if (empty($this->user->private_token)) {
+            $this->updateToken('private', $this->user->id);
         }
-        if (empty($this->user['share_token'])) {
-            $this->updateToken('share', $this->user['id']);
+        if (empty($this->user->share_token)) {
+            $this->updateToken('share', $this->user->id);
         }
     }
 
@@ -39,6 +39,7 @@ class userQueries
         if (empty($id)) {
             $userObject = unserialize($_SESSION['userDatas']);
             $userConfig = $userObject->getConfig();
+            $this->config = $userConfig;
             $id = $userConfig['id'];
             $query  = 'SELECT id, username, private_token, share_token, email, shaarli, type
                    FROM ' . self::$table .' WHERE id = "' . $id . '"' ;
@@ -47,7 +48,8 @@ class userQueries
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $stmt->closeCursor();
             $stmt = NULL;
-            $this->user = $result[0];
+            $this->user = (object) $result[0];
+            $this->datas = (object) $result[0];
         }
         elseif ($this->user['level'] === 0) {
             $query  = 'SELECT username, private_token, share_token, email, shaarli, type
