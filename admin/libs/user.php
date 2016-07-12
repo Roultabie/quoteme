@@ -94,9 +94,7 @@ class userQueries
         $stmt->closeCursor();
         $stmt = NULL;
         if (password_verify($oldpassword, $result[0]['hash'])) {
-            echo 'good';
             if ($password === $confirm) {
-                echo 'very good';
                 $hash = userWriter::returnHash($password);
                 if (!empty($hash)) {
                     $this->updateData('hash', $hash, $user);
