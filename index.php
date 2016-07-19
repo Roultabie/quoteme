@@ -1,16 +1,26 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
 /**
- * Construct permalink query
+ * Construct permalink and token query
  * (if a permalink is called)
  * DO NOT REMOVE !
  */
-$_GET      = array_flip($_GET) ;
-$permalink = array_shift($_GET);
-if (!empty($permalink)) {
-    $_GET = array('w' => 'permalink', 'wo' => 'equal,' . $permalink);
+if (is_array($_GET)) {
+    $elements = array_chunk($_GET, 1, true);
+    if (is_array($elements)) {
+        if (is_array($elements[0])) {
+            $permalink  = array_flip($elements[0]) ;
+            $permalink  = array_shift($permalink);
+            $_GET['w']  = 'permalink';
+            $_GET['wo'] = 'equal,' . $permalink;
+        }
+        if (is_array($elements[1])) {
+            $token         = array_flip($elements[1]);
+            $token         = array_shift($token);
+            $_GET['token'] = $token;
+        }
+    }
 }
-
 /**
  * Loading parser
  */
