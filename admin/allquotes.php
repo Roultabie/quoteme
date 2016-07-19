@@ -31,6 +31,7 @@ if (is_array($datas)) {
 	        $taglist->setElement('tagName', $tag, 'tagList');
             }
         }
+        $shareLink = (!empty($user->datas->share_token)) ? $quote->permalink . '&' . $user->datas->share_token : $quote->permalink;
         $html->setElement('quoteText', SmartyPants(str_replace(PHP_EOL, '<br>', $quote->quote), 'f+:+t+h+H+'), 'quote');
         $html->setElement('quoteAuthor', SmartyPants($quote->author), 'quote');
         $html->setElement('quoteSource', SmartyPants($quote->source), 'quote');
@@ -39,11 +40,11 @@ if (is_array($datas)) {
         $html->setElement('edit', '?' . http_build_query(array('p' => 'eq', 'o' => $_GET['p'], 'permalink' => $quote->permalink), '', '&'), 'quote');
         $html->setElement('delete', '?' . http_build_query(array('p' => 'dq', 'o' => $_GET['p'], 'permalink' => $quote->permalink, 'anchor' => $parentPermalink), '', '&'), 'quote');
         $html->setElement('quotePermalink', $quote->permalink, 'quote');
-        $html->setElement('googleShareLink', 'https://plus.google.com/share?url=http://' . $_SERVER['HTTP_HOST'] . '/?' . $quote->permalink, 'quote');
-        $html->setElement('facebookShareLink', 'http://facebook.com/sharer.php?u=http://' . $_SERVER['HTTP_HOST'] . '/?' . $quote->permalink, 'quote');
-        $html->setElement('twitterShareLink', 'http://twitter.com/intent/tweet?url=http://' . $_SERVER['HTTP_HOST'] . '/?' . $quote->permalink . '&text=' . $quote->author . ' said:', 'quote');
+        $html->setElement('googleShareLink', 'https://plus.google.com/share?url=http://' . $_SERVER['HTTP_HOST'] . '/?' . $shareLink, 'quote');
+        $html->setElement('facebookShareLink', 'http://facebook.com/sharer.php?u=http://' . $_SERVER['HTTP_HOST'] . '/?' . $shareLink, 'quote');
+        $html->setElement('twitterShareLink', 'http://twitter.com/intent/tweet?url=http://' . $_SERVER['HTTP_HOST'] . '/?' . $shareLink . '&text=' . $quote->author . ' said:', 'quote');
         if (!empty($userConfig['shaarli'])) {
-            $html->setElement('ifShaarli', '<a class="icon-shaarli" href="' . rtrim($userConfig['shaarli'], '/') . '/?post=http://' . $_SERVER['HTTP_HOST'] . '/?' . $quote->permalink . '&source=bookmarklet" onclick="javascript:window.open(this.href,\'\',\'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600\');return false;">Shaarli</a>', 'quote');
+            $html->setElement('ifShaarli', '<a class="icon-shaarli" href="' . rtrim($userConfig['shaarli'], '/') . '/?post=http://' . $_SERVER['HTTP_HOST'] . '/?' . $shareLink . '&source=bookmarklet" onclick="javascript:window.open(this.href,\'\',\'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600\');return false;">Shaarli</a>', 'quote');
         }
         $parentPermalink = $quote->permalink;
         unset($finalTags);
