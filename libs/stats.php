@@ -26,7 +26,7 @@ class stats
             $date = new DateTime();
             $wanted = $date->format('Y-m-d');
         }
-        $query = 'SELECT date, delivered, quotes, authors, tags, contributors, editors
+        $query = 'SELECT date, delivered, delivered_today, quotes, authors, tags, contributors, editors
                   FROM ' . $GLOBALS['config']['tblPrefix'] .'stats WHERE date=:date ORDER BY date DESC LIMIT 1';
         $stmt  = dbConnexion::getInstance()->prepare($query);
         $stmt->bindValue(':date', $wanted, PDO::PARAM_STR);
