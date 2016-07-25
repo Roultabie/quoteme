@@ -37,6 +37,23 @@ class stats
         return $datas;
     }
 
+    function checkDelivered($permalink, $parser, $token = '')
+    {
+        if (!is_array($_SESSION['delivered']) || !in_array($permalink, $_SESSION['delivered'])) {
+            $this->hitDelivered();
+            if (!empty($token)) {
+                if (self::checkToken($token)) {
+                    $datas['token'] = $token;
+                    $datas['permalink'] = $permalink;
+                    $datas['source'] = '...';
+                    $datas['parser'] = $parser;
+                    $this->addDelivered($datas);
+                }
+            }
+            $_SESSION['delivered'][] = $permalink;
+        }
+    }
+
     function initStats()
     {
         $query = 'SELECT date, delivered, quotes, authors, tags, contributors, editors, administrators
@@ -140,14 +157,13 @@ class stats
         return (int) $result[0]->nb;
     }
 
-
     private function addDelivered($datas)
     {
-        if (!empty($user)) {
-            $query = 'INSERT INTO ' . self::$tblPrefix . 'delivered' . ' (date, permalink, share_token, source, parser)
+        if (!empty($datas['token'])) {
+            $query = 'INSERT INTO ' . self::$tblPrefix . 'delivered (date, permalink, share_token, source, parser)
                       VALUES (NOW(), :permalink, :share_token, :source, :parser);';
             $stmt  = dbConnexion::getInstance()->prepare($query);
-            $stmt->bindValue(':quote', $query['permalink'], PDO::PARAM_STR);
+            $stmt->bindValue(':permalink', $datas['permalink'], PDO::PARAM_STR);
             $stmt->bindValue(':share_token',$datas['token'], PDO::PARAM_STR);
             $stmt->bindValue(':source', $datas['source'], PDO::PARAM_STR);
             $stmt->bindValue(':parser', $datas['parser'], PDO::PARAM_STR);
@@ -157,10 +173,25 @@ class stats
 
     private function hitDelivered()
     {
+        $date = new DateTime();
+        $wanted = $date->format('Y-m-d');
         $query = 'UPDATE ' . self::$tblPrefix . 'stats' .'
-                  SET delivered = delivered+1, delivered_today = delivered_today+1';
+                  SET delivered = delivered+1, delivered_today = delivered_today+1 WHERE date = :date';
         $stmt  = dbConnexion::getInstance()->prepare($query);
+        $stmt->bindValue(':date', $wanted, PDO::PARAM_STR);
         $stmt->execute();
-}
+    }
+
+    public static function checkToken($token)
+    {
+        $query = 'SELECT COUNT(*) AS nb FROM ' . self::$tblPrefix . 'users' .' WHERE share_token = :token';
+        $stmt  = dbConnexion::getInstance()->prepare($query);
+        $stmt->bindValue(':token', $token, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $stmt->closeCursor();
+        $stmt = NULL;
+        return ($result[0]->nb === '1') ? true : false;
+    }
 }
 ?>
