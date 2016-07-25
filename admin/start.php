@@ -1,6 +1,10 @@
 <?php
 $html = new timply('start.html');
 
+require BASE_URL . 'libs/stats.php';
+
+$temp = new stats();
+
 function genStats()
 {
     $globalCount = 'SELECT
