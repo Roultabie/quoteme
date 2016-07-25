@@ -45,7 +45,8 @@ class stats
                 if (self::checkToken($token)) {
                     $datas['token'] = $token;
                     $datas['permalink'] = $permalink;
-                    $datas['source'] = '...';
+                    // if direct access, source empty and deliver not registered, actually it's good
+                    $datas['source'] = $_SERVER['HTTP_REFERER'];
                     $datas['parser'] = $parser;
                     $this->addDelivered($datas);
                 }
