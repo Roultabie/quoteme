@@ -9,6 +9,7 @@ require_once 'config.php';
  */
 require_once 'libs/mysql.php';
 require_once 'libs/quoteme.php';
+require_once 'libs/stats.php';
 require_once 'libs/timply.php';
 
 /**
@@ -33,7 +34,8 @@ parser::$cacheDir   = $GLOBALS['config']['cacheDir'];
 function parseQuote($parser = '', $options = '')
 {
     if ($parser !== 'php') {
-        $parserUri = 'parser/' . $parser . '.php';
+        $parserName = $parser;
+        $parserUri  = 'parser/' . $parser . '.php';
         if (file_exists($parserUri)) {
             require_once $parserUri;
             $class = $parser . 'Parser';
@@ -43,10 +45,14 @@ function parseQuote($parser = '', $options = '')
                     $quotes  = $quote->getQuote($options);
                     if (is_array($quotes)) {
                         $parser = new $class;
+                        $stats  = new stats();
                         if ($parser instanceof parserTemplate) {
                             $parser->loadHeader($quotes);
                             $parser::startCache();
                             $result = $parser->parse($quotes);
+                            if (count($quotes) === 1) {
+                                $stats->checkDelivered($quotes[0]->getPermalink(), $parserName, $_GET['token']);
+                            }
                             return $result;
                         }
                         else {
@@ -69,7 +75,12 @@ function parseQuote($parser = '', $options = '')
     }
     else {
         $quote = new quoteQueries();
-        return array('obj' => $quote->getQuote($options), 'nb' => quoteQueries::$nbQuotes);
+        $quote = $quote->getQuote($options);
+        $stats  = new stats();
+        if (count($quote) === 1) {
+            $stats->checkDelivered($quote[0]->getPermalink(), $parser, $_GET['token']);
+        }
+        return array('obj' => $quote, 'nb' => quoteQueries::$nbQuotes);
     }
 }
 
