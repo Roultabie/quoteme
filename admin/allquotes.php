@@ -31,7 +31,7 @@ if (is_array($datas)) {
 	        $taglist->setElement('tagName', $tag, 'tagList');
             }
         }
-        $shareLink = (!empty($user->datas->share_token)) ? $quote->permalink . '&' . $user->datas->share_token : $quote->permalink;
+        $shareLink = (!empty($user->datas->share_token)) ? urlencode($quote->permalink . '&' . $user->datas->share_token) : $quote->permalink;
         $html->setElement('quoteText', SmartyPants(str_replace(PHP_EOL, '<br>', $quote->quote), 'f+:+t+h+H+'), 'quote');
         $html->setElement('quoteAuthor', SmartyPants($quote->author), 'quote');
         $html->setElement('quoteSource', SmartyPants($quote->source), 'quote');
