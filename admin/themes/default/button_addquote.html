@@ -1,0 +1,19 @@
+    <!--<a href="#" class="add-quote"></div>-->
+    <label for="button_add-quote"></label>
+    <input type="checkbox" class="button_add-quote">
+    <section id="box_add-quote" class="box_add-quote">
+        <script language="javascript" src="../libs/searchstring.js"></script>
+        <article>
+            <form form name="addQuote" method="post" id="quote" class="u-full-width">
+                <fieldset>
+                    <label for="text">Citation</label><textarea class="u-full-width" name="text" id="text" placeholder="lorem ipsum"></textarea>
+                    <label for="author">Auteur</label><input type="text" class="u-full-width" name="author" id="author" id="author" placeholder="John Doe" onkeypress="bypassNavigation(this, event);" onkeyup="searchString(this,'author', event, 1);">
+                </fieldset>
+                <fieldset>
+                    <label for="source">Source</label><input type="text" class="u-full-width" name=source id="source" placeholder="Anywhere">
+                    <label for="tags">Mots clés</label><input type="text" class="u-full-width" name="tags" id="tags" placeholder="tag1, tag2, tagX"  onkeypress="bypassNavigation(this, event);" onkeyup="searchString(this,'tag', event);">
+                </fieldset>
+                <fieldset class="center"><input type="submit" value="Ajouter" class="button-primary"></fieldset>
+            </form>
+        </article>
+    </section>
