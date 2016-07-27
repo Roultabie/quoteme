@@ -10,16 +10,20 @@
 </head>
 <body>
     <header>
-        <nav>
-            <ul>
-                <li><a href="index.php">{username}</a></li>
-                <li class="{nqhover}"><a href="?p=nq">Nouvelle citation</a></li>
-                <!--<li class="{mqhover}"><a href="?p=mq">Mes citations</a></li>-->
-                <li class="{aqhover}"><a href="?p=aq">Toutes les citations</a></li>
-                <li class="{pehover}"><a href="?p=pe">Personnalisation</a></li>
-                <!--<li><a href="?p=co">Configuration</a></li>
-                <li><a href="">Maintenance</a></li>-->
-                <li><a href="?disconnect">Déconnexion</a></li>
-            </ul>
-        </nav>
+        
     </header>
+
+    <input type="checkbox" id="nav-trigger" class="nav-trigger">
+    <nav>
+        <ul>
+            <li><a href="index.php">{username}</a></li>
+            <li class="{nqhover}"><a href="?p=nq">Nouvelle citation</a></li>
+            <!--<li class="{mqhover}"><a href="?p=mq">Mes citations</a></li>-->
+            <li class="{aqhover}"><a href="?p=aq">Toutes les citations</a></li>
+            <li class="{pehover}"><a href="?p=pe">Personnalisation</a></li>
+            <!--<li><a href="?p=co">Configuration</a></li>
+            <li><a href="">Maintenance</a></li>-->
+            <li><a href="?disconnect">Déconnexion</a></li>
+        </ul>
+    </nav>
+    <label for="nav-trigger"></label>
