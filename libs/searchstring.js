@@ -66,7 +66,7 @@ function searchString(obj, dataType, event, maxKeywords = 'n')
         toSend = '';
     };
     var http = createRequestObject();
-    http.open('GET', '/admin.php?' + dataType + '=' + toSend + '&not=' + elements.join(','), true);
+    http.open('GET', '/admin/?' + dataType + '=' + toSend + '&not=' + elements.join(','), true);
     http.onreadystatechange = ( function ()
     {
         if (http.readyState === 4) {
