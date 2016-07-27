@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="themes/default/css/normalize.css">
     <link rel="stylesheet" href="themes/default/css/skeleton.css">
     <link rel="stylesheet" href="themes/default/css/custom.css">
+    <script type="text/javascript">
+        function unmask() {
+            document.getElementById("nav-trigger").checked = false;
+            document.getElementById("button_add-quote").checked = false;
+        }
+    </script>
 </head>
 <body>
     <header>
@@ -27,3 +33,5 @@
         </ul>
     </nav>
     <label for="nav-trigger"></label>
+    <div class="mask" onclick="unmask()">
+    </div>

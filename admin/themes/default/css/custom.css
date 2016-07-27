@@ -74,7 +74,7 @@ nav {
     top: 0;
     bottom: 0;
     left: -280px;
-    z-index: 2;
+    z-index: 5;
 }
 .nav-trigger {
     position: absolute;
@@ -133,6 +133,9 @@ label[for="nav-trigger"] {
 .nav-trigger + nav + label, nav {
     transition: left 0.2s;
 }
+.nav-trigger:checked + nav + label + .mask{
+    visibility: visible;
+}
 
 section {
     margin-left: auto;
@@ -183,10 +186,21 @@ label[for="button_add-quote"] {
     border-radius: 50%;
     right: 30px;
     bottom: 30px;
-    background-color: rgba(0,0,0,0);
     transition-property: width, height, border-radius, background-color;
     transition-duration: 0.4s, 0.4s, 0.4s, 0.4s;
+    transition-timing-function: ease-in-out;
     transition-delay: 0, 0, 0, .55s;
+}
+
+.mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 3;
 }
 
 .box_add-quote form {
@@ -203,10 +217,14 @@ label[for="button_add-quote"] {
     right: 0;
     bottom: 0;
     border-radius: 0;
+    z-index: 5;
     /*background-color: rgba(0,0,0,0.5);*/
 }
 .button_add-quote:checked + .box_add-quote form {
     display: block;
+}
+.button_add-quote:checked + .box_add-quote + .mask{
+    visibility: visible;
 }
 .center {
     text-align: center;
