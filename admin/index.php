@@ -34,6 +34,13 @@ parser::$cacheDir   = $GLOBALS['config']['cacheDir'];
 $user = new userQueries();
 $userConfig = $user->config;
 
+// Adding new quote
+if (!empty($_POST) && isset($_POST['add'])) {
+     $quote = new quoteQueries();
+     $add   = $quote->addQuote($_POST['text'], $_POST['author'], $_POST['source'], $_POST['tags'], $userConfig['id']);
+     parser::clearCache();
+}
+
 // System declaration
 $navHover = 'hover';
 
