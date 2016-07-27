@@ -178,6 +178,7 @@ label[for="button_add-quote"] {
     background-repeat: no-repeat;
     background-position: center center;
     box-shadow: 0 10px 15px 0px rgba(0,0,0,0.3);
+    z-index: 10;
 }
 .box_add-quote {
     position: absolute;
