@@ -5,7 +5,7 @@ function pagination($currentPage, $nbElements, $baseLink)
     $perpage = $GLOBALS['config']['perpage'];
     $baseLink = preg_replace('/&page=\d+/', '', $baseLink);
     $nbPages = ceil($nbElements / $perpage);
-    $maxElements = 13;
+    $maxElements = 12;
     $calc = 3;
     $min = $currentPage - $calc;
     $max = $currentPage + $calc + 1;
