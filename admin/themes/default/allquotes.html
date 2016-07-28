@@ -4,12 +4,13 @@
             <form name="metadatas" method="GET">
                 <input type="hidden" name="p" value="aq">
                 <fieldset>
-                    <input type="text" class="u-full-width" name="s" value="{currentSearch}" placeholder="Rechercher par...">
+                    <input type="text" id="search" class="u-full-width" name="s" value="{currentSearch}" placeholder="Rechercher par...">
                 </fieldset>
                 <fieldset>
                     <input class="" type="submit" name="au", value="auteur">
 	    <input class="" type="submit" name="so", value="source">
                     <input class="" type="submit" name="tg", value="mot clé">
+                    <input class="" type="submit" name="", value="⟳">
                 </fieldset>
             </form>
             <hr>
@@ -25,10 +26,10 @@
                                 <a href="{edit}" class="icon-pencil" title="[trad::edit]" alt="[trad::edit]"></a>
                                 <a href="{delete}" class="icon-remove" title="[trad::delete]" alt="[trad::delete]" onclick="return confirm('[trad::comfirm-delete]')"></a>
                                 <span class="spanSep"></span>
-                                {ifShaarli}
-                                <a class="googleplus icon-googleplus" href="{googleShareLink}" onclick="javascript:window.open(this.href,'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
-                                <a class="facebook icon-facebook" href="{facebookShareLink}" onclick="javascript:window.open(this.href,'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
                                 <a class="twitter icon-twitter" href="{twitterShareLink}" onclick="javascript:window.open(this.href,'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+                                <a class="facebook icon-facebook" href="{facebookShareLink}" onclick="javascript:window.open(this.href,'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+                                <a class="googleplus icon-googleplus" href="{googleShareLink}" onclick="javascript:window.open(this.href,'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+                                {ifShaarli}
                             </span>
                         </td>
                     </tr>
@@ -38,5 +39,4 @@
             {pagination}
         </article>
     </section>
-<!-- Include button_addquote.html -->
 <!-- Include footer.html -->

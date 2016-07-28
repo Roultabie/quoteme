@@ -42,16 +42,6 @@
 .icon-googleplus2:before {
     content: "\e604";
 }
-.icon-shaarli {
-    background: url('../images/shaarli-flower.png') no-repeat left;
-    background-size: 17px 16px;
-    background-color: transparent;
-    width: 17px;
-    height: 20px;
-    font-size: 0;
-    display: inline-block;
-    vertical-align: top;
-}
 body {
     font-family: "Raleway";
     font-weight: lighter;
@@ -222,57 +212,6 @@ label[for="button_add-quote"] {
     text-align: center;
 }
 
-/* quotes list */
-#myQuotes td, #newQuotes td {
-    background: #fff;
-}
-#myQuotes .actions, #allQuotes .actions {
-    position: absolute;
-    display: block;
-    width: calc(78% - 40px);
-    margin-top: -25px;
-    opacity: 0;
-    text-align: center;
-    transition-property: length, opacity 500ms;
-    transition-duration: 500ms;
-}
-#myQuotes .actions a, #allQuotes .actions a {
-    color: #000;
-    text-decoration: none;
-    background-color: white;
-}
-.spanSep {
-    display: inline-block;
-    width: 5px;
-}
-#myQuotes td:hover .actions, #allQuotes td:hover .actions {
-    margin-top: 2px;
-    opacity: 1;
-}
-#myQuotes .author, #allQuotes .author {
-    font-style: italic;
-}
-#myQuotes .tags, #allQuotes .tags {
-    display: block;
-    margin-top: 5px;
-}
-#myQuotes .tags span, #allQuotes .tags span {
-    padding: 5px;
-    height: 20px;
-    line-height: 10px;
-    margin-left: 3px;
-    margin-bottom: 0px;
-    cursor: default;
-    transition-property: border;
-    transition-duration: 400ms;
-}
-#myQuotes .tags span a, #allQuotes .tags span a {
-    text-decoration: none;
-}
-#myQuotes .tags span:first-child, #allQuotes .tags span:first-child {
-    margin-left: 0;
-}
-
 /* Personnalisation */
 #personalization #user input[type=submit] {
     width: 28%;
@@ -315,31 +254,6 @@ label[for="button_add-quote"] {
     font-weight: normal;
     color: #222;
     text-decoration: none;
-}
-/* pagination */
-.pagination, .pagination a {
-text-align:center;
-}
-.pagination a {
-    margin-right: 2px;
-}
-.pagination a:nth-last-child(2) {
-    margin-right: 0;
-}
-
-.pagination a:first-child, .pagination a:last-child {
-    margin: 0;
-}
-.pagination a:first-child {
-float: left;
-}
-.pagination a:last-child {
-float: right;
-}
-.pagination a.button  {
-    display: inline-block;
-    width: 70px;
-    padding: 0;
 }
 
 /* all quotes, my quotes */
@@ -404,6 +318,96 @@ input[type=submit] {
         margin-right: 5px;
         z-index: 5;
     }*/
+
+    /* quotes list */
+    #allQuotes input {
+        width: 49%;
+    }
+    #allQuotes input[type=submit]:last-child {
+        font-size: 1.2em;
+    }
+    #allQuotes input[type=text] {
+        margin-top: 10px;
+    }
+    #allQuotes fieldset {
+        margin: 0;
+    }
+    #allQuotes hr {
+        display: none;
+    }
+    #myQuotes td, #newQuotes td {
+        background: #fff;
+    }
+    #myQuotes .actions, #allQuotes .actions {
+        display: inline-block;
+        width: 100%;
+        margin-left: 2px;
+        margin-top: 10px;
+    }
+    #myQuotes .actions a, #allQuotes .actions a {
+        float: right;
+        color: #000;
+        text-decoration: none;
+        background-color: white;
+        font-size: 1.5em;
+        opacity: 0.7;
+        margin-right: 6px;
+    }
+    #myQuotes .actions a, #allQuotes .actions a:nth-child(-n+2){
+        float: left;
+    }
+    .icon-shaarli {
+        background: url('../images/shaarli-flower.png') no-repeat left;
+        background-size: 24px 23px;
+        background-color: transparent;
+        width: 24px;
+        height: 23px;
+        font-size: 0 !important;
+        display: inline-block;
+        vertical-align: top;
+    }
+    .spanSep {
+        display: inline-block;
+        width: 5px;
+    }
+    #myQuotes .author, #allQuotes .author {
+        font-style: italic;
+    }
+    #myQuotes .tags, #allQuotes .tags {
+        display: block;
+        margin-top: 5px;
+    }
+    #myQuotes .tags span, #allQuotes .tags span {
+        padding: 5px;
+        height: 20px;
+        line-height: 10px;
+        margin-right: 3px;
+        margin-bottom: 0px;
+        cursor: default;
+        transition-property: border;
+        transition-duration: 400ms;
+    }
+    #myQuotes .tags span a, #allQuotes .tags span a {
+        text-decoration: none;
+    }
+    /* pagination */
+    .pagination, .pagination a {
+        text-align:center;
+    }
+    .pagination a {
+        margin-right: 2px;
+    }
+    .pagination a.button  {
+        display: inline-block;
+        width: 70px;
+        padding: 0;
+    }
+    #allQuotes article > .pagination {
+        display: none;
+    }
+    #allQuotes article > .pagination ~ .pagination {
+        display: block;
+    }
 }
 
 
@@ -442,6 +446,39 @@ input[type=submit] {
         width: 48%;
         margin-left: 5px;
     }
+
+    /* Quotes list */
+    #allQuotes hr {
+        display: block;
+    }
+    #allQuotes input {
+        width: 20%;
+    }
+    #allQuotes input[type=submit]:last-child {
+        display: none;
+    }
+    #allQuotes input[type=text] {
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 2em;
+    }
+
+    /* Pagination */
+    .pagination a:nth-last-child(2) {
+        margin-right: 0;
+    }
+    .pagination a:first-child, .pagination a:last-child {
+        margin: 0;
+    }
+    .pagination a:first-child {
+    float: left;
+    }
+    .pagination a:last-child {
+    float: right;
+    }
+    #allQuotes article > .pagination {
+        display: block;
+    }
 }
 
 /* Larger than Desktop HD */
@@ -452,4 +489,30 @@ input[type=submit] {
     }
     /* Accueil */
 
+    /* Quotes list */
+    #myQuotes .actions, #allQuotes .actions {
+        position: absolute;
+        display: inline-block;
+        width: 192px;
+        left: calc(50% - 96px);
+        margin-top: -25px;
+        opacity: 0;
+        text-align: center;
+        transition-property: length, opacity 500ms;
+        transition-duration: 500ms;
+    }
+    #myQuotes .actions a, #allQuotes .actions a {
+        color: #000;
+        text-decoration: none;
+        background-color: white;
+        opacity: 1;
+    }
+    .spanSep {
+        display: inline-block;
+        width: 5px;
+    }
+    #myQuotes td:hover .actions, #allQuotes td:hover .actions {
+        margin-top: 2px;
+        opacity: 1;
+    }
 }
