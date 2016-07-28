@@ -41,13 +41,6 @@ form {
 }
 
 @media (min-width: 300px) {
-    section {
-        box-sizing: border-box;
-        display: block;
-        width: 100%;
-        padding: 20px;
-        text-align: center;
-    }
     form {
         box-sizing: border-box;
         margin-left: auto;
@@ -59,13 +52,6 @@ form {
 
 /* Larger than mobile */
 @media (min-width: 400px) {
-    section {
-        box-sizing: border-box;
-        display: block;
-        width: 100%;
-        padding: 20px;
-        text-align: center;
-    }
     form {
         box-sizing: border-box;
         margin-left: auto;
@@ -77,18 +63,33 @@ form {
 
 /* Larger than phablet (also point when grid becomes active) */
 @media (min-width: 550px) {
-        section {
-        box-sizing: border-box;
-        display: block;
-        width: 100%;
-        padding: 20px;
-        text-align: center;
-    }
     form {
         box-sizing: border-box;
         margin-left: auto;
         margin-right: auto;
         width: 80%;
+        text-align: center;
+    }
+}
+
+/* Larger than desktop */
+@media (min-width: 1000px) {
+    form {
+        box-sizing: border-box;
+        margin-left: auto;
+        margin-right: auto;
+        width: 30%;
+        text-align: center;
+    }
+}
+
+/* Larger than Desktop HD */
+@media (min-width: 1200px) {
+    form {
+        box-sizing: border-box;
+        margin-left: auto;
+        margin-right: auto;
+        width: 30%;
         text-align: center;
     }
 }
