@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Administration - q.uote.me</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <link rel="stylesheet" href="../admin/themes/default/css/fonts.css">
+    <link rel="stylesheet" href="../admin/themes/default/css/normalize.css">
+    <link rel="stylesheet" href="../admin/themes/default/css/skeleton.css">
+    <link rel="stylesheet" href="../admin/themes/default/css/login.css">
+</head>
+<body>
+    <section>
+        <form name="login" method="post" {loginAction}>
+            <fieldset>
+                <input type="text" name="login" placeholder="Username" required>
+                <input type="password" name="pass" placeholder="Password" required>
+                <input type="submit" value="login">
+            </fieldset>
+        </form>
+        <span class="{statusClass}">{statusMessage}</span>
+    </section>
+</body>
+</html>

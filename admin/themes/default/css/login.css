@@ -1,0 +1,94 @@
+/* Palette: http://encycolorpedia.fr/293133 */
+[class^="icon-"], [class*=" icon-"] {
+    font-family: 'icomoon';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+body {
+    font-family: "Raleway";
+    font-weight: lighter;
+    color: #3b3b38;
+    overflow-x: hidden;
+}
+section {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+}
+input {
+    width: 85%;
+}
+input[type=submit] {
+    background-color: #33C3F0 !important;
+    border-color: #33C3F0;
+}
+form {
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+    text-align: center;
+}
+
+@media (min-width: 300px) {
+    section {
+        box-sizing: border-box;
+        display: block;
+        width: 100%;
+        padding: 20px;
+        text-align: center;
+    }
+    form {
+        box-sizing: border-box;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Larger than mobile */
+@media (min-width: 400px) {
+    section {
+        box-sizing: border-box;
+        display: block;
+        width: 100%;
+        padding: 20px;
+        text-align: center;
+    }
+    form {
+        box-sizing: border-box;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Larger than phablet (also point when grid becomes active) */
+@media (min-width: 550px) {
+        section {
+        box-sizing: border-box;
+        display: block;
+        width: 100%;
+        padding: 20px;
+        text-align: center;
+    }
+    form {
+        box-sizing: border-box;
+        margin-left: auto;
+        margin-right: auto;
+        width: 80%;
+        text-align: center;
+    }
+}
