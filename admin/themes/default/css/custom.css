@@ -136,15 +136,6 @@ label[for="nav-trigger"] {
 .nav-trigger:checked + nav + label + .mask{
     visibility: visible;
 }
-
-section {
-    margin-left: auto;
-    margin-right: auto;
-    box-sizing: border-box;
-    display: block;
-    width: 80%;
-    padding: 20px;
-}
 footer {
     position: fixed;
     display: block;
@@ -229,47 +220,6 @@ label[for="button_add-quote"] {
 }
 .center {
     text-align: center;
-}
-
-/* Accueil */
-#index h1 {
-    font-style: italic;
-    line-height: 150px;
-}
-
-.summary article {
-    float: left;
-    display: block;
-    width: 48%;
-    margin-top: 20px;
-    margin-left: 5px;
-}
-.index .last-quotes span {
-    display: block;
-    max-height: 20px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    border-bottom: 1px solid #E1E1E1;
-    padding: 8px 11px;
-}
-.index .last-quotes span a {
-    text-decoration: none;
-    font-style: italic;
-    line-height: 1em;
-    color: inherit;
-}
-.index th:first-child {
-    width: 90%;
-}
-
-/* Nouvelle citation */
-#quote textarea {
-    height: 30vh;
-}
-#quote input[type=submit] {
-    width: 28%;
-    margin-top: 5vh;
 }
 
 /* quotes list */
@@ -398,4 +348,108 @@ form {
 }
 input[type=submit] {
     width: 20%;
+}
+
+@media (min-width: 300px) {
+    section {
+        margin-left: auto;
+        margin-right: auto;
+        box-sizing: border-box;
+        display: block;
+        width: 98%;
+        padding: 5px;
+    }
+
+/* Accueil */
+    .index h1 {
+        display: none;
+    }
+    .summary article {
+        float: left;
+        display: block;
+        width: 100%;
+        margin-top: 20px;
+        margin-left: 0;
+    }
+    .index .last-quotes span {
+        display: block;
+        max-height: 20px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border-bottom: 1px solid #E1E1E1;
+        padding: 8px 11px;
+    }
+    .index .last-quotes span a {
+        text-decoration: none;
+        font-style: italic;
+        line-height: 1em;
+        color: inherit;
+    }
+    .index th:first-child {
+        width: 90%;
+    }
+
+    /* Nouvelle citation */
+    #newQuote textarea {
+        height: 30vh;
+    }
+    #quote input[type=submit] {
+        width: 28%;
+        margin-top: 5vh;
+    }
+    /*#newQuote label {
+        float: right;
+        margin-bottom: -20px;
+        margin-right: 5px;
+        z-index: 5;
+    }*/
+}
+
+
+/* Larger than mobile */
+@media (min-width: 400px) {
+    section {
+        width: 98%;
+        padding: 5px;
+    }
+    .index h1 {
+        display: none;
+    }
+}
+
+/* Larger than phablet (also point when grid becomes active) */
+@media (min-width: 550px) {}
+
+/* Larger than tablet */
+@media (min-width: 750px) {}
+
+/* Larger than desktop */
+@media (min-width: 1000px) {
+    section {
+        width: 92%;
+        padding: 8px;
+    }
+
+    /* Accueil */
+    .index h1 {
+        display: block;
+        font-style: italic;
+        line-height: 150px;
+    }
+
+    .summary article {
+        width: 48%;
+        margin-left: 5px;
+    }
+}
+
+/* Larger than Desktop HD */
+@media (min-width: 1200px) {
+    section {
+        width: 80%;
+        padding: 20px;
+    }
+    /* Accueil */
+
 }
