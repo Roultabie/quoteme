@@ -19,6 +19,22 @@ class stats
         }
     }
 
+    function getLiveStat($stat)
+    {
+        if ($stat === 'quotes')         $result = $this->countQuotes();
+        if ($stat === 'authors')        $result = $this->countAuthors();
+        if ($stat === 'tags')           $result = $this->countTags();
+        if ($stat === 'contributors')   $result = $this->countAccounts(2);
+        if ($stat === 'editors')        $result = $this->countAccounts(1);
+        if ($stat === 'administrators') $result = $this->countAccounts(0);
+        if ($stat === 'allUsers') {
+            $result  = $this->countAccounts(2);
+            $result += $this->countAccounts(1);
+            $result += $this->countAccounts(0);
+        }
+        return $result;
+    }
+
 
     function getStats($wanted = '')
     {
