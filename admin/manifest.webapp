@@ -3,8 +3,8 @@
     "description": "Collaborative quotes database",
     "launch_path": "/admin/",
     "icons": {
-        "128": "admin/themes/default/images/quoteme-128.png"
-        "256": "admin/themes/default/images/quoteme-256.png"
+        "128": "/admin/themes/default/images/quoteme-128.png"
+        "256": "/admin/themes/default/images/quoteme-256.png"
     },
     "fullscreen": true
 }
