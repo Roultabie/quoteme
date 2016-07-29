@@ -35,10 +35,11 @@ if (is_array($myQuotes)) {
 //$stats = getStats();
 //$date = new DateTime($stats[0]['date']);
 //$html->setElement('lastGen', date_format($date, 'd-m-Y H:i'));
-$html->setElement('nbQuotes', $stats[0]->quotes);
+$html->setElement('nbQuotes', $statsObj->getLiveStat('quotes'));
 $html->setElement('nbDelivered', $stats[0]->delivered);
 $html->setElement('nbDeliveredToday', $stats[0]->delivered_today);
-$html->setElement('nbContributors', $stats[0]->contributors);
-$html->setElement('nbEditors', $stats[0]->editors);
+$html->setElement('nbUsers', $statsObj->getLiveStat('allUsers'));
+//$html->setElement('nbContributors', $stats[0]->contributors);
+//$html->setElement('nbEditors', $stats[0]->editors);
 //$html->setElement('nbParsers', $stats[0]['parsers']);
 //$html->setElement('nbActiveParsers', $stats[0]['parsers_active']);
