@@ -70,7 +70,7 @@ class stats
         $stmt  = dbConnexion::getInstance()->prepare($query);
         if (count($datas) > 0) {
             $stmt->bindValue(':delivered', $datas[0]->delivered, PDO::PARAM_INT);
-            $stmt->bindValue(':quotes', $datas[0]->quotes, PDO::PARAM_INT);
+            $stmt->bindValue(':quotes', $this->countQuotes(), PDO::PARAM_INT);
             $stmt->bindValue(':authors', $datas[0]->authors, PDO::PARAM_INT);
             $stmt->bindValue(':tags', $datas[0]->tags, PDO::PARAM_INT);
             $stmt->bindValue(':contributors', $datas[0]->contributors, PDO::PARAM_INT);
