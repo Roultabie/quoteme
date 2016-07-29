@@ -162,7 +162,7 @@ class stats
         return (int) $result[0]->nb;
     }
 
-    private function countAccounts(int $type)
+    private function countAccounts($type)
     {
         $query = 'SELECT COUNT(*) AS nb FROM ' . self::$tblPrefix . 'users' .' WHERE type = :type';
         $stmt  = dbConnexion::getInstance()->prepare($query);
