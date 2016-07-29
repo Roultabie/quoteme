@@ -3,8 +3,14 @@
     "description": "Collaborative quotes database",
     "launch_path": "/admin/",
     "icons": {
-        "128": "/admin/themes/default/images/quoteme-128.png"
-        "256": "/admin/themes/default/images/quoteme-256.png"
+        {
+            "src": "/admin/themes/default/images/quoteme-256.png",
+            "sizes": "48x48 72x72 96x96 128x128 256x256"
+        },{
+            "src": "quoteme.svg",
+            "sizes": "48x48 72x72 96x96 128x128 256x256",
+            "density": 2
+        }
     },
     "fullscreen": true
 }
