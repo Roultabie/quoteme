@@ -505,6 +505,11 @@ input[type=submit] {
     }
     /* Accueil */
 
+    /* Nouvelle citation */
+    #newQuote textarea {
+        margin-top: 10px;
+    }
+
     /* Quotes list */
     #myQuotes .actions, #allQuotes .actions {
         position: absolute;
