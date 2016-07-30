@@ -4,12 +4,10 @@
         <article>
             <form form name="addQuote" method="post" id="quote" class="u-full-width">
                 <fieldset>
-                    <label for="text">Citation</label><textarea class="u-full-width" name="text" id="text" placeholder="lorem ipsum"></textarea>
-                    <label for="author">Auteur</label><input type="text" class="u-full-width" name="author" id="author" id="author" placeholder="John Doe" onkeypress="bypassNavigation(this, event);" onkeyup="searchString(this,'author', event, 1);">
-                </fieldset>
-                <fieldset>
-                    <label for="source">Source</label><input type="text" class="u-full-width" name=source id="source" placeholder="Anywhere">
-                    <label for="tags">Mots clés</label><input type="text" class="u-full-width" name="tags" id="tags" placeholder="tag1, tag2, tagX"  onkeypress="bypassNavigation(this, event);" onkeyup="searchString(this,'tag', event);">
+                    <label for="text">Citation</label><textarea class="u-full-width" name="text" id="text" placeholder="Citation" required></textarea>
+                    <label for="author">Auteur</label><input type="text" class="u-full-width" name="author" id="author" id="author" placeholder="Auteur" onkeypress="bypassNavigation(this, event);" onkeyup="searchString(this,'author', event, 1);" required>
+                    <label for="source">Source</label><input type="text" class="u-full-width" name=source id="source" placeholder="Source">
+                    <label for="tags">Mots clés</label><input type="text" class="u-full-width" name="tags" id="tags" placeholder="motclé1, motclé2, motcléX"  onkeypress="bypassNavigation(this, event);" onkeyup="searchString(this,'tag', event);">
                 </fieldset>
                 <fieldset class="center"><input type="submit" value="Ajouter" class="button-primary"></fieldset>
             </form>

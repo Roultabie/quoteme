@@ -42,12 +42,6 @@
 .icon-googleplus2:before {
     content: "\e604";
 }
-body {
-    font-family: "Raleway";
-    font-weight: lighter;
-    color: #3b3b38;
-    overflow-x: hidden;
-}
 h1, h2, h3, h4 {
     color: #372e3e;
 }
@@ -268,13 +262,22 @@ input[type=submit] {
 }
 
 @media (min-width: 300px) {
+    body {
+        font-family: "Raleway";
+        font-weight: lighter;
+        color: #3b3b38;
+        overflow-x: hidden;
+    }
+    section, article, div, form, fieldset {
+        margin: 0;
+        padding: 0;
+    }
     section {
         margin-left: auto;
         margin-right: auto;
         box-sizing: border-box;
         display: block;
-        width: 98%;
-        padding: 5px;
+        width: 95%;
     }
 
 /* Accueil */
@@ -311,16 +314,18 @@ input[type=submit] {
     #newQuote textarea {
         height: 30vh;
     }
-    #quote input[type=submit] {
-        width: 28%;
-        margin-top: 5vh;
+    #newQuote label {
+        display: none;
     }
-    /*#newQuote label {
-        float: right;
-        margin-bottom: -20px;
-        margin-right: 5px;
-        z-index: 5;
-    }*/
+    #newQuote textarea {
+        margin-top: 60px;
+    }
+    #newQuote input[type=submit] {
+        width: 40%;
+        position: absolute;
+        top: 2%;
+        right: 2.5%;
+    }
 
     /* quotes list */
     #allQuotes input {
@@ -416,20 +421,23 @@ input[type=submit] {
 
 /* Larger than mobile */
 @media (min-width: 400px) {
-    section {
-        width: 98%;
-        padding: 5px;
-    }
     .index h1 {
         display: none;
     }
+    
 }
 
 /* Larger than phablet (also point when grid becomes active) */
 @media (min-width: 550px) {}
 
 /* Larger than tablet */
-@media (min-width: 750px) {}
+@media (min-width: 750px) {
+
+/* Nouvelle citation */
+    #newQuote textarea {
+        margin-top: 70px;
+    }
+}
 
 /* Larger than desktop */
 @media (min-width: 1000px) {
@@ -448,6 +456,11 @@ input[type=submit] {
     .summary article {
         width: 48%;
         margin-left: 5px;
+    }
+
+    /* Nouvelle citation */
+    #newQuote input[type=submit] {
+        position: relative;
     }
 
     /* Quotes list */
