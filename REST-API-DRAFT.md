@@ -21,7 +21,7 @@ stats/quotes -> gives stats about quotes
 *Backend for non url rewrite:*
 
 ```
-stats?subject=quotes -> gives stats about quotes  
+stats?method=quotes -> gives stats about quotes  
 {...}&type=posted -> gives nb quotes posted  
 {...}&type=delivered -> gives nb quotes delivered  
 &when={lastYear|lastMonth|lastWeek|yesterday|today} -> gives nb quotes last year, last month, last week, yesterday or today  
