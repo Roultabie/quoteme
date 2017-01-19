@@ -16,9 +16,11 @@ stats/quotes -> gives stats about quotes
 /{...}/{...}/{year}/{month} -> (int 2) gives nb posted on {month}  
 /{...}/{...}/{year}/{month}/{day} -> (int 2) gives nb posted on {day}  
 /{...}/{...}/{...}/{user} -> filter search by user {user}  
+```
 
 *Backend for non url rewrite:*
 
+```
 stats?subject=quotes -> gives stats about quotes  
 {...}&type=posted -> gives nb quotes posted  
 {...}&type=delivered -> gives nb quotes delivered  
@@ -27,3 +29,4 @@ stats?subject=quotes -> gives stats about quotes
 &year={year}&month={month} -> (int 2) gives nb posted on {month}  
 &year={year}&month={month}&day={day} -> (int 2) gives nb posted on {day}  
 &user={user} -> filter search by user {user}  
+```
