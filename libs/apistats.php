@@ -1,0 +1,111 @@
+<?php
+
+# Models
+
+
+# Controllers
+/**
+ * Quoteme api stats class
+ *
+ * Give RESful API for q.uote.me stats
+ *
+ * @package     quoteme
+ * @author      Daniel Douat <daniel@gorgones.net>
+ * @link        http://daniel.douat.fr
+ * WIP:https://google.github.io/styleguide/jsoncstyleguide.xml#JSON_Structure_&_Reserved_Property_Names
+ */
+class apiStats
+{
+    function __construct()
+    {
+        $this->apiVersion = '0.0';
+        $this->domain     = 'statistics';
+        $this->methodType = 'get';
+        $this->methods    = ['quotes'];
+        $urlRewrite       = (empty($GLOBALS['config']['apiUrlRewrite'])) ? true : false;
+        self::$tblPrefix  = $GLOBALS['config']['tblPrefix'];
+    }
+
+    private function returnSuccess($items, $context)
+    {
+        switch ($code) {
+            case 200:
+                $message = 'Success';
+                break;
+            default:
+                $message = 'Unknown Success';
+                break;
+        }
+        $datas = [];
+        $datas['apiVersion']      = $this->apiVersion;
+        $datas['context']         = $context;
+        $datas['data']['code']    = $code;
+        $datas['data']['message'] = $message;
+
+        $datas['items'] = [];
+        if (is_array($items)) $data['items'] = $items;
+
+        return json_encode($datas);
+    }
+
+    private function returnError($code, $context, $reason = '')
+    {
+        switch ($code) {
+            case 400:
+                $message = 'Bad Request';
+                break;
+            case 401:
+                $message = 'Unauthorized';
+                break;
+            case 404:
+                $message = 'Not Found';
+                break;
+            case 405:
+                $message = 'Method Not Allowed';
+                break;
+            case 409:
+                $message = 'Bad Request';
+                break;
+            default:
+                $message = 'Unknown Error';
+                break;
+        }
+        $datas = [];
+        $datas['apiVersion'] = $this->apiVersion;
+        $datas['context']    = $context;
+        $datas['error']['code']    = $code;
+        $datas['error']['message'] = $message;
+
+        $datas['error']['errors'] = [];
+        $datas['error']['errors']['domain']  = $this->domain;
+        $datas['error']['errors']['message'] = $message;
+        if (false && !empty($reason)) { // WIP: if user is dev or admin
+            $datas['error']['errors']['reason'] = $reason;
+        }
+
+        return json_encode($datas);
+    }
+
+    private function returnMethod($method)
+    {
+        parse_str($_SERVER["QUERY_STRING"], $parameters);
+        $datas = [];
+        //$datas['method'] = $parameters['method'] . '.' . $this->methodType;
+        $datas['method'] = $parameters['method'];
+        unset($parameters['method']);
+        $datas['params'] = $parameters;
+        $this->method = $datas;
+    }
+
+    // private function setTable()
+    // {
+    //     if ($this->method['method'] === 'quotes') {
+    //         if ($this->method['params']['type'] === 'posted') {
+    //             $table = self::$tblPrefix .'quotes';
+    //         }
+    //         elseif ($this->method['params']['type'] === 'delivered') {
+    //             $table = self::$tblPrefix .'';
+    //         }
+    //     }
+    // }
+}
