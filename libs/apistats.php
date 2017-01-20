@@ -40,7 +40,7 @@ class statsQueries
                       AND d.date LIKE ":dateSearch";';
         }
         else {
-            $query = 'SELECT date permalink source parser
+            $query = 'SELECT COUNT (id) AS total
                       FROM ' . self::$tblPrefix . 'delivered
                       WHERE date LIKE ":dateSearch"';
         }
