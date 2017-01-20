@@ -49,11 +49,11 @@ class statsQueries
         if (!empty($user)) $stmt->bindValue(':user', $user, PDO::PARAM_STR);
         $stmt->bindValue(':dateSearch', $dateSearch, PDO::PARAM_STR);
         $stmt->execute();
-        $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $datas = $stmt->fetchAll(PDO::FETCH_OBJ);
         $stmt = NULL;
 
         if (count($datas) > 0) {
-            if $datas[0]['total'] !== '0') return $datas[0]['total'];
+            if $datas[0]->total !== '0') return $datas[0]->total;
         }
 
         return 404;
@@ -82,14 +82,14 @@ class statsQueries
                   WHERE date LIKE ":dateSearch"
                   AND user LIKE ":user"';
         $stmt = dbConnexion::getInstance()->prepare($query);
-        if (!empty($user)) $stmt->bindValue(':user', $user, PDO::PARAM_STR);
+        $stmt->bindValue(':user', $user, PDO::PARAM_STR);
         $stmt->bindValue(':dateSearch', $dateSearch, PDO::PARAM_STR);
         $stmt->execute();
-        $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $datas = $stmt->fetchAll(PDO::FETCH_OBJ);
         $stmt = NULL;
 
         if (count($datas) > 0) {
-            if $datas[0]['total'] !== '0') return $datas[0]['total'];
+            if $datas[0]->total !== '0') return $datas[0]->total;
         }
 
         return 404;
