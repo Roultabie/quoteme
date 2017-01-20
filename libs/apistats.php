@@ -114,6 +114,65 @@ class apiStats
         $this->methods    = ['quotes'];
         $urlRewrite       = (empty($GLOBALS['config']['apiUrlRewrite'])) ? true : false;
         self::$tblPrefix  = $GLOBALS['config']['tblPrefix'];
+        $this->Queries    = new statsQueries();
+    }
+
+    public function getDelivered($datas)
+    {
+        if (is_array($datas)) {
+            if (isset($datas['shortcut'])) {
+                if ($array = $this->shortcutToDate($shortcut)) {
+                    list($year, $month, $day) = $array;
+                }
+                else {
+                    return $this->returnError(400, 'delivered');
+                }
+            }
+            elseif (count($datas['year']) === 4) {
+                $year = $datas['year'];
+                if (count($datas['month']) === 2) {
+                    $month = $datas['month'];
+                    if ($datas['day'] === 2) {
+                        $day = $datas['day'];
+                    }
+                }
+            }
+        }
+        else {
+            return $this->returnError(400, 'delivered');
+        }
+    }
+
+    private function shortcutToDate($shortcut)
+    {
+        $date = new DateTime('now');
+        switch ($shortcut) {
+            case 'lastyear':
+                $date->modify('-1 year');
+                $year = $date->format('Y');
+                break;
+            case 'lastmonth':
+                $date->modify('-1 month');
+                $year  = $date->format('Y');
+                $month = $date->format('m');
+                break;
+            case 'lastweek':
+                $date->modify('-1 week');
+                $year  = $date->format('Y');
+                $month = $date->format('m');
+                $day   = $date->format('d');
+                break;
+            case 'yesterday':
+                $date->modify('yesterday');
+                $year  = $date->format('Y');
+                $month = $date->format('m');
+                $day   = $date->format('d');
+                break;
+            default:
+                return false;
+                break;
+        }
+        return [$year, $month, $day];
     }
 
     private function returnSuccess($items, $context)
