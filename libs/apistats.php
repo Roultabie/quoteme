@@ -14,21 +14,8 @@ class statsQueries
 
     function getDelivered($year = $month = $day = $user = '')
     {
-        if (!empty($year)) {
-            if (count($year) != 4) return 400;
-            $dateSearch = $year . '-';
-        }
-        if (!empty($month)) {
-            if (count($month) != 2) return 400;
-            if (empty($year)) return 400;
-            $dateSearch .= $month . '-';
-        }
-        if (!empty($day)) {
-            if (count($day) != 2) return 400;
-            if (empty($month)) return 400;
-            $dateSearch .= $day;
-        }
-        $dateSearch .= '%'
+        $dateSearch = $this->returnDateSearch($year, $month, $day)
+        if ($dateSearch === false) return 400;
 
         if (!empty($user)) {
             $query = 'SELECT ' . self::$tblPrefix . 'users.id,
@@ -61,21 +48,9 @@ class statsQueries
 
     function getPosted($year = $month = $day = $user = '')
     {
-        if (!empty($year)) {
-            if (count($year) != 4) return 400;
-            $dateSearch = $year . '-';
-        }
-        if (!empty($month)) {
-            if (count($month) != 2) return 400;
-            if (empty($year)) return 400;
-            $dateSearch .= $month . '-';
-        }
-        if (!empty($day)) {
-            if (count($day) != 2) return 400;
-            if (empty($month)) return 400;
-            $dateSearch .= $day;
-        }
-        $dateSearch .= '%'
+        $dateSearch = $this->returnDateSearch($year, $month, $day)
+        if ($dateSearch === false) return 400;
+
         $user = (empty($user)) ? '%' : $user;
         $query = 'SELECT COUNT (id) AS total
                   FROM ' . self::$tblPrefix . 'quotes
@@ -93,6 +68,27 @@ class statsQueries
         }
 
         return 404;
+    }
+
+    private function formatDateSearch($year = $month = $day = '')
+    {
+        if (!empty($year)) {
+            if (count($year) != 4) return false;
+            $dateSearch = $year . '-';
+        }
+        if (!empty($month)) {
+            if (count($month) != 2) return false;
+            if (empty($year)) return false;
+            $dateSearch .= $month . '-';
+        }
+        if (!empty($day)) {
+            if (count($day) != 2) return false;
+            if (empty($month)) return false;
+            $dateSearch .= $day;
+        }
+        $dateSearch .= '%'
+
+        return $dateSearch;
     }
 }
 
