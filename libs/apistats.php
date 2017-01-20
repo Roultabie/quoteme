@@ -15,16 +15,16 @@ class statsQueries
     function getDelivered($year = $month = $day = $user = '')
     {
         if (!empty($year)) {
-            if (count($year) < 4) return 400;
+            if (count($year) != 4) return 400;
             $dateSearch = $year . '-';
         }
         if (!empty($month)) {
-            if (count($month) < 2) return 400;
+            if (count($month) != 2) return 400;
             if (empty($year)) return 400;
             $dateSearch .= $month . '-';
         }
         if (!empty($day)) {
-            if (count($day) < 2) return 400;
+            if (count($day) != 2) return 400;
             if (empty($month)) return 400;
             $dateSearch .= $day;
         }
