@@ -32,7 +32,7 @@ class statsQueries
 
         if (!empty($user)) {
             $query = 'SELECT ' . self::$tblPrefix . 'users.id,
-                      COUNT (' . self::$tblPrefix . 'delivered.id,) AS total
+                      COUNT (' . self::$tblPrefix . 'delivered.id) AS total
                       FROM ' . self::$tblPrefix . 'users AS u
                       INNER JOIN ' . self::$tblPrefix . 'delivered AS d
                       ON u.share_token = d.share_token
