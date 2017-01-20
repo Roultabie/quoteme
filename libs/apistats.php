@@ -77,7 +77,7 @@ class statsQueries
         }
         $dateSearch .= '%'
         $user = (empty($user)) ? '%' : $user;
-        $query = 'SELECT COUNT(id)
+        $query = 'SELECT COUNT (id) AS total
                   FROM ' . self::$tblPrefix . 'quotes
                   WHERE date LIKE ":dateSearch"
                   AND user LIKE ":user"';
