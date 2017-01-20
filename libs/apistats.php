@@ -118,9 +118,6 @@ class apiStats
             case 405:
                 $message = 'Method Not Allowed';
                 break;
-            case 409:
-                $message = 'Bad Request';
-                break;
             default:
                 $message = 'Unknown Error';
                 break;
