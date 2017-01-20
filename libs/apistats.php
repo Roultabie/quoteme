@@ -44,15 +44,18 @@ class statsQueries
                       FROM ' . self::$tblPrefix . 'delivered
                       WHERE date LIKE ":dateSearch"';
         }
+
         $stmt = dbConnexion::getInstance()->prepare($query);
         if (!empty($user)) $stmt->bindValue(':user', $user, PDO::PARAM_STR);
         $stmt->bindValue(':dateSearch', $dateSearch, PDO::PARAM_STR);
         $stmt->execute();
         $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt = NULL;
+
         if (count($datas) > 0) {
             if $datas[0]['total'] !== '0') return $datas[0]['total'];
         }
+        
         return 404;
     }
 }
