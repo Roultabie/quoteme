@@ -184,18 +184,10 @@ class apiStats
 
     private function returnSuccess($items, $context)
     {
-        switch ($code) {
-            case 200:
-                $message = 'Success';
-                break;
-            default:
-                $message = 'Unknown Success';
-                break;
-        }
         $datas = [];
         $datas['apiVersion']      = $this->apiVersion;
         $datas['context']         = $context;
-        $datas['data']['code']    = $code;
+        $datas['data']['code']    = 200;
         $datas['data']['message'] = $message;
 
         $datas['items'] = [];
