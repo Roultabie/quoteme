@@ -150,6 +150,24 @@ class apiStats
         }
     }
 
+    public function getPosted($datas)
+    {
+        if (is_array($datas)) {
+            if ($elements = $this->arrayToElements($datas)) {
+                list($year, $month, $day, $user) = $elements;
+            }
+            else {
+                $this->returnError(400, 'delivered');
+            }
+        }
+        if ($result = $this->queries($year, $month, $day, $user) !== 404) {
+            return $this->returnSuccess(['total' => $result], 'delivered');
+        }
+        else {
+            return $this->returnError($result, 'delivered');
+        }
+    }
+
     private function arrayToElements($datas)
     {
         if (is_array($datas)) {
