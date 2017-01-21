@@ -150,6 +150,34 @@ class apiStats
         }
     }
 
+    private function arrayToElements($datas)
+    {
+        if (is_array($datas)) {
+            if (isset($datas['shortcut'])) {
+                if ($array = $this->shortcutToDate($shortcut)) {
+                    list($year, $month, $day) = $array;
+                }
+                else {
+                    $year = $month = $day = false;
+                }
+            }
+            elseif (!empty($datas['year']) {
+                $year = (count($datas['year']) === 4) ? $datas['year'] : false;
+                if (!empty($datas['month']) {
+                    $month = (count($datas['month']) === 2) ? $datas['month'] : false;
+                    if (!empty($datas['day']) {
+                        $day = ($datas['day'] === 2) ? $datas['day'] : false;
+                    }
+                }
+            }
+            if (!$year || !$month || !$day) {
+                return false;
+            }
+            if (isset($datas['user'])) $user = $datas['user'];
+            return [$year, $month, $day, $user];
+        }
+    }
+
     private function shortcutToDate($shortcut)
     {
         $date = new DateTime('now');
