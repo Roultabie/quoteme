@@ -12,7 +12,7 @@ class statsQueries
         self::$tblPrefix  = $GLOBALS['config']['tblPrefix'];
     }
 
-    function getDelivered($year = $month = $day = $user = '')
+    function getDelivered($year = '', $month = '', $day = '', $user = '')
     {
         $dateSearch = $this->returnDateSearch($year, $month, $day)
         if ($dateSearch === false) return 400;
@@ -46,7 +46,7 @@ class statsQueries
         return 404;
     }
 
-    function getPosted($year = $month = $day = $user = '')
+    function getPosted($year = '', $month = '', $day = '', $user = '')
     {
         $dateSearch = $this->returnDateSearch($year, $month, $day)
         if ($dateSearch === false) return 400;
@@ -70,7 +70,7 @@ class statsQueries
         return 404;
     }
 
-    private function formatDateSearch($year = $month = $day = '')
+    private function formatDateSearch($year = '', $month = '', $day = '')
     {
         if (!empty($year)) {
             if (count($year) != 4) return false;
@@ -142,6 +142,7 @@ class apiStats
             }
             if (isset($datas['user'])) $user = $datas['user'];
         }
+
     }
 
     private function shortcutToDate($shortcut)
