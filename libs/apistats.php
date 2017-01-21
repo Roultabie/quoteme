@@ -127,7 +127,7 @@ class apiStats
                 $this->returnError(400, 'delivered');
             }
         }
-        if ($result = $this->queries($year, $month, $day, $user) !== 404) {
+        if ($result = $this->queries->getDelivered($year, $month, $day, $user) !== 404) {
             return $this->returnSuccess(['total' => $result], 'delivered');
         }
         else {
@@ -142,14 +142,14 @@ class apiStats
                 list($year, $month, $day, $user) = $elements;
             }
             else {
-                $this->returnError(400, 'delivered');
+                $this->returnError(400, 'posted');
             }
         }
-        if ($result = $this->queries($year, $month, $day, $user) !== 404) {
-            return $this->returnSuccess(['total' => $result], 'delivered');
+        if ($result = $this->queries->getPosted($year, $month, $day, $user) !== 404) {
+            return $this->returnSuccess(['total' => $result], 'posted');
         }
         else {
-            return $this->returnError($result, 'delivered');
+            return $this->returnError($result, 'posted');
         }
     }
 
