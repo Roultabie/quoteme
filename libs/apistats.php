@@ -120,27 +120,12 @@ class apiStats
     public function getDelivered($datas)
     {
         if (is_array($datas)) {
-            if (isset($datas['shortcut'])) {
-                if ($array = $this->shortcutToDate($shortcut)) {
-                    list($year, $month, $day) = $array;
-                }
-                else {
-                    $year = $month = $day = false;
-                }
+            if ($elements = $this->arrayToElements($datas)) {
+                list($year, $month, $day, $user) = $elements;
             }
-            elseif (!empty($datas['year']) {
-                $year = (count($datas['year']) === 4) ? $datas['year'] : false;
-                if (!empty($datas['month']) {
-                    $month = (count($datas['month']) === 2) ? $datas['month'] : false;
-                    if (!empty($datas['day']) {
-                        $day = ($datas['day'] === 2) ? $datas['day'] : false;
-                    }
-                }
+            else {
+                $this->returnError(400, 'delivered');
             }
-            if (!$year || !$month || !$day) {
-                return $this->returnError(400, 'delivered');
-            }
-            if (isset($datas['user'])) $user = $datas['user'];
         }
         if ($result = $this->queries($year, $month, $day, $user) !== 404) {
             return $this->returnSuccess(['total' => $result], 'delivered');
