@@ -142,7 +142,12 @@ class apiStats
             }
             if (isset($datas['user'])) $user = $datas['user'];
         }
-
+        if ($result = $this->queries($year, $month, $day, $user) !== 404) {
+            return $this->returnSuccess(['total' => $result], 'delivered');
+        }
+        else {
+            return $this->returnError($result, 'delivered');
+        }
     }
 
     private function shortcutToDate($shortcut)
