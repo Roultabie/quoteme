@@ -272,16 +272,4 @@ class apiStats
         $datas['params'] = $parameters;
         $this->method = $datas;
     }
-
-    // private function setTable()
-    // {
-    //     if ($this->method['method'] === 'quotes') {
-    //         if ($this->method['params']['type'] === 'posted') {
-    //             $table = self::$tblPrefix .'quotes';
-    //         }
-    //         elseif ($this->method['params']['type'] === 'delivered') {
-    //             $table = self::$tblPrefix .'';
-    //         }
-    //     }
-    // }
 }
