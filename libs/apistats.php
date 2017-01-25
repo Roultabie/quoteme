@@ -14,7 +14,7 @@ class statsQueries
 
     function getDelivered($year = '', $month = '', $day = '', $user = '')
     {
-        $dateSearch = $this->returnDateSearch($year, $month, $day)
+        $dateSearch = $this->returnDateSearch($year, $month, $day);
         if ($dateSearch === false) return 400;
 
         if (!empty($user)) {
@@ -40,7 +40,7 @@ class statsQueries
         $stmt = NULL;
 
         if (count($datas) > 0) {
-            if $datas[0]->total !== '0') return $datas[0]->total;
+            if ($datas[0]->total !== '0') return $datas[0]->total;
         }
 
         return 404;
@@ -48,7 +48,7 @@ class statsQueries
 
     function getPosted($year = '', $month = '', $day = '', $user = '')
     {
-        $dateSearch = $this->returnDateSearch($year, $month, $day)
+        $dateSearch = $this->returnDateSearch($year, $month, $day);
         if ($dateSearch === false) return 400;
 
         $user = (empty($user)) ? '%' : $user;
@@ -64,7 +64,7 @@ class statsQueries
         $stmt = NULL;
 
         if (count($datas) > 0) {
-            if $datas[0]->total !== '0') return $datas[0]->total;
+            if ($datas[0]->total !== '0') return $datas[0]->total;
         }
 
         return 404;
@@ -86,7 +86,7 @@ class statsQueries
             if (empty($month)) return false;
             $dateSearch .= $day;
         }
-        $dateSearch .= '%'
+        $dateSearch .= '%';
 
         return $dateSearch;
     }
@@ -164,11 +164,11 @@ class apiStats
                     $year = $month = $day = false;
                 }
             }
-            elseif (!empty($datas['year']) {
+            elseif (!empty($datas['year'])) {
                 $year = (count($datas['year']) === 4) ? $datas['year'] : false;
-                if (!empty($datas['month']) {
+                if (!empty($datas['month'])) {
                     $month = (count($datas['month']) === 2) ? $datas['month'] : false;
-                    if (!empty($datas['day']) {
+                    if (!empty($datas['day'])) {
                         $day = ($datas['day'] === 2) ? $datas['day'] : false;
                     }
                 }
