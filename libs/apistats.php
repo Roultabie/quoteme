@@ -18,8 +18,8 @@ class statsQueries
         if ($dateSearch === false) return 400;
 
         if (!empty($user)) {
-            $query = 'SELECT ' . self::$tblPrefix . 'users.id,
-                      COUNT(' . self::$tblPrefix . 'delivered.id) AS total
+            $query = 'SELECT "' . self::$tblPrefix . 'users.id",
+                      COUNT("' . self::$tblPrefix . 'delivered.id") AS total
                       FROM ' . self::$tblPrefix . 'users AS u
                       INNER JOIN ' . self::$tblPrefix . 'delivered AS d
                       ON u.share_token = d.share_token
@@ -181,7 +181,7 @@ class apiStats
             if ($year === false || $month === false || $day === false) {
                 return false;
             }
-            if (isset($datas[3])) $user = $datas['user'];
+            if (isset($datas[3])) $user = $datas[3];
             return [$year, $month, $day, $user];
         }
     }
