@@ -6,7 +6,7 @@
  */
 class statsQueries
 {
-
+    private static $tblPrefix;
     function __construct()
     {
         self::$tblPrefix  = $GLOBALS['config']['tblPrefix'];
@@ -106,6 +106,12 @@ class statsQueries
  */
 class apiStats
 {
+    private static $tblPrefix;
+    private $apiVersion;
+    private $domain;
+    private $methodType;
+    private $methods;
+    private $queries;
     function __construct()
     {
         $this->apiVersion = '0.0';
