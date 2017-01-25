@@ -19,31 +19,31 @@ class statsQueries
 
         if (!empty($user)) {
             $query = 'SELECT ' . self::$tblPrefix . 'users.id,
-                      COUNT (' . self::$tblPrefix . 'delivered.id) AS total
+                      COUNT(' . self::$tblPrefix . 'delivered.id) AS total
                       FROM ' . self::$tblPrefix . 'users AS u
                       INNER JOIN ' . self::$tblPrefix . 'delivered AS d
                       ON u.share_token = d.share_token
-                      WHERE u.id = ":user"
-                      AND d.date LIKE ":dateSearch";';
+                      WHERE u.id = :user
+                      AND d.date LIKE :dateSearch;';
         }
         else {
             $query = 'SELECT COUNT(id) AS total
                       FROM ' . self::$tblPrefix . 'delivered
-                      WHERE date LIKE ":dateSearch"';
+                      WHERE date LIKE :dateSearch';
         }
-
         $stmt = dbConnexion::getInstance()->prepare($query);
         if (!empty($user)) $stmt->bindValue(':user', $user, PDO::PARAM_STR);
         $stmt->bindValue(':dateSearch', $dateSearch, PDO::PARAM_STR);
         $stmt->execute();
         $datas = $stmt->fetchAll(PDO::FETCH_OBJ);
+        var_dump($datas);
         $stmt = NULL;
 
-        if (count($datas) > 0) {
+        if (is_array($datas)) {
             if ($datas[0]->total !== '0') return $datas[0]->total;
         }
 
-        return 404;
+        return false;
     }
 
     function getPosted($year = '', $month = '', $day = '', $user = '')
@@ -52,10 +52,10 @@ class statsQueries
         if ($dateSearch === false) return 400;
 
         $user = (empty($user)) ? '%' : $user;
-        $query = 'SELECT COUNT (id) AS total
+        $query = 'SELECT COUNT(id) AS total
                   FROM ' . self::$tblPrefix . 'quotes
-                  WHERE date LIKE ":dateSearch"
-                  AND user LIKE ":user"';
+                  WHERE date LIKE :dateSearch
+                  AND user LIKE :user';
         $stmt = dbConnexion::getInstance()->prepare($query);
         $stmt->bindValue(':user', $user, PDO::PARAM_STR);
         $stmt->bindValue(':dateSearch', $dateSearch, PDO::PARAM_STR);
@@ -67,7 +67,7 @@ class statsQueries
             if ($datas[0]->total !== '0') return $datas[0]->total;
         }
 
-        return 404;
+        return false;
     }
 
     private function returnDateSearch($year = '', $month = '', $day = '')
@@ -132,11 +132,11 @@ class apiStats
                 $this->returnError(400, 'delivered');
             }
         }
-        if ($result = $this->queries->getDelivered($year, $month, $day, $user) !== 404) {
+        if ($result = $this->queries->getDelivered($year, $month, $day, $user)) {
             return $this->returnSuccess(['total' => $result], 'delivered');
         }
         else {
-            return $this->returnError($result, 'delivered');
+            return $this->returnError(404, 'delivered');
         }
     }
 
