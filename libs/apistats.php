@@ -118,9 +118,8 @@ class apiStats
         $this->domain     = 'statistics';
         $this->methodType = 'get';
         $this->methods    = ['quotes'];
-        $urlRewrite       = (empty($GLOBALS['config']['apiUrlRewrite'])) ? true : false;
         self::$tblPrefix  = $GLOBALS['config']['tblPrefix'];
-        $this->Queries    = new statsQueries();
+        $this->queries    = new statsQueries();
     }
 
     public function getDelivered($datas)
