@@ -33,7 +33,7 @@ if (!empty($_GET)) {
             $method   = array_shift($request);
         }
     }
-    var_dump($request);
+    //var_dump($request);
     if ($function === 'stats') {
         require_once BASE_URL . 'libs/apistats.php';
         $stats = new apiStats();

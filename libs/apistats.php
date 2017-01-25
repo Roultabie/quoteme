@@ -27,7 +27,7 @@ class statsQueries
                       AND d.date LIKE ":dateSearch";';
         }
         else {
-            $query = 'SELECT COUNT (id) AS total
+            $query = 'SELECT COUNT(id) AS total
                       FROM ' . self::$tblPrefix . 'delivered
                       WHERE date LIKE ":dateSearch"';
         }
