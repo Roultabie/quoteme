@@ -55,7 +55,7 @@ class statsQueries
                   FROM ' . self::$tblPrefix . 'quotes
                   WHERE date LIKE :dateSearch
                   AND user LIKE :user';
-                  var_dump($query);
+
         $stmt = dbConnexion::getInstance()->prepare($query);
         $stmt->bindValue(':user', $user, PDO::PARAM_STR);
         $stmt->bindValue(':dateSearch', $dateSearch, PDO::PARAM_STR);
@@ -170,18 +170,20 @@ class apiStats
                 }
             }
             else {
-                $year = (strlen($datas[0]) === 4) ? $datas[0] : false;
-                if (!empty($year) && !empty($datas[1])) {
-                    $month = (strlen($datas[1]) === 2) ? $datas[1] : false;
-                    if (!empty($month) && !empty($data[2])) {
-                        $day = (strlen($datas[2]) === 2) ? $datas[2] : false;
+                if (!empty($datas['year'])) {
+                    $year = (strlen($datas['year']) === 4) ? $datas['year'] : false;
+                    if (!empty($datas['month'])) {
+                        $month = (strlen($datas['month']) === 2) ? $datas['month'] : false;
+                        if (!empty($data['day'])) {
+                            $day = (strlen($datas['day']) === 2) ? $datas['day'] : false;
+                        }
                     }
                 }
             }
             if ($year === false || $month === false || $day === false) {
                 return false;
             }
-            if (isset($datas[3])) $user = $datas[3];
+            if (isset($datas['user'])) $user = $datas['user'];
             return [$year, $month, $day, $user];
         }
     }

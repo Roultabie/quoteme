@@ -19,11 +19,8 @@ if (!empty($_GET)) {
         $function = $_GET['function'];
         $type     = $_GET['type'];
         $method   = $_GET['method'];
-        $year     = (isset($_GET['year'])) ? $_GET['year'] : '';
-        $month    = (isset($_GET['month'])) ? $_GET['month'] : '';
-        $day      = (isset($_GET['day'])) ? $_GET['day'] : '';
-        $user     = (isset($_GET['user'])) ? $_GET['user'] : '';
-        $request  = [$year, $month, $day, $user];
+        unset($_GET['function'], $_GET['type'], $_GET['method']);
+        $request  = $_GET;
     }
     else {
         $request = explode('/', $_GET['handler']);
@@ -33,7 +30,6 @@ if (!empty($_GET)) {
             $method   = array_shift($request);
         }
     }
-    //var_dump($request);
     if ($function === 'stats') {
         require_once BASE_URL . 'libs/apistats.php';
         $stats = new apiStats();
