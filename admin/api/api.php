@@ -30,7 +30,7 @@ if (!empty($_GET)) {
         }
     }
     if ($function === 'stats') {
-        require_once 'libs/apistats.php';
+        require_once BASE_URL . 'libs/apistats.php';
         $stats = new apiStats();
         if ($type === 'delivered') {
             $result = $stats->getDelivered($request);
