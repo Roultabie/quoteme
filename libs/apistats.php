@@ -18,7 +18,7 @@ class statsQueries
         if ($dateSearch === false) return 400;
 
         if (!empty($user)) {
-            $query = 'SELECT COUNT(d.id) AS total
+            $query = 'SELECT COUNT(d.id) AS count
                       FROM ' . self::$tblPrefix . 'delivered AS d
                       LEFT JOIN ' . self::$tblPrefix . 'users AS u
                       ON d.share_token = u.share_token
@@ -26,9 +26,12 @@ class statsQueries
                       AND d.date LIKE :dateSearch;';
         }
         else {
-            $query = 'SELECT COUNT(id) AS total
-                      FROM ' . self::$tblPrefix . 'delivered
-                      WHERE date LIKE :dateSearch';
+            $query = 'SELECT u.username, COUNT(d.id) AS count
+                      FROM ' . self::$tblPrefix . 'delivered AS d
+                      LEFT JOIN ' . self::$tblPrefix . 'users AS u
+                      ON d.share_token = u.share_token
+                      WHERE date LIKE :dateSearch
+                      GROUP BY u.username WITH ROLLUP';
         }
 
         $stmt = dbConnexion::getInstance()->prepare($query);
@@ -37,9 +40,8 @@ class statsQueries
         $stmt->execute();
         $datas = $stmt->fetchAll(PDO::FETCH_OBJ);
         $stmt = NULL;
-
         if (is_array($datas)) {
-            if ($datas[0]->total !== '0') return $datas[0]->total;
+            if ($datas[0]->total !== '0') return $datas;
         }
 
         return false;
@@ -133,7 +135,7 @@ class apiStats
             }
         }
         if ($result = $this->queries->getDelivered($year, $month, $day, $user)) {
-            return $this->returnSuccess(['count' => $result], 'delivered');
+            return $this->returnSuccess($result, 'delivered');
         }
         else {
             return $this->returnError(404, 'delivered');
