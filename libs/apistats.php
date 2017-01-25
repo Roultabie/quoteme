@@ -18,11 +18,10 @@ class statsQueries
         if ($dateSearch === false) return 400;
 
         if (!empty($user)) {
-            $query = 'SELECT "' . self::$tblPrefix . 'users.id",
-                      COUNT("' . self::$tblPrefix . 'delivered.id") AS total
-                      FROM ' . self::$tblPrefix . 'users AS u
-                      INNER JOIN ' . self::$tblPrefix . 'delivered AS d
-                      ON u.share_token = d.share_token
+            $query = 'SELECT COUNT(d.id) AS total
+                      FROM ' . self::$tblPrefix . 'delivered AS d
+                      LEFT JOIN ' . self::$tblPrefix . 'users AS u
+                      ON d.share_token = u.share_token
                       WHERE u.id = :user
                       AND d.date LIKE :dateSearch;';
         }
@@ -56,6 +55,7 @@ class statsQueries
                   FROM ' . self::$tblPrefix . 'quotes
                   WHERE date LIKE :dateSearch
                   AND user LIKE :user';
+                  var_dump($query);
         $stmt = dbConnexion::getInstance()->prepare($query);
         $stmt->bindValue(':user', $user, PDO::PARAM_STR);
         $stmt->bindValue(':dateSearch', $dateSearch, PDO::PARAM_STR);
@@ -225,8 +225,8 @@ class apiStats
         $datas['context']         = $context;
         $datas['data']['code']    = 200;
 
-        $datas['items'] = [];
-        if (is_array($items)) $datas['items'] = $items;
+        $datas['data']['items'] = [];
+        if (is_array($items)) $datas['data']['items'] = $items;
 
         return json_encode($datas);
     }
