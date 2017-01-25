@@ -70,7 +70,7 @@ class statsQueries
         return 404;
     }
 
-    private function formatDateSearch($year = '', $month = '', $day = '')
+    private function returnDateSearch($year = '', $month = '', $day = '')
     {
         if (!empty($year)) {
             if (count($year) != 4) return false;
