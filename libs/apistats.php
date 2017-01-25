@@ -132,7 +132,7 @@ class apiStats
             }
         }
         if ($result = $this->queries->getDelivered($year, $month, $day, $user)) {
-            return $this->returnSuccess(['total' => $result], 'delivered');
+            return $this->returnSuccess(['count' => $result], 'delivered');
         }
         else {
             return $this->returnError(404, 'delivered');
@@ -150,7 +150,7 @@ class apiStats
             }
         }
         if ($result = $this->queries->getPosted($year, $month, $day, $user)) {
-            return $this->returnSuccess(['total' => $result], 'posted');
+            return $this->returnSuccess(['count' => $result], 'posted');
         }
         else {
             return $this->returnError($result, 'posted');
