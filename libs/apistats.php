@@ -181,7 +181,7 @@ class apiStats
             if ($year === false || $month === false || $day === false) {
                 return false;
             }
-            if (isset($datas['user'])) $user = $datas['user'];
+            if (isset($datas[3])) $user = $datas['user'];
             return [$year, $month, $day, $user];
         }
     }
