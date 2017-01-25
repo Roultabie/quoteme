@@ -226,7 +226,7 @@ class apiStats
         $datas['data']['message'] = $message;
 
         $datas['items'] = [];
-        if (is_array($items)) $data['items'] = $items;
+        if (is_array($items)) $datas['items'] = $items;
 
         return json_encode($datas);
     }
