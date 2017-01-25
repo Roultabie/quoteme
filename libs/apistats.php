@@ -31,7 +31,7 @@ class statsQueries
                       FROM ' . self::$tblPrefix . 'delivered
                       WHERE date LIKE :dateSearch';
         }
-        var_dump($dateSearch);
+
         $stmt = dbConnexion::getInstance()->prepare($query);
         if (!empty($user)) $stmt->bindValue(':user', $user, PDO::PARAM_STR);
         $stmt->bindValue(':dateSearch', $dateSearch, PDO::PARAM_STR);
@@ -73,16 +73,16 @@ class statsQueries
     private function returnDateSearch($year = '', $month = '', $day = '')
     {
         if (!empty($year)) {
-            if (count($year) != 4) return false;
+            if (strlen($year) != 4) return false;
             $dateSearch = $year . '-';
         }
         if (!empty($month)) {
-            if (count($month) != 2) return false;
+            if (strlen($month) != 2) return false;
             if (empty($year)) return false;
             $dateSearch .= $month . '-';
         }
         if (!empty($day)) {
-            if (count($day) != 2) return false;
+            if (strlen($day) != 2) return false;
             if (empty($month)) return false;
             $dateSearch .= $day;
         }
