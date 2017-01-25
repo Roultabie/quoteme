@@ -3,6 +3,7 @@
 class dataQueries
 {
     private static $table;
+    private static $tblPrefix;
     private static $perPage;
     private static $offset;
     private static $fields;
@@ -14,9 +15,10 @@ class dataQueries
         if (is_string($table)) {
             self::$table   = $GLOBALS['config']['tblPrefix'] . $table;
         }
-        self::$perPage = (is_int($GLOBALS['config']['perpage'])) ? $GLOBALS['config']['perpage'] : 10;
-        self::$fields  = $fields;
-        self::$id = $id;
+        $this->tblPrefix = $GLOBALS['config']['tblPrefix'];
+        self::$perPage   = (is_int($GLOBALS['config']['perpage'])) ? $GLOBALS['config']['perpage'] : 10;
+        self::$fields    = $fields;
+        self::$id        = $id;
         $this->countElements();
     }
 
@@ -90,11 +92,11 @@ class dataQueries
 function getDatas($table, $page, $like = '')
 {
     $perpage = (!empty($GLOBALS['config']['perpage'])) ? $GLOBALS['config']['perpage'] : 10;
-    
+
     $query = 'SELECT id, quote, author, source, tags, permalink, date
-              FROM ' . self::$tblPrefix . $table . ' INNER JOIN (
+              FROM ' . $this->$tblPrefix . $table . ' INNER JOIN (
                    SELECT id
-                   FROM ' . self::$tblPrefix . $table . '
+                   FROM ' . $this->$tblPrefix . $table . '
                    ORDER BY id DESC
                    LIMIT ' . $perpage . '
                    OFFSET ' . $offset . '
