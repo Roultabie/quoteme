@@ -31,6 +31,7 @@ class statsQueries
                       FROM ' . self::$tblPrefix . 'delivered
                       WHERE date LIKE :dateSearch';
         }
+        var_dump($dateSearch);
         $stmt = dbConnexion::getInstance()->prepare($query);
         if (!empty($user)) $stmt->bindValue(':user', $user, PDO::PARAM_STR);
         $stmt->bindValue(':dateSearch', $dateSearch, PDO::PARAM_STR);
@@ -160,7 +161,7 @@ class apiStats
     private function arrayToElements($datas)
     {
         if (is_array($datas)) {
-            if (isset($datas['shortcut'])) {
+            if (count($datas[0]) > 4) {
                 if ($array = $this->shortcutToDate($shortcut)) {
                     list($year, $month, $day) = $array;
                 }
@@ -168,16 +169,16 @@ class apiStats
                     $year = $month = $day = false;
                 }
             }
-            elseif (!empty($datas['year'])) {
-                $year = (count($datas['year']) === 4) ? $datas['year'] : false;
-                if (!empty($datas['month'])) {
-                    $month = (count($datas['month']) === 2) ? $datas['month'] : false;
-                    if (!empty($datas['day'])) {
-                        $day = ($datas['day'] === 2) ? $datas['day'] : false;
+            else {
+                $year = (strlen($datas[0]) === 4) ? $datas[0] : false;
+                if (!empty($year) && !empty($datas[1])) {
+                    $month = (strlen($datas[1]) === 2) ? $datas[1] : false;
+                    if (!empty($month) && !empty($data[2])) {
+                        $day = (strlen($datas[2]) === 2) ? $datas[2] : false;
                     }
                 }
             }
-            if (!$year || !$month || !$day) {
+            if ($year === false || $month === false || $day === false) {
                 return false;
             }
             if (isset($datas['user'])) $user = $datas['user'];
