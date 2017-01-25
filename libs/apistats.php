@@ -36,7 +36,6 @@ class statsQueries
         $stmt->bindValue(':dateSearch', $dateSearch, PDO::PARAM_STR);
         $stmt->execute();
         $datas = $stmt->fetchAll(PDO::FETCH_OBJ);
-        var_dump($datas);
         $stmt = NULL;
 
         if (is_array($datas)) {
@@ -150,7 +149,7 @@ class apiStats
                 $this->returnError(400, 'posted');
             }
         }
-        if ($result = $this->queries->getPosted($year, $month, $day, $user) !== 404) {
+        if ($result = $this->queries->getPosted($year, $month, $day, $user)) {
             return $this->returnSuccess(['total' => $result], 'posted');
         }
         else {
