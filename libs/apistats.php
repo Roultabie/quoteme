@@ -224,7 +224,6 @@ class apiStats
         $datas['apiVersion']      = $this->apiVersion;
         $datas['context']         = $context;
         $datas['data']['code']    = 200;
-        $datas['data']['message'] = $message;
 
         $datas['items'] = [];
         if (is_array($items)) $datas['items'] = $items;
