@@ -10,6 +10,8 @@ class statsQueries
     function __construct()
     {
         self::$tblPrefix  = $GLOBALS['config']['tblPrefix'];
+        $user = new userQueries();
+        $this->userConfig = $user->config;
     }
 
     function getDelivered($year = '', $month = '', $day = '', $user = '')
@@ -17,23 +19,37 @@ class statsQueries
         $dateSearch = $this->returnDateSearch($year, $month, $day);
         if ($dateSearch === false) return 400;
 
-        if (!empty($user)) {
-            $query = 'SELECT COUNT(d.id) AS count
-                      FROM ' . self::$tblPrefix . 'delivered AS d
-                      LEFT JOIN ' . self::$tblPrefix . 'users AS u
-                      ON d.share_token = u.share_token
-                      WHERE u.id = :user
-                      AND d.date LIKE :dateSearch;';
-        }
-        else {
-            $query = 'SELECT u.username, COUNT(d.id) AS count
-                      FROM ' . self::$tblPrefix . 'delivered AS d
-                      LEFT JOIN ' . self::$tblPrefix . 'users AS u
-                      ON d.share_token = u.share_token
-                      WHERE date LIKE :dateSearch
-                      GROUP BY u.username WITH ROLLUP';
+        if ($this->userConfig['type'] == '2') {
+            $user = $this->userConfig['id'];
         }
 
+        if (empty($user)) {
+            if ($this->userConfig['type'] > '1') {
+                $query = 'SELECT (
+                              SELECT COUNT(*)
+                              FROM ' . self::$tblPrefix . 'delivered AS d
+                              LEFT JOIN qm_users AS u
+                              ON d.share_token = u.share_token
+                              WHERE d.date LIKE "%"
+                          ) AS user, (
+                              SELECT COUNT(*) FROM qm_quotes
+                          ) AS total';
+            }
+            else {
+                $query = 'SELECT u.username, COUNT(d.id) AS count
+                          FROM ' . self::$tblPrefix . 'delivered AS d
+                          LEFT JOIN ' . self::$tblPrefix . 'users AS u
+                          ON d.share_token = u.share_token
+                          WHERE d.date LIKE :dateSearch
+                          GROUP BY u.username WITH ROLLUP';
+            }
+        }
+        else {
+            $query = 'SELECT COUNT(*) AS count
+                      FROM ' . self::$tblPrefix . 'delivered
+                      WHERE date LIKE :dateSearch
+                      AND user LIKE :user';
+        }
         $stmt = dbConnexion::getInstance()->prepare($query);
         if (!empty($user)) $stmt->bindValue(':user', $user, PDO::PARAM_STR);
         $stmt->bindValue(':dateSearch', $dateSearch, PDO::PARAM_STR);
@@ -52,21 +68,42 @@ class statsQueries
         $dateSearch = $this->returnDateSearch($year, $month, $day);
         if ($dateSearch === false) return 400;
 
-        $user = (empty($user)) ? '%' : $user;
-        $query = 'SELECT COUNT(id) AS total
-                  FROM ' . self::$tblPrefix . 'quotes
-                  WHERE date LIKE :dateSearch
-                  AND user LIKE :user';
-
+        if (empty($user)) {
+            if ($this->userConfig['type'] > '1') {
+                $query = 'SELECT (
+                              SELECT COUNT(*)
+                              FROM ' . self::$tblPrefix . 'quotes AS q
+                              LEFT JOIN qm_users AS u
+                              ON q.user = u.id
+                              WHERE q.date LIKE "%"
+                          ) AS user, (
+                              SELECT COUNT(*) FROM qm_quotes
+                          ) AS total';
+            }
+            else {
+                $query = 'SELECT u.username, COUNT(q.id) AS count
+                          FROM ' . self::$tblPrefix . 'quotes AS q
+                          LEFT JOIN ' . self::$tblPrefix . 'users AS u
+                          ON q.user = u.id
+                          WHERE q.date LIKE :dateSearch
+                          GROUP BY u.username WITH ROLLUP';
+            }
+        }
+        else {
+            $query = 'SELECT COUNT(*) AS count
+                      FROM ' . self::$tblPrefix . 'quotes
+                      WHERE date LIKE :dateSearch
+                      AND user LIKE :user';
+        }
         $stmt = dbConnexion::getInstance()->prepare($query);
-        $stmt->bindValue(':user', $user, PDO::PARAM_STR);
+        if (!empty($user)) $stmt->bindValue(':user', $user, PDO::PARAM_STR);
         $stmt->bindValue(':dateSearch', $dateSearch, PDO::PARAM_STR);
         $stmt->execute();
         $datas = $stmt->fetchAll(PDO::FETCH_OBJ);
         $stmt = NULL;
 
         if (count($datas) > 0) {
-            if ($datas[0]->total !== '0') return $datas[0]->total;
+            if ($datas[0]->total !== '0') return $datas;
         }
 
         return false;
@@ -122,6 +159,8 @@ class apiStats
         $this->methods    = ['quotes'];
         self::$tblPrefix  = $GLOBALS['config']['tblPrefix'];
         $this->queries    = new statsQueries();
+        $user = new userQueries();
+        $this->userConfig = $user->config;
     }
 
     public function getDelivered($datas)
@@ -134,7 +173,16 @@ class apiStats
                 $this->returnError(400, 'delivered');
             }
         }
-        if ($result = $this->queries->getDelivered($year, $month, $day, $user)) {
+        if ($elements = $this->queries->getDelivered($year, $month, $day, $user)) {
+            if ($this->userConfig['type'] > '1') {
+                $result[0]['username'] = $this->userConfig['username'];
+                $result[0]['count']    = $elements[0]->user;
+                $result[1]['username'] = 'null';
+                $result[1]['count']    = $elements[0]->total;
+            }
+            else {
+                $result = $elements;
+            }
             return $this->returnSuccess($result, 'delivered');
         }
         else {
@@ -152,8 +200,17 @@ class apiStats
                 $this->returnError(400, 'posted');
             }
         }
-        if ($result = $this->queries->getPosted($year, $month, $day, $user)) {
-            return $this->returnSuccess(['count' => $result], 'posted');
+        if ($elements = $this->queries->getPosted($year, $month, $day, $user)) {
+            if ($this->userConfig['type'] > '1') {
+                $result[0]['username'] = $this->userConfig['username'];
+                $result[0]['count']    = $elements[0]->user;
+                $result[1]['username'] = 'null';
+                $result[1]['count']    = $elements[0]->total;
+            }
+            else {
+                $result = $elements;
+            }
+            return $this->returnSuccess($result, 'posted');
         }
         else {
             return $this->returnError($result, 'posted');
