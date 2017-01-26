@@ -22,7 +22,6 @@ class statsQueries
         if ($this->userConfig['type'] == '2') {
             $user = $this->userConfig['id'];
         }
-
         if (empty($user)) {
             if ($this->userConfig['type'] > '1') {
                 $query = 'SELECT (
@@ -222,8 +221,8 @@ class apiStats
     private function arrayToElements($datas)
     {
         if (is_array($datas)) {
-            if (count($datas[0]) > 4) {
-                if ($array = $this->shortcutToDate($shortcut)) {
+            if (strlen($datas['year']) > 4) {
+                if ($array = $this->shortcutToDate($datas['year'])) {
                     list($year, $month, $day) = $array;
                 }
                 else {
@@ -235,7 +234,7 @@ class apiStats
                     $year = (strlen($datas['year']) === 4) ? $datas['year'] : false;
                     if (!empty($datas['month'])) {
                         $month = (strlen($datas['month']) === 2) ? $datas['month'] : false;
-                        if (!empty($data['day'])) {
+                        if (!empty($datas['day'])) {
                             $day = (strlen($datas['day']) === 2) ? $datas['day'] : false;
                         }
                     }
@@ -256,6 +255,7 @@ class apiStats
             case 'lastyear':
                 $date->modify('-1 year');
                 $year = $date->format('Y');
+                var_dump($year);
                 break;
             case 'lastmonth':
                 $date->modify('-1 month');
