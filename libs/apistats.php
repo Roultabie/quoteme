@@ -45,10 +45,12 @@ class statsQueries
             }
         }
         else {
-            $query = 'SELECT COUNT(*) AS count
-                      FROM ' . self::$tblPrefix . 'delivered
-                      WHERE date LIKE :dateSearch
-                      AND user LIKE :user';
+            $query = 'SELECT COUNT(d.id) AS count
+                      FROM ' . self::$tblPrefix . 'delivered AS d
+                      LEFT JOIN ' . self::$tblPrefix . 'users AS u
+                      ON d.share_token = u.share_token
+                      WHERE d.date LIKE :dateSearch
+                      AND u.id LIKE :user';
         }
         $stmt = dbConnexion::getInstance()->prepare($query);
         if (!empty($user)) $stmt->bindValue(':user', $user, PDO::PARAM_STR);
