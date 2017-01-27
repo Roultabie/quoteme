@@ -104,7 +104,6 @@ class statsQueries
         $stmt->execute();
         $datas = $stmt->fetchAll(PDO::FETCH_OBJ);
         $stmt = NULL;
-
         if (count($datas) > 0) {
             if ($datas[0]->count !== '0') return $datas;
         }
@@ -216,7 +215,7 @@ class apiStats
             return $this->returnSuccess($result, 'posted');
         }
         else {
-            return $this->returnError($result, 'posted');
+            return $this->returnError(404, 'posted');
         }
     }
 
