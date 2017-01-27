@@ -58,7 +58,7 @@ class statsQueries
         $datas = $stmt->fetchAll(PDO::FETCH_OBJ);
         $stmt = NULL;
         if (is_array($datas)) {
-            if ($datas[0]->total !== '0') return $datas;
+            if ($datas[0]->count !== '0') return $datas;
         }
 
         return false;
@@ -104,7 +104,7 @@ class statsQueries
         $stmt = NULL;
 
         if (count($datas) > 0) {
-            if ($datas[0]->total !== '0') return $datas;
+            if ($datas[0]->count !== '0') return $datas;
         }
 
         return false;
