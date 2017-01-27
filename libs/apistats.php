@@ -44,7 +44,7 @@ class statsQueries
             }
         }
         else {
-            $query = 'SELECT COUNT(d.id) AS count
+            $query = 'SELECT u.username, COUNT(d.id) AS count
                       FROM ' . self::$tblPrefix . 'delivered AS d
                       LEFT JOIN ' . self::$tblPrefix . 'users AS u
                       ON d.share_token = u.share_token
@@ -91,8 +91,10 @@ class statsQueries
             }
         }
         else {
-            $query = 'SELECT COUNT(*) AS count
-                      FROM ' . self::$tblPrefix . 'quotes
+            $query = 'SELECT u.username, COUNT(q.id) AS count
+                      FROM ' . self::$tblPrefix . 'quotes AS q
+                      LEFT JOIN '. self::$tblPrefix . 'users AS u
+                      ON q.user = u.id
                       WHERE date LIKE :dateSearch
                       AND user LIKE :user';
         }
