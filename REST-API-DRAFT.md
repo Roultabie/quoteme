@@ -1,4 +1,4 @@
-#Draft 
+#Draft
 Rest API q.uote.me URL (GET)  
 
 /quotes -> gives last 10 quotes by date desc  
@@ -30,3 +30,11 @@ stats?method=quotes -> gives stats about quotes
 &year={year}&month={month}&day={day} -> (int 2) gives nb for {day}  
 &user={user} -> filter search by user {user}  
 ```
+
+*REST API for replacing current quote API:*
+
+```
+quotes -> work on quotes table
+/random.{json,html,php,png} -> get a random quote in json,html,php,png format
+/{6chars}.{json,html,php,png} -> get a quote with it's permalink in json,html,php,png format
+/search/author:john/tag:society/sort:date:{desc,asc}/limit:10.json -> get 10 quotes sort by date desc,asc where author = john ans tag = society
