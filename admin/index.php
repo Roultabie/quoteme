@@ -74,6 +74,7 @@ if ($_GET['p'] === 'md') require 'metadatas.php';
 if ($_GET['p'] === 'eq') require 'editquote.php';
 if ($_GET['p'] === 'dq') require 'deletequote.php';
 if ($_GET['p'] === 'pe') require 'perso.php';
+if ($_GET['p'] === 'st') require 'stats.php';
 
 $html->setElement('username', $user->datas->username);
 

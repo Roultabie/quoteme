@@ -424,7 +424,7 @@ input[type=submit] {
     .index h1 {
         display: none;
     }
-    
+
 }
 
 /* Larger than phablet (also point when grid becomes active) */
@@ -536,4 +536,8 @@ input[type=submit] {
         margin-top: 2px;
         opacity: 1;
     }
+}
+#charts div {
+    width: 300px;
+    display: inline-block;
 }
