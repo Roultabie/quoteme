@@ -20,14 +20,13 @@ $html = new timply('precieux.html');
 $html->setElement('precieuxhover', $GLOBALS['navHover']);
 $query  = 'SELECT *
            FROM qm_quotes
-           WHERE user = ""
+           WHERE user IS NULL
            LIMIT 20;';
 $stmt = dbConnexion::getInstance()->prepare($query);
 $stmt->execute();
 $result = $stmt->fetchAll(PDO::FETCH_OBJ);
 $stmt->closeCursor();
 $stmt = NULL;
-
 if (is_array($result)) {
     foreach ($result as $quote) {
         $shareLink = (!empty($user->datas->share_token)) ? urlencode($quote->permalink . '&' . $user->datas->share_token) : $quote->permalink;
