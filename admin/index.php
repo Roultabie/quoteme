@@ -75,6 +75,7 @@ if ($_GET['p'] === 'eq') require 'editquote.php';
 if ($_GET['p'] === 'dq') require 'deletequote.php';
 if ($_GET['p'] === 'pe') require 'perso.php';
 if ($_GET['p'] === 'st') require 'stats.php';
+if ($_GET['p'] === 'precieux') require 'precieux.php';
 
 $html->setElement('username', $user->datas->username);
 
