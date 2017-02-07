@@ -10,10 +10,11 @@ function createRequestObject()
     return http;
 }
 
-function getDelivered()
+function getDelivered(chart, user)
 {
     var http = createRequestObject();
-    http.open('GET', '/admin/api/api.php?function=stats&type=delivered', true);
+    var uri = (user !== undefined) ? '&user=' + user : '';
+    http.open('GET', '/admin/api/api.php?function=stats&type=delivered' + uri, true);
     http.onreadystatechange = ( function ()
     {
         if (http.readyState === 4) {
@@ -23,12 +24,17 @@ function getDelivered()
                 if (datas['code'] === 200) {
                     var labels = [];
                     var series = [];
-                    if (datas.items.length > 1) {
+                    if (datas.items.length > 1 && user === undefined) {
                         datas.items.pop();
                     }
                     for(var i= 0; i < datas.items.length; i++)
                     {
-                        labels.push(datas.items[i]['username'] + '(' + datas.items[i]['count'] + ')');
+                        if (user !== undefined) {
+                            labels.push(datas.items[i]['source'] + '(' + datas.items[i]['count'] + ')');
+                        }
+                        else {
+                            labels.push(datas.items[i]['username'] + '(' + datas.items[i]['count'] + ')');
+                        }
                         series.push(datas.items[i]['count']);
                     };
                     var data = {
@@ -57,7 +63,7 @@ function getDelivered()
                         }]
                     ];
 
-                    new Chartist.Pie('#chartDelivered', data, options, responsiveOptions);
+                    new Chartist.Pie(chart, data, options, responsiveOptions);
                 };
             };
         };
@@ -119,5 +125,6 @@ function getPosted()
     } );
     http.send(null);
 };
-getDelivered();
+getDelivered('#chartDelivered');
+getDelivered('#chartDeliveredBySource', 'Jean-Baptiste');
 getPosted();
