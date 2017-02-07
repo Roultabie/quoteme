@@ -10,10 +10,10 @@ function createRequestObject()
     return http;
 }
 
-function getDelivered(chart, user)
+function getDelivered(chart, user, source)
 {
     var http = createRequestObject();
-    var uri = (user !== undefined) ? '&user=' + user : '';
+    var uri = (user !== undefined) ? '&user=' + user + '&sortby=' + source : '';
     http.open('GET', '/admin/api/api.php?function=stats&type=delivered' + uri, true);
     http.onreadystatechange = ( function ()
     {
@@ -29,11 +29,14 @@ function getDelivered(chart, user)
                     }
                     for(var i= 0; i < datas.items.length; i++)
                     {
-                        if (user !== undefined) {
+                        if (user === undefined) {
+                            labels.push(datas.items[i]['username'] + '(' + datas.items[i]['count'] + ')');
+                        }
+                        else if (source === 'network') {
                             labels.push(datas.items[i]['source'] + '(' + datas.items[i]['count'] + ')');
                         }
-                        else {
-                            labels.push(datas.items[i]['username'] + '(' + datas.items[i]['count'] + ')');
+                        else if (source === 'permalink') {
+                            labels.push(datas.items[i]['permalink'] + '(' + datas.items[i]['count'] + ')');
                         }
                         series.push(datas.items[i]['count']);
                     };
@@ -125,6 +128,24 @@ function getPosted()
     } );
     http.send(null);
 };
+
+function chartsForUser()
+{
+    var http = createRequestObject();
+    http.open('GET', '/admin/api/api.php?getuserinfos', true);
+    http.onreadystatechange = ( function ()
+    {
+        if (http.readyState === 4) {
+            if (http.status === 200) {
+                var result = eval( '(' + http.responseText + ')' );
+                var userInfos = result.data['items'];
+                getDelivered('#chartDeliveredBySource', userInfos['id'], 'network');
+                getDelivered('#chartDeliveredByQuote', userInfos['id'], 'permalink');
+            };
+        };
+    } );
+    http.send(null);
+};
+chartsForUser();
 getDelivered('#chartDelivered');
-getDelivered('#chartDeliveredBySource', 'Jean-Baptiste');
 getPosted();
