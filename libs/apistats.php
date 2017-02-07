@@ -223,6 +223,11 @@ class apiStats
         }
     }
 
+    public function getUserInfos()
+    {
+        return $this->returnSuccess($this->userConfig, 'user');
+    }
+
     private function arrayToElements($datas)
     {
         if (is_array($datas)) {

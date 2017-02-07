@@ -14,6 +14,9 @@ require_once BASE_URL . 'admin/libs/sqlQueries.php';
 $user = new userQueries();
 $userConfig = $user->config;
 
+require_once BASE_URL . 'libs/apistats.php';
+$stats = new apiStats();
+
 if (!empty($_GET)) {
     if (empty($_GET['handler'])) {
         $function = $_GET['function'];
@@ -23,22 +26,27 @@ if (!empty($_GET)) {
         $request  = $_GET;
     }
     else {
-        $request = explode('/', $_GET['handler']);
-        if (is_array($request) && count($request) >= 3) {
-            $function = array_shift($request);
-            $type     = array_shift($request);
-            $method   = array_shift($request);
+        if(!isset($_GET['getuserinfos'])) {
+            $request = explode('/', $_GET['handler']);
+            if (is_array($request) && count($request) >= 3) {
+                $function = array_shift($request);
+                $type     = array_shift($request);
+                $method   = array_shift($request);
+            }
         }
     }
-    if ($function === 'stats') {
-        require_once BASE_URL . 'libs/apistats.php';
-        $stats = new apiStats();
-        if ($type === 'delivered') {
-            $result = $stats->getDelivered($request);
+    if (!isset($_GET['getuserinfos'])) {
+        if ($function === 'stats') {
+            if ($type === 'delivered') {
+                $result = $stats->getDelivered($request);
+            }
+            elseif ($type === 'posted') {
+                $result = $stats->getPosted($request);
+            }
         }
-        elseif ($type === 'posted') {
-            $result = $stats->getPosted($request);
-        }
+    }
+    else {
+        $result = $stats->getUserInfos();
     }
 }
 header('Cache-Control: no-cache, must-revalidate');
