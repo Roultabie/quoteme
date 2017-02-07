@@ -19,29 +19,15 @@ class statsQueries
         $dateSearch = $this->returnDateSearch($year, $month, $day);
         if ($dateSearch === false) return 400;
 
-        if ($this->userConfig['type'] == '2') {
-            $user = $this->userConfig['id'];
-        }
+        if ($this->userConfig['type'] > '1') $user = $this->userConfig['id'];
+
         if (empty($user)) {
-            if ($this->userConfig['type'] > '1') {
-                $query = 'SELECT (
-                              SELECT COUNT(*)
-                              FROM ' . self::$tblPrefix . 'delivered AS d
-                              LEFT JOIN qm_users AS u
-                              ON d.share_token = u.share_token
-                              WHERE d.date LIKE "%"
-                          ) AS user, (
-                              SELECT COUNT(*) FROM qm_quotes
-                          ) AS total';
-            }
-            else {
-                $query = 'SELECT u.username, COUNT(d.id) AS count
-                          FROM ' . self::$tblPrefix . 'delivered AS d
-                          LEFT JOIN ' . self::$tblPrefix . 'users AS u
-                          ON d.share_token = u.share_token
-                          WHERE d.date LIKE :dateSearch
-                          GROUP BY u.username WITH ROLLUP';
-            }
+            $query = 'SELECT u.username, COUNT(d.id) AS count
+                      FROM ' . self::$tblPrefix . 'delivered AS d
+                      LEFT JOIN ' . self::$tblPrefix . 'users AS u
+                      ON d.share_token = u.share_token
+                      WHERE d.date LIKE :dateSearch
+                      GROUP BY u.username WITH ROLLUP';
         }
         else {
             $query = 'SELECT u.username, COUNT(d.id) AS count
