@@ -12,6 +12,7 @@ class statsQueries
         self::$tblPrefix  = $GLOBALS['config']['tblPrefix'];
         $user = new userQueries();
         $this->userConfig = $user->config;
+        $this->debug = true;
     }
 
     function getDelivered($year = '', $month = '', $day = '', $user = '')
@@ -30,12 +31,13 @@ class statsQueries
                       GROUP BY u.username WITH ROLLUP';
         }
         else {
-            $query = 'SELECT u.username, COUNT(d.id) AS count
+            $query = 'SELECT d.source, COUNT(d.id) AS count
                       FROM ' . self::$tblPrefix . 'delivered AS d
                       LEFT JOIN ' . self::$tblPrefix . 'users AS u
                       ON d.share_token = u.share_token
                       WHERE d.date LIKE :dateSearch
-                      AND u.id LIKE :user';
+                      AND u.id LIKE :user
+                      GROUP BY d.source';
         }
         $stmt = dbConnexion::getInstance()->prepare($query);
         if (!empty($user)) $stmt->bindValue(':user', $user, PDO::PARAM_STR);

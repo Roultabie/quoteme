@@ -121,7 +121,7 @@ class stats
             $query = 'SELECT COUNT(*) AS nb FROM ' . self::$tblPrefix . 'quotes';
             $stmt  = dbConnexion::getInstance()->prepare($query);
         }
-        
+
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_OBJ);
         $stmt->closeCursor();
@@ -182,7 +182,7 @@ class stats
             $stmt  = dbConnexion::getInstance()->prepare($query);
             $stmt->bindValue(':permalink', $datas['permalink'], PDO::PARAM_STR);
             $stmt->bindValue(':share_token',$datas['token'], PDO::PARAM_STR);
-            $stmt->bindValue(':source', $datas['source'], PDO::PARAM_STR);
+            $stmt->bindValue(':source', $this->getHost($datas['source']), PDO::PARAM_STR);
             $stmt->bindValue(':parser', $datas['parser'], PDO::PARAM_STR);
             $stmt->execute();
         }
@@ -197,6 +197,17 @@ class stats
         $stmt  = dbConnexion::getInstance()->prepare($query);
         $stmt->bindValue(':date', $wanted, PDO::PARAM_STR);
         $stmt->execute();
+    }
+
+    private function getHost($source)
+    {
+        $elements = parse_url($source);
+        if (is_array($elements)) {
+            return $elements['host'];
+        }
+        else {
+            return 'Unknown source';
+        }
     }
 
     public static function checkToken($token)
