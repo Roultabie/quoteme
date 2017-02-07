@@ -15,7 +15,7 @@ class statsQueries
         $this->debug = true;
     }
 
-    function getDelivered($year = '', $month = '', $day = '', $user = '')
+    function getDelivered($year = '', $month = '', $day = '', $user = '', $sortBy = '')
     {
         $dateSearch = $this->returnDateSearch($year, $month, $day);
         if ($dateSearch === false) return 400;
@@ -30,14 +30,30 @@ class statsQueries
                       WHERE d.date LIKE :dateSearch
                       GROUP BY u.username WITH ROLLUP';
         }
-        else {
-            $query = 'SELECT d.source, COUNT(d.id) AS count
+        elseif (!empty($sortBy)) {
+            switch ($sortBy) {
+                case 'network':
+                    $field = 'd.source';
+                    break;
+                default:
+                    $field = 'd.permalink';
+                    break;
+            }
+            $query = 'SELECT ' . $field . ', COUNT(d.id) AS count
                       FROM ' . self::$tblPrefix . 'delivered AS d
                       LEFT JOIN ' . self::$tblPrefix . 'users AS u
                       ON d.share_token = u.share_token
                       WHERE d.date LIKE :dateSearch
                       AND u.id LIKE :user
-                      GROUP BY d.source';
+                      GROUP BY ' . $field;
+        }
+        else {
+            $query = 'SELECT u.username, COUNT(d.id) AS count
+                      FROM ' . self::$tblPrefix . 'delivered AS d
+                      LEFT JOIN ' . self::$tblPrefix . 'users AS u
+                      ON d.share_token = u.share_token
+                      WHERE d.date LIKE :dateSearch
+                      AND u.id LIKE :user';
         }
         $stmt = dbConnexion::getInstance()->prepare($query);
         if (!empty($user)) $stmt->bindValue(':user', $user, PDO::PARAM_STR);
@@ -157,13 +173,13 @@ class apiStats
     {
         if (is_array($datas)) {
             if ($elements = $this->arrayToElements($datas)) {
-                list($year, $month, $day, $user) = $elements;
+                list($year, $month, $day, $user, $sortBy) = $elements;
             }
             else {
                 $this->returnError(400, 'delivered');
             }
         }
-        if ($elements = $this->queries->getDelivered($year, $month, $day, $user)) {
+        if ($elements = $this->queries->getDelivered($year, $month, $day, $user, $sortBy)) {
             if ($this->userConfig['type'] > '1') {
                 $result[0]['username'] = $this->userConfig['username'];
                 $result[0]['count']    = $elements[0]->user;
@@ -233,7 +249,8 @@ class apiStats
                 return false;
             }
             if (isset($datas['user'])) $user = $datas['user'];
-            return [$year, $month, $day, $user];
+            if (isset($datas['sortby'])) $sortBy = $datas['sortby'];
+            return [$year, $month, $day, $user, $sortBy];
         }
     }
 
