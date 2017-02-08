@@ -16,13 +16,15 @@ if (!empty($_POST)) {
         }
     }
 }
+$limit = (!empty($_GET['nb']))  ? (int)$_GET['nb'] : 20;
 $html = new timply('precieux.html');
 $html->setElement('precieuxhover', $GLOBALS['navHover']);
 $query  = 'SELECT *
            FROM qm_quotes
            WHERE user IS NULL
-           LIMIT 20;';
+           LIMIT :limit;';
 $stmt = dbConnexion::getInstance()->prepare($query);
+$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
 $stmt->execute();
 $result = $stmt->fetchAll(PDO::FETCH_OBJ);
 $stmt->closeCursor();
