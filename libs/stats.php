@@ -203,7 +203,12 @@ class stats
     {
         $elements = parse_url($source);
         if (is_array($elements)) {
-            return $elements['host'];
+	    if (!empty($elements['host'])) {
+                return $elements['host'];
+	    }
+	    else {
+	        return 'Unknown source';
+	    }
         }
         else {
             return 'Unknown source';
