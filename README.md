@@ -1,4 +1,4 @@
-#Q.uote.me
+# Q.uote.me
 
 *PHP script to store and view random quotes. [(v1.6b)](https://github.com/Roultabie/quoteme/releases/latest)*
 
@@ -10,15 +10,15 @@ When you find a new quote, you have to update your files... It can be boring !
 
 With this script, you manage only one SQL database. With his API, you read it in your favorite format (actualy, json, rss2, csv).
 
-##Features
+## Features
 **Storage** : Store your favorite quotes in a single place,  
 
 **API** : you can extract quotes with sql like queries in multiples formats,  
 _Supported_ : **RSS2, JSON, CSV, IMG**. in the future : XML, TXT, ATOM and _iCal_ ;),  
 
-##How to use
+## How to use
 
-###_Api.php :_
+### _Api.php :_
 
 To extract datas, use api.php (ex: http://q.uote.me/api.php) and use the following syntax in url :  
 **p** > parser : json rss2 csv img _ex : p=json_  
@@ -29,15 +29,15 @@ To extract datas, use api.php (ex: http://q.uote.me/api.php) and use the followi
 **a** > and : like (and must be preceded by) **where**  
 **ao** > and second part (and option) like **and option**
 
-####Availables columns :  
+#### Availables columns :  
 **quote** _(text)_, **author** _(varchar)_, **source** _(varchar)_, **tags** _(varchar)_, **permalink** _(char 6)_, **date** _(datetime)_
 
-####Image extraction options :
+#### Image extraction options :
 **t** > type : png gif jpeg (or all image supported by your phpgd version) _ex : t=png_  
 **wi** > width : width of image in pixel _ex : wi=512_  
 _If you want extract a png image, options are not required_  
 
-####Full examples :  
+#### Full examples :  
 
 - To extract a random quote in json format :  
 **http://q.uote.me/api.php?p=json**
@@ -54,12 +54,12 @@ _If you want extract a png image, options are not required_
 - To extract a jpeg file of 500 pixels width :  
 **http://q.uote.me/api.php?p=img&t=jpeg&wi=512**  
 
-###_Index of website :_
+### _Index of website :_
 
 Just type address of website to view random quote. Click on the arrow to reload a new quote. Add permalink option in the URL to view a specific quote.  
 Permalink format example : http://q.uote.me?xHlefA (thank to [sebsauvage](https://github.com/sebsauvage/Shaarli) for permalink function)
 
-###Requirements :
+### Requirements :
 _PHP_  
   
 - >= 5.3
@@ -77,7 +77,7 @@ _Other_
 - freetype2
 
 
-###Updates :
+### Updates :
 
 _2014-10-03 (1.6b)_
 - Added authors and tags suggest in admin (ajax),
@@ -120,13 +120,13 @@ _2013-06-14 :_
 - Added creation date (in the future maybe changed by quote date),
 - Added tags.
 
-###In the future :
+### In the future :
 
 _1.7b :_
 - New syntax for api,
 - Multi users field in quotes table.
 
-##Licence :
+## Licence :
 
 Timply is distributed under the BSD licence:
 
